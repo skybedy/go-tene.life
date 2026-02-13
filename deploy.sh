@@ -17,6 +17,9 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Úklid - odstranění referenční složky (nechceme ji na serveru)
+rm -rf _laravel_reference
+
 # 2. Build binárky
 echo -e "${BLUE}🏗️ Sestavuji novou binárku...${NC}"
 go build -o tenelife-app ./main.go
