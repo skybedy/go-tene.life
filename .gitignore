@@ -12,6 +12,19 @@ main
 .vscode/
 .idea/
 
-# Go
+# Root Go/Laravel junk
 vendor/
+node_modules/
+storage/
+public/build/
+public/storage
+bootstrap/cache/
+
+# Reference junk (deep)
+_laravel_reference/vendor/
+_laravel_reference/node_modules/
+_laravel_reference/storage/
+_laravel_reference/public/build/
+_laravel_reference/public/storage
+_laravel_reference/bootstrap/cache/
 
