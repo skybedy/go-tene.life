@@ -12,7 +12,7 @@ echo -e "${BLUE}🚀 Spouštím deployment TenerLife...${NC}"
 echo -e "${BLUE}📥 Stahuji změny z GitHubu...${NC}"
 
 # Nejdřív musíme Gitu dovolit ty soubory vidět, aby je mohl aktualizovat
-FILES_TO_HIDE="_laravel_reference .air.toml"
+FILES_TO_HIDE="_laravel_reference .air.toml .env.example"
 
 for FILE in $FILES_TO_HIDE; do
     git ls-files -z "$FILE" | xargs -0 git update-index --no-skip-worktree 2>/dev/null
