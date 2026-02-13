@@ -10,6 +10,9 @@ main
 # Air tmp directory
 tmp/
 
+# Dynamic Data directory
+data/
+
 # IDEs
 .vscode/
 .idea/

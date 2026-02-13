@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 
@@ -61,7 +62,17 @@ func main() {
 	e := echo.New()
 
 	// Middleware
-	e.Use(middleware.Logger())
+	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+		LogStatus: true,
+		LogURI:    true,
+		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+			slog.Info("request",
+				slog.String("uri", v.URI),
+				slog.Int("status", v.Status),
+			)
+			return nil
+		},
+	}))
 	e.Use(middleware.Recover())
 
 	// Security Middleware
@@ -74,6 +85,13 @@ func main() {
 	e.Static("/images", "public/images")
 	e.Static("/files", "public/files")
 	e.Static("/js", "public/js")
+
+	// Dynamic Webcam Image serving
+	webcamPath := os.Getenv("WEBCAM_IMAGE_PATH")
+	if webcamPath == "" {
+		webcamPath = "public/images/tenelife.jpg"
+	}
+	e.File("/images/tenelife.jpg", webcamPath)
 
 	// Template Renderer
 	renderer := &web.TemplateRenderer{

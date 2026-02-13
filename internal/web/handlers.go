@@ -37,7 +37,11 @@ func NewHandler(ws *store.WeatherStore) *Handler {
 func (h *Handler) IndexHandler(c echo.Context) error {
 	// 1. Get Weather Data from JSON
 	var weather *models.WeatherData
-	file, err := os.Open("public/files/weather.json")
+	weatherPath := os.Getenv("WEATHER_JSON_PATH")
+	if weatherPath == "" {
+		weatherPath = "public/files/weather.json"
+	}
+	file, err := os.Open(weatherPath)
 	if err == nil {
 		defer file.Close()
 		decoder := json.NewDecoder(file)
