@@ -9,12 +9,12 @@ NC='\033[0m' # No Color
 echo -e "${BLUE}🚀 Spouštím deployment TenerLife...${NC}"
 
 # 1. Stáhnutí nejnovějšího kódu
-echo -e "${BLUE}📥 Synchronizuji stav Gitu...${NC}"
+echo -e "${BLUE}📥 Stahuji změny z GitHubu...${NC}"
 
-# Dočasně obnovíme smazanou složku, aby Git nehlásil změny a pull proběhl hladce
+# Nejdřív musíme Gitu dovolit ty soubory vidět, aby je mohl aktualizovat
+git ls-files -z _laravel_reference | xargs -0 git update-index --no-skip-worktree 2>/dev/null
 git checkout _laravel_reference 2>/dev/null
 
-echo -e "${BLUE}📥 Stahuji změny z GitHubu...${NC}"
 git pull origin main
 
 if [ $? -ne 0 ]; then
@@ -22,7 +22,9 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Úklid - odstranění velké referenční složky, kterou v produkci nechceme
+# TEĎ TEN TRIK: Řekneme Gitu, aby ignoroval, že ty soubory smažeme
+echo -e "${BLUE}🧹 Čistím server a schovávám změny pro Git...${NC}"
+git ls-files -z _laravel_reference | xargs -0 git update-index --skip-worktree 2>/dev/null
 rm -rf _laravel_reference
 
 # 2. Build binárky
