@@ -133,5 +133,9 @@ func main() {
 	e.GET("/api/weather/annual", handler.GetAnnualDataHandler)
 
 	// Start Server
-	e.Logger.Fatal(e.Start(":8080"))
+	port := os.Getenv("APP_PORT")
+	if port == "" {
+		port = "8080"
+	}
+	e.Logger.Fatal(e.Start(":" + port))
 }
