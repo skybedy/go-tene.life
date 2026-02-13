@@ -12,7 +12,7 @@ echo -e "${BLUE}🚀 Spouštím deployment TenerLife...${NC}"
 echo -e "${BLUE}📥 Stahuji změny z GitHubu...${NC}"
 
 # Seznam souborů a složek, které v produkci nechceme, ale jsou v Gitu
-FILES_TO_HIDE="_laravel_reference .air.toml .env.example main.go go.mod go.sum internal views"
+FILES_TO_HIDE="_laravel_reference .air.toml .env.example main.go go.mod go.sum internal views public/js public/build public/storage"
 
 # Nejdřív musíme Gitu dovolit ty soubory vidět, aby je mohl aktualizovat
 for FILE in $FILES_TO_HIDE; do
