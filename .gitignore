@@ -1,0 +1,21 @@
+# Binaries
+app_bin
+main
+*.exe
+*.test
+*.out
+
+# Environment
+.env
+
+# IDEs
+.vscode/
+.idea/
+
+node_modules
+_laravel_reference/
+vendor/
+storage/
+public/build/
+public/storage
+bootstrap/cache/
