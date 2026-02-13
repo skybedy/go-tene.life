@@ -12,8 +12,12 @@ echo -e "${BLUE}🚀 Spouštím deployment TenerLife...${NC}"
 echo -e "${BLUE}📥 Stahuji změny z GitHubu...${NC}"
 
 # Nejdřív musíme Gitu dovolit ty soubory vidět, aby je mohl aktualizovat
-git ls-files -z _laravel_reference | xargs -0 git update-index --no-skip-worktree 2>/dev/null
-git checkout _laravel_reference 2>/dev/null
+FILES_TO_HIDE="_laravel_reference .air.toml"
+
+for FILE in $FILES_TO_HIDE; do
+    git ls-files -z "$FILE" | xargs -0 git update-index --no-skip-worktree 2>/dev/null
+    git checkout "$FILE" 2>/dev/null
+done
 
 git pull origin main
 
@@ -23,9 +27,11 @@ if [ $? -ne 0 ]; then
 fi
 
 # TEĎ TEN TRIK: Řekneme Gitu, aby ignoroval, že ty soubory smažeme
-echo -e "${BLUE}🧹 Čistím server a schovávám změny pro Git...${NC}"
-git ls-files -z _laravel_reference | xargs -0 git update-index --skip-worktree 2>/dev/null
-rm -rf _laravel_reference
+echo -e "${BLUE}🧹 Čistím server od nepotřebných souborů...${NC}"
+for FILE in $FILES_TO_HIDE; do
+    git ls-files -z "$FILE" | xargs -0 git update-index --skip-worktree 2>/dev/null
+    rm -rf "$FILE"
+done
 
 # 2. Build binárky
 echo -e "${BLUE}🏗️ Sestavuji novou binárku...${NC}"
