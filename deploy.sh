@@ -9,6 +9,11 @@ NC='\033[0m' # No Color
 echo -e "${BLUE}🚀 Spouštím deployment TenerLife...${NC}"
 
 # 1. Stáhnutí nejnovějšího kódu
+echo -e "${BLUE}📥 Synchronizuji stav Gitu...${NC}"
+
+# Dočasně obnovíme smazanou složku, aby Git nehlásil změny a pull proběhl hladce
+git checkout _laravel_reference 2>/dev/null
+
 echo -e "${BLUE}📥 Stahuji změny z GitHubu...${NC}"
 git pull origin main
 
@@ -17,7 +22,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Úklid - odstranění referenční složky (nechceme ji na serveru)
+# Úklid - odstranění velké referenční složky, kterou v produkci nechceme
 rm -rf _laravel_reference
 
 # 2. Build binárky
