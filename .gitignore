@@ -12,10 +12,6 @@ main
 .vscode/
 .idea/
 
-node_modules
-_laravel_reference/
+# Go
 vendor/
-storage/
-public/build/
-public/storage
-bootstrap/cache/
+
