@@ -1,0 +1,24 @@
+<nav class="bg-white/30 backdrop-blur-sm border-b border-gray-300 shadow-sm relative z-50">
+    <div class="mx-auto w-full sm:w-3/4 px-3 sm:px-4 md:px-6 lg:px-8">
+        <div class="flex items-center py-5 sm:pb-4">
+            <!-- Logo/Brand -->
+            <div class="flex-shrink-0 -mt-4 sm:-mt-5.5">
+                <a href="/" class="block">
+                    <img src="/images/tenelife-logo.png" alt="TeneLife Logo" class="h-8 sm:h-10 md:h-12 w-auto">
+                </a>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="flex gap-2 sm:gap-4 md:gap-6 ml-4 sm:ml-6 md:ml-8">
+                <a href="/"
+                    class="px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm md:text-base font-medium rounded-lg hover:bg-white/50 transition {{ if eq .PageTitle "" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                    Webkamera
+                </a>
+                <a href="/statistics/daily"
+                    class="px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm md:text-base font-medium rounded-lg hover:bg-white/50 transition {{ if ne .PageTitle "" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                    Statistiky
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
