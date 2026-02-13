@@ -26,8 +26,9 @@ go build -o tenelife-app ./main.go
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Build byl úspěšný!${NC}"
-    echo -e "${BLUE}💡 Nyní můžeš aplikaci spustit nebo restartovat službu.${NC}"
-    echo -e "   Příklad: ./tenelife-app"
+    echo -e "${BLUE}💡 Tip: Doporučená složka je ~/apps/tene.life${NC}"
+    echo -e "${BLUE}💡 Nyní můžeš aplikaci restartovat:${NC}"
+    echo -e "   sudo systemctl restart tenelife"
 else
     echo -e "${RED}❌ Build selhal!${NC}"
     exit 1
