@@ -2,8 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"embed"
 	"fmt"
 	"html/template"
+	"io/fs"
 	"log"
 	"log/slog"
 	"net/http"
@@ -16,6 +18,12 @@ import (
 	"github.com/skybedy/laravel-tene.life/internal/store"
 	"github.com/skybedy/laravel-tene.life/internal/web"
 )
+
+//go:embed views/*.html views/statistics/*.html
+var viewsFS embed.FS
+
+//go:embed public/js/*.js public/images/tenelife-logo.png
+var staticFS embed.FS
 
 var db *sql.DB
 
@@ -81,10 +89,14 @@ func main() {
 		TokenLookup: "form:csrf",
 	}))
 
-	// Static Files
+	// Static Files from Embed
+	publicFS, _ := fs.Sub(staticFS, "public")
+	e.StaticFS("/js", echo.MustSubFS(publicFS, "js"))
+	e.FileFS("/images/tenelife-logo.png", "images/tenelife-logo.png", publicFS)
+
+	// We still need to serve local images for the webcam and other files
 	e.Static("/images", "public/images")
 	e.Static("/files", "public/files")
-	e.Static("/js", "public/js")
 
 	// Dynamic Webcam Image serving
 	webcamPath := os.Getenv("WEBCAM_IMAGE_PATH")
@@ -93,12 +105,10 @@ func main() {
 	}
 	e.File("/images/tenelife.jpg", webcamPath)
 
-	// Template Renderer
+	// Template Renderer using Embed
 	renderer := &web.TemplateRenderer{
-		Templates: template.Must(template.ParseGlob("views/*.html")),
+		Templates: template.Must(template.ParseFS(viewsFS, "views/*.html", "views/statistics/*.html")),
 	}
-	// Add subdirectories manually or use a better search if needed
-	template.Must(renderer.Templates.ParseGlob("views/statistics/*.html"))
 
 	e.Renderer = renderer
 
