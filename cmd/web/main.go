@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"net/http"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -72,15 +73,36 @@ func main() {
 	// Static Files
 	e.Static("/images", "public/images")
 	e.Static("/files", "public/files")
+	e.Static("/js", "public/js")
 
 	// Template Renderer
 	renderer := &web.TemplateRenderer{
 		Templates: template.Must(template.ParseGlob("views/*.html")),
 	}
+	// Add subdirectories manually or use a better search if needed
+	template.Must(renderer.Templates.ParseGlob("views/statistics/*.html"))
+
 	e.Renderer = renderer
 
 	// Routes
 	e.GET("/", handler.IndexHandler)
+	e.GET("/webcam/big", handler.WebcamBigHandler)
+	e.GET("/api/weather/hourly", handler.GetHourlyDataHandler)
+
+	// Statistics
+	e.GET("/statistics", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/statistics/daily")
+	})
+	e.GET("/statistics/daily", handler.DailyStatisticsHandler)
+	e.GET("/statistics/weekly", handler.WeeklyStatisticsHandler)
+	e.GET("/statistics/monthly", handler.MonthlyStatisticsHandler)
+	e.GET("/statistics/annual", handler.AnnualStatisticsHandler)
+
+	// API Statistics
+	e.GET("/api/weather/daily", handler.GetDailyDataHandler)
+	e.GET("/api/weather/weekly", handler.GetWeeklyDataHandler)
+	e.GET("/api/weather/monthly", handler.GetMonthlyDataHandler)
+	e.GET("/api/weather/annual", handler.GetAnnualDataHandler)
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":8080"))

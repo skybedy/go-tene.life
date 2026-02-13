@@ -1,0 +1,54 @@
+{{ template "header.html" . }}
+{{ template "nav.html" . }}
+
+<main>
+    <div class="mx-auto w-full sm:w-3/4 p-3 sm:p-4 md:p-6 lg:p-8">
+
+        <!-- Statistics Header -->
+        <div
+            class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6 mb-4 sm:mb-6">
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-1">{{ .PageTitle }}</h1>
+            <p class="text-gray-600 text-xs sm:text-sm">Týdenní průměry a extrémy meteorologických dat.</p>
+        </div>
+
+        {{ template "statistics/stats_nav.html" . }}
+
+        <!-- Stats Table -->
+        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden mb-8">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs sm:text-sm">
+                    <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase">
+                        <tr>
+                            <th class="px-3 py-3 font-semibold">Týden / Rok</th>
+                            <th class="px-3 py-3 font-semibold">Období</th>
+                            <th class="px-3 py-3 font-semibold text-right">Ø Teplota</th>
+                            <th class="px-3 py-3 font-semibold text-right">Tlak</th>
+                            <th class="px-3 py-3 font-semibold text-right">Vlhkost</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {{ range .WeeklyStats }}
+                        <tr class="hover:bg-white/40 transition">
+                            <td class="px-3 py-3 font-medium text-gray-900">{{ .Week }} / {{ .Year }}</td>
+                            <td class="px-3 py-3 text-gray-500">{{ .WeekStart }} - {{ .WeekEnd }}</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ printf "%.1f" .AvgTemperature }} °C</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ printf "%.1f" .AvgPressure }} hPa</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ printf "%.0f" .AvgHumidity }} %</td>
+                        </tr>
+                        {{ else }}
+                        <tr>
+                            <td colspan="5" class="px-3 py-8 text-center text-gray-500 italic">Zatím nejsou k dispozici
+                                žádná data.</td>
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/statistics-charts.js"></script>
+{{ template "footer.html" . }}

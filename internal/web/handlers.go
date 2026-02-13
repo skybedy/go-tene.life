@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"io"
 	"log"
@@ -78,7 +79,117 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		SeaTemperatureVal: seaTempVal,
 		FormattedDate:     formattedDate,
 		FormattedTime:     formattedTime,
+		PageTitle:         "", // Homepage has no specific title in nav logic
 	}
 
 	return c.Render(http.StatusOK, "index.html", data)
+}
+
+func (h *Handler) GetHourlyDataHandler(c echo.Context) error {
+	date := c.QueryParam("date")
+	if date == "" {
+		date = time.Now().Format("2006-01-02")
+	}
+
+	data, err := h.WeatherStore.GetHourlyData(date)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	response := models.HourlyChartResponse{}
+	for _, record := range data {
+		response.Labels = append(response.Labels, fmt.Sprintf("%02d:00", record.Hour))
+		response.Datasets.Temperature = append(response.Datasets.Temperature, record.AvgTemperature)
+		response.Datasets.Pressure = append(response.Datasets.Pressure, record.AvgPressure)
+		response.Datasets.Humidity = append(response.Datasets.Humidity, record.AvgHumidity)
+	}
+
+	return c.JSON(http.StatusOK, response)
+}
+
+func (h *Handler) WebcamBigHandler(c echo.Context) error {
+	return c.Render(http.StatusOK, "webcam-big.html", nil)
+}
+
+func (h *Handler) DailyStatisticsHandler(c echo.Context) error {
+	stats, err := h.WeatherStore.GetDailyStats(30)
+	if err != nil {
+		log.Println("Error fetching daily stats:", err)
+	}
+	data := models.StatsPageData{
+		DailyStats: stats,
+		PageTitle:  "Denní statistiky",
+	}
+	return c.Render(http.StatusOK, "daily.html", data)
+}
+
+func (h *Handler) WeeklyStatisticsHandler(c echo.Context) error {
+	stats, err := h.WeatherStore.GetWeeklyStats()
+	if err != nil {
+		log.Println("Error fetching weekly stats:", err)
+	}
+	data := models.StatsPageData{
+		WeeklyStats: stats,
+		PageTitle:   "Týdenní statistiky",
+	}
+	return c.Render(http.StatusOK, "weekly.html", data)
+}
+
+func (h *Handler) MonthlyStatisticsHandler(c echo.Context) error {
+	stats, err := h.WeatherStore.GetMonthlyStats(12)
+	if err != nil {
+		log.Println("Error fetching monthly stats:", err)
+	}
+	data := models.StatsPageData{
+		MonthlyStats: stats,
+		PageTitle:    "Měsíční statistiky",
+	}
+	return c.Render(http.StatusOK, "monthly.html", data)
+}
+
+func (h *Handler) AnnualStatisticsHandler(c echo.Context) error {
+	stats, err := h.WeatherStore.GetAnnualStats()
+	if err != nil {
+		log.Println("Error fetching annual stats:", err)
+	}
+	data := models.StatsPageData{
+		AnnualStats: stats,
+		PageTitle:   "Roční statistiky",
+	}
+	return c.Render(http.StatusOK, "annual.html", data)
+}
+
+// API for Statistics Charts
+
+func (h *Handler) GetDailyDataHandler(c echo.Context) error {
+	stats, err := h.WeatherStore.GetDailyStats(7) // Default to 7 days
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	// Format for Chart.js
+	return c.JSON(http.StatusOK, stats)
+}
+
+func (h *Handler) GetMonthlyDataHandler(c echo.Context) error {
+	stats, err := h.WeatherStore.GetMonthlyStats(12)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusOK, stats)
+}
+
+func (h *Handler) GetWeeklyDataHandler(c echo.Context) error {
+	stats, err := h.WeatherStore.GetWeeklyStats()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusOK, stats)
+}
+
+func (h *Handler) GetAnnualDataHandler(c echo.Context) error {
+	stats, err := h.WeatherStore.GetAnnualStats()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusOK, stats)
 }

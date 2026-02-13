@@ -1,0 +1,6 @@
+<div class="flex flex-wrap gap-2 mb-4 sm:mb-6">
+    <a href="/statistics/daily" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .PageTitle "Denní statistiky" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">Denní</a>
+    <a href="/statistics/weekly" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .PageTitle "Týdenní statistiky" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">Týdenní</a>
+    <a href="/statistics/monthly" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .PageTitle "Měsíční statistiky" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">Měsíční</a>
+    <a href="/statistics/annual" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .PageTitle "Roční statistiky" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">Roční</a>
+</div>
