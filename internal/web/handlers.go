@@ -10,6 +10,8 @@ import (
 	"os"
 	"time"
 
+	"sync"
+
 	"github.com/labstack/echo/v4"
 	"github.com/skybedy/laravel-tene.life/internal/models"
 	"github.com/skybedy/laravel-tene.life/internal/store"
@@ -26,6 +28,9 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 
 type Handler struct {
 	WeatherStore *store.WeatherStore
+	weatherCache *models.WeatherData
+	cacheMu      sync.RWMutex
+	lastCache    time.Time
 }
 
 func NewHandler(ws *store.WeatherStore) *Handler {
@@ -35,23 +40,40 @@ func NewHandler(ws *store.WeatherStore) *Handler {
 }
 
 func (h *Handler) IndexHandler(c echo.Context) error {
-	// 1. Get Weather Data from JSON
-	var weather *models.WeatherData
-	weatherPath := os.Getenv("WEATHER_JSON_PATH")
-	if weatherPath == "" {
-		weatherPath = "public/files/weather.json"
-	}
-	file, err := os.Open(weatherPath)
-	if err == nil {
-		defer file.Close()
-		decoder := json.NewDecoder(file)
-		weather = &models.WeatherData{}
-		if err := decoder.Decode(weather); err != nil {
-			log.Println("Error decoding weather.json:", err)
-			weather = nil
+	// 1. Get Weather Data (with simple caching)
+	h.cacheMu.RLock()
+	weather := h.weatherCache
+	cacheAge := time.Since(h.lastCache)
+	h.cacheMu.RUnlock()
+
+	// Refresh cache if older than 30 seconds or empty
+	if weather == nil || cacheAge > 30*time.Second {
+		h.cacheMu.Lock()
+		// Double check after acquiring lock
+		if h.weatherCache == nil || time.Since(h.lastCache) > 30*time.Second {
+			weatherPath := os.Getenv("WEATHER_JSON_PATH")
+			if weatherPath == "" {
+				weatherPath = "public/files/weather.json"
+			}
+			file, err := os.Open(weatherPath)
+			if err == nil {
+				defer file.Close()
+				decoder := json.NewDecoder(file)
+				newWeather := &models.WeatherData{}
+				if err := decoder.Decode(newWeather); err == nil {
+					h.weatherCache = newWeather
+					h.lastCache = time.Now()
+					weather = newWeather
+				} else {
+					log.Println("Error decoding weather.json:", err)
+				}
+			} else {
+				log.Println("Error opening weather.json:", err)
+			}
+		} else {
+			weather = h.weatherCache
 		}
-	} else {
-		log.Println("Error opening weather.json:", err)
+		h.cacheMu.Unlock()
 	}
 
 	// 2. Get Sea Temperature from DB via Store
@@ -61,17 +83,14 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 	}
 
 	// 3. Format Date/Time
-	// Use timestamp from weather data or current time
 	ts := time.Now()
 	if weather != nil && weather.Timestamp > 0 {
 		ts = time.Unix(weather.Timestamp, 0)
 	}
 
-	// Use explicit Czech timezone or UTC+1/PCT if server is local (assumed local for PoC)
 	formattedDate := ts.Format("2. 1. 2006")
 	formattedTime := ts.Format("15:04")
 
-	// Dereference seaTemp for template if it exists
 	var seaTempVal float64
 	if seaTemp != nil {
 		seaTempVal = *seaTemp
@@ -83,7 +102,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		SeaTemperatureVal: seaTempVal,
 		FormattedDate:     formattedDate,
 		FormattedTime:     formattedTime,
-		PageTitle:         "", // Homepage has no specific title in nav logic
+		PageTitle:         "",
 	}
 
 	return c.Render(http.StatusOK, "index.html", data)

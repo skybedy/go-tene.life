@@ -7,9 +7,9 @@ import (
 	"html/template"
 	"io/fs"
 	"log"
-	"log/slog"
 	"net/http"
 	"os"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
@@ -58,6 +58,12 @@ func main() {
 	if err := db.Ping(); err != nil {
 		log.Fatal("Database connection failed:", err)
 	}
+
+	// Optimize connection pool
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(25)
+	db.SetConnMaxLifetime(5 * time.Minute)
+
 	log.Println("Connected to database successfully!")
 
 	// Initialize Store
@@ -70,18 +76,12 @@ func main() {
 	e := echo.New()
 
 	// Middleware
-	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
-		LogStatus: true,
-		LogURI:    true,
-		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
-			slog.Info("request",
-				slog.String("uri", v.URI),
-				slog.Int("status", v.Status),
-			)
-			return nil
-		},
-	}))
 	e.Use(middleware.Recover())
+
+	// Simple logger for production (optional, can be disabled for max speed)
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}, latency=${latency_human}\n",
+	}))
 
 	// Security Middleware
 	e.Use(middleware.Secure())
