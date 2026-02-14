@@ -134,6 +134,20 @@ func (h *Handler) WebcamBigHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "webcam-big.html", nil)
 }
 
+func (h *Handler) WebcamImageHandler(c echo.Context) error {
+	webcamPath := os.Getenv("WEBCAM_IMAGE_PATH")
+	if webcamPath == "" {
+		webcamPath = "public/images/tenelife.jpg"
+	}
+
+	// Disable caching for the webcam image to ensure it's always fresh
+	c.Response().Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+	c.Response().Header().Set("Pragma", "no-cache")
+	c.Response().Header().Set("Expires", "0")
+
+	return c.File(webcamPath)
+}
+
 func (h *Handler) DailyStatisticsHandler(c echo.Context) error {
 	stats, err := h.WeatherStore.GetDailyStats(30)
 	if err != nil {

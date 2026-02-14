@@ -115,6 +115,7 @@ func main() {
 	// Routes
 	e.GET("/", handler.IndexHandler)
 	e.GET("/webcam/big", handler.WebcamBigHandler)
+	e.GET("/webcam/image.jpg", handler.WebcamImageHandler) // New dynamic route
 	e.GET("/api/weather/hourly", handler.GetHourlyDataHandler)
 
 	// Statistics
