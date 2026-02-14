@@ -89,21 +89,21 @@ func main() {
 		TokenLookup: "form:csrf",
 	}))
 
-	// Static Files from Embed
-	publicFS, _ := fs.Sub(staticFS, "public")
-	e.StaticFS("/js", echo.MustSubFS(publicFS, "js"))
-	e.FileFS("/images/tenelife-logo.png", "images/tenelife-logo.png", publicFS)
-
-	// We still need to serve local images for the webcam and other files
-	e.Static("/images", "public/images")
-	e.Static("/files", "public/files")
-
 	// Dynamic Webcam Image serving
 	webcamPath := os.Getenv("WEBCAM_IMAGE_PATH")
 	if webcamPath == "" {
 		webcamPath = "public/images/tenelife.jpg"
 	}
 	e.File("/images/tenelife.jpg", webcamPath)
+
+	// Static Files from Embed
+	publicFS, _ := fs.Sub(staticFS, "public")
+	e.StaticFS("/js", echo.MustSubFS(publicFS, "js"))
+	e.FileFS("/images/tenelife-logo.png", "images/tenelife-logo.png", publicFS)
+
+	// We still need to serve local images for other files
+	e.Static("/images", "public/images")
+	e.Static("/files", "public/files")
 
 	// Template Renderer using Embed
 	renderer := &web.TemplateRenderer{
