@@ -11,15 +11,14 @@ echo -e "${BLUE}🚀 Spouštím deployment TenerLife...${NC}"
 # 1. Stáhnutí nejnovějšího kódu
 echo -e "${BLUE}📥 Stahuji změny z GitHubu...${NC}"
 
-# Seznam souborů a složek, které v produkci nechceme, ale jsou v Gitu
+# Seznam souborů pro pozdější úklid (tady definujeme, co se má po buildu smazat)
 FILES_TO_HIDE="_laravel_reference .air.toml .env.example main.go go.mod go.sum internal views public/js public/build public/storage"
 
-# Nejdřív musíme Gitu dovolit ty soubory vidět, aby je mohl aktualizovat
-for FILE in $FILES_TO_HIDE; do
-    git ls-files -z "$FILE" | xargs -0 git update-index --no-skip-worktree 2>/dev/null
-    git checkout "$FILE" 2>/dev/null
-done
+# AGRESIVNÍ OBNOVA: Najdi všechny skryté soubory (skip-worktree) a odhal je
+git ls-files -v | grep '^S' | awk '{print $2}' | tr '\n' '\0' | xargs -0 -r git update-index --no-skip-worktree
 
+# Vynutí shodu s repozitářem (obnoví smazané soubory)
+git reset --hard HEAD
 git pull origin main
 
 if [ $? -ne 0 ]; then
