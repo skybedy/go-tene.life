@@ -29,7 +29,7 @@ fi
 
 # 2. Build binárky (musí proběhnout dokud jsou soubory na disku)
 echo -e "${BLUE}🏗️ Sestavuji novou binárku...${NC}"
-go build -o tenelife-app ./main.go
+go build -o tenelife-app .
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Build byl úspěšný!${NC}"

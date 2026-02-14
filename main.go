@@ -19,10 +19,10 @@ import (
 	"github.com/skybedy/laravel-tene.life/internal/web"
 )
 
-//go:embed views/*.html views/statistics/*.html
+//go:embed views
 var viewsFS embed.FS
 
-//go:embed public/js/*.js public/images/tenelife-logo.png
+//go:embed public/js public/images/tenelife-logo.png
 var staticFS embed.FS
 
 var db *sql.DB
