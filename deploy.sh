@@ -27,8 +27,9 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# 2. Build binárky (musí proběhnout dokud jsou soubory na disku)
+# 2. Build binárky
 echo -e "${BLUE}🏗️ Sestavuji novou binárku...${NC}"
+go mod tidy
 go build -o tenelife-app .
 
 if [ $? -eq 0 ]; then
