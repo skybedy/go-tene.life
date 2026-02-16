@@ -19,7 +19,9 @@ git ls-files -v | grep '^S' | awk '{print $2}' | tr '\n' '\0' | xargs -0 -r git 
 
 # Vynutí shodu s repozitářem (obnoví smazané soubory)
 git reset --hard HEAD
-git pull origin main
+CURRENT_BRANCH=$(git branch --show-current)
+echo -e "${BLUE}📡 Tahám z větve: ${CURRENT_BRANCH}...${NC}"
+git pull origin "$CURRENT_BRANCH"
 
 if [ $? -ne 0 ]; then
     echo -e "${RED}❌ Chyba při stahování z Gitu!${NC}"
