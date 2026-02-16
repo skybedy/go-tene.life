@@ -22,7 +22,7 @@ import (
 //go:embed views
 var viewsFS embed.FS
 
-//go:embed public/js public/images/tenelife-logo.png
+//go:embed public/js public/css public/images/tenelife-logo.png
 var staticFS embed.FS
 
 var db *sql.DB
@@ -99,6 +99,7 @@ func main() {
 	// Static Files from Embed
 	publicFS, _ := fs.Sub(staticFS, "public")
 	e.StaticFS("/js", echo.MustSubFS(publicFS, "js"))
+	e.StaticFS("/css", echo.MustSubFS(publicFS, "css"))
 	e.FileFS("/images/tenelife-logo.png", "images/tenelife-logo.png", publicFS)
 
 	// We still need to serve local images for other files

@@ -26,8 +26,16 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# 2. Build binárky
-echo -e "${BLUE}🏗️ Sestavuji novou binárku...${NC}"
+# 2. Build frontend a binárky
+echo -e "${BLUE}🏗️ Sestavuji frontend a novou binárku...${NC}"
+
+# Instalace závislostí a build Tailwindu
+npm install && npm run build
+if [ $? -ne 0 ]; then
+    echo -e "${RED}❌ Chyba při buildu Tailwindu!${NC}"
+    exit 1
+fi
+
 go mod tidy
 go build -o tenelife-app .
 
@@ -36,6 +44,10 @@ if [ $? -eq 0 ]; then
     
     # TEĎ TEN TRIK: Úklid všeho nepotřebného po úspěšném buildu
     echo -e "${BLUE}🧹 Čistím server od zdrojových kódů (Production mode)...${NC}"
+    
+    # Přidány i nové soubory Tailwindu k úklidu
+    FILES_TO_HIDE="$FILES_TO_HIDE resources package.json package-lock.json node_modules public/css"
+    
     for FILE in $FILES_TO_HIDE; do
         git ls-files -z "$FILE" | xargs -0 git update-index --skip-worktree 2>/dev/null
         rm -rf "$FILE"
