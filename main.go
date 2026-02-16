@@ -77,6 +77,9 @@ func main() {
 
 	// Middleware
 	e.Use(middleware.Recover())
+	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
+		Level: 5,
+	}))
 
 	// Simple logger for production (optional, can be disabled for max speed)
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{

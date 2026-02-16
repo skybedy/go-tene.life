@@ -29,6 +29,7 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 type Handler struct {
 	WeatherStore *store.WeatherStore
 	weatherCache *models.WeatherData
+	seaTempCache *float64
 	cacheMu      sync.RWMutex
 	lastCache    time.Time
 }
@@ -43,14 +44,16 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 	// 1. Get Weather Data (with simple caching)
 	h.cacheMu.RLock()
 	weather := h.weatherCache
+	seaTemp := h.seaTempCache
 	cacheAge := time.Since(h.lastCache)
 	h.cacheMu.RUnlock()
 
 	// Refresh cache if older than 30 seconds or empty
-	if weather == nil || cacheAge > 30*time.Second {
+	if weather == nil || seaTemp == nil || cacheAge > 30*time.Second {
 		h.cacheMu.Lock()
 		// Double check after acquiring lock
-		if h.weatherCache == nil || time.Since(h.lastCache) > 30*time.Second {
+		if h.weatherCache == nil || h.seaTempCache == nil || time.Since(h.lastCache) > 30*time.Second {
+			// Update Weather JSON
 			weatherPath := os.Getenv("WEATHER_JSON_PATH")
 			if weatherPath == "" {
 				weatherPath = "public/files/weather.json"
@@ -62,34 +65,30 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 				newWeather := &models.WeatherData{}
 				if err := decoder.Decode(newWeather); err == nil {
 					h.weatherCache = newWeather
-					h.lastCache = time.Now()
 					weather = newWeather
-				} else {
-					log.Println("Error decoding weather.json:", err)
 				}
-			} else {
-				log.Println("Error opening weather.json:", err)
 			}
+
+			// Update Sea Temp from DB
+			newSeaTemp, err := h.WeatherStore.GetLatestSeaTemperature()
+			if err == nil {
+				h.seaTempCache = newSeaTemp
+				seaTemp = newSeaTemp
+			}
+
+			h.lastCache = time.Now()
 		} else {
 			weather = h.weatherCache
+			seaTemp = h.seaTempCache
 		}
 		h.cacheMu.Unlock()
 	}
 
-	// 2. Get Sea Temperature from DB via Store
-	seaTemp, err := h.WeatherStore.GetLatestSeaTemperature()
-	if err != nil {
-		log.Println("Error fetching sea temperature (not critical):", err)
-	}
-
-	// 3. Format Date/Time
+	// 2. Format Date/Time (Moved outside lock for performance)
 	ts := time.Now()
 	if weather != nil && weather.Timestamp > 0 {
 		ts = time.Unix(weather.Timestamp, 0)
 	}
-
-	formattedDate := ts.Format("2. 1. 2006")
-	formattedTime := ts.Format("15:04")
 
 	var seaTempVal float64
 	if seaTemp != nil {
@@ -100,8 +99,8 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		Weather:           weather,
 		SeaTemperature:    seaTemp,
 		SeaTemperatureVal: seaTempVal,
-		FormattedDate:     formattedDate,
-		FormattedTime:     formattedTime,
+		FormattedDate:     ts.Format("2. 1. 2006"),
+		FormattedTime:     ts.Format("15:04"),
 		PageTitle:         "",
 	}
 
