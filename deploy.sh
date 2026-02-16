@@ -8,6 +8,13 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}🚀 Spouštím deployment TenerLife...${NC}"
 
+# Pokus o nalezení Go, pokud není v PATH
+export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:/home/skybedy/go/bin
+if ! command -v go &> /dev/null; then
+    # Pokud stále není, zkusíme načíst prostředí z go env uživatele (pokud existuje)
+    export PATH=$PATH:$(sudo -u skybedy go env GOROOT 2>/dev/null)/bin
+fi
+
 # 1. Stáhnutí nejnovějšího kódu
 echo -e "${BLUE}📥 Stahuji změny z GitHubu...${NC}"
 
