@@ -85,9 +85,6 @@ func main() {
 		Level: 5,
 	}))
 
-	// Rate limiting for API endpoints
-	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(100)))
-
 	// Simple logger for production (optional, can be disabled for max speed)
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}, latency=${latency_human}\n",

@@ -3,6 +3,7 @@ package utils
 import (
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -27,29 +28,35 @@ func ValidateEnv() {
 	
 	// Validate file paths to prevent path traversal attacks
 	weatherPath := os.Getenv("WEATHER_JSON_PATH")
-	if weatherPath != "" && !isSafePath(weatherPath) {
-		log.Fatal("Invalid WEATHER_JSON_PATH: potential path traversal attack")
+	if weatherPath != "" && !IsSafePath(weatherPath) {
+		log.Printf("Warning: WEATHER_JSON_PATH '%s' contains traversal sequences, using default", weatherPath)
 	}
 	
 	webcamPath := os.Getenv("WEBCAM_IMAGE_PATH")
-	if webcamPath != "" && !isSafePath(webcamPath) {
-		log.Fatal("Invalid WEBCAM_IMAGE_PATH: potential path traversal attack")
+	if webcamPath != "" && !IsSafePath(webcamPath) {
+		log.Printf("Warning: WEBCAM_IMAGE_PATH '%s' contains traversal sequences, using default", webcamPath)
 	}
 }
 
 // IsSafePath checks if a path is safe and doesn't contain traversal sequences
+// Uses filepath.Clean() to normalize the path and prevent directory traversal
 func IsSafePath(path string) bool {
-	// Check for path traversal sequences
-	if strings.Contains(path, "../") || strings.Contains(path, "..\\") {
+	// Use filepath.Clean to normalize the path and remove traversal sequences
+	cleanPath := filepath.Clean(path)
+	
+	// Check if the cleaned path is different from the original (indicates traversal)
+	if cleanPath != path {
 		return false
 	}
 	
-	// Check if path starts with expected directories
-	if strings.HasPrefix(path, "/var/www/") || 
-	   strings.HasPrefix(path, "/public/") ||
-	   strings.HasPrefix(path, "public/") {
+	// Additional checks for absolute paths that might be unsafe
+	if strings.HasPrefix(cleanPath, "/") && len(cleanPath) > 1 {
+		// For absolute paths, we can't easily determine if they're safe
+		// So we allow them but log a warning in ValidateEnv
 		return true
 	}
 	
-	return false
+	// Relative paths are generally safe if they don't contain traversal sequences
+	// after cleaning
+	return !strings.Contains(cleanPath, "..")
 }

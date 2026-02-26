@@ -91,6 +91,8 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) 
 	// Refresh cache if older than timeout or empty
 	if weather == nil || seaTemp == nil || cacheAge > h.cacheTimeout {
 		h.cacheMu.Lock()
+		
+		// Ensure unlock happens when we return
 		defer h.cacheMu.Unlock()
 		
 		// Double check after acquiring lock
