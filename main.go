@@ -16,6 +16,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/skybedy/laravel-tene.life/internal/store"
+	"github.com/skybedy/laravel-tene.life/internal/utils"
 	"github.com/skybedy/laravel-tene.life/internal/web"
 )
 
@@ -36,6 +37,9 @@ func main() {
 			log.Println("No .env file found in parent either")
 		}
 	}
+
+	// Validate environment variables
+	utils.ValidateEnv()
 
 	// Database Connection
 	var err error
@@ -81,6 +85,9 @@ func main() {
 		Level: 5,
 	}))
 
+	// Rate limiting for API endpoints
+	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(100)))
+
 	// Simple logger for production (optional, can be disabled for max speed)
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}, latency=${latency_human}\n",
@@ -121,6 +128,9 @@ func main() {
 	e.GET("/webcam/big", handler.WebcamBigHandler)
 	e.GET("/webcam/image.jpg", handler.WebcamImageHandler) // New dynamic route
 	e.GET("/api/weather/hourly", handler.GetHourlyDataHandler)
+	
+	// Health check endpoint
+	e.GET("/health", handler.HealthCheckHandler)
 
 	// Statistics
 	e.GET("/statistics", func(c echo.Context) error {
