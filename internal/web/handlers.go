@@ -261,10 +261,28 @@ func (h *Handler) WebcamBigHandler(c echo.Context) error {
 func (h *Handler) WebcamImageHandler(c echo.Context) error {
 	webcamPath := utils.EnvPathOrDefault("WEBCAM_IMAGE_PATH", "public/images/tenelife.jpg")
 
-	// Disable caching for the webcam image to ensure it's always fresh
-	c.Response().Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-	c.Response().Header().Set("Pragma", "no-cache")
-	c.Response().Header().Set("Expires", "0")
+	info, err := os.Stat(webcamPath)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "Webcam image not found")
+	}
+
+	modTime := info.ModTime().UTC()
+	etag := fmt.Sprintf("\"%x-%x\"", info.Size(), modTime.UnixNano())
+
+	// Browser may cache, but must always revalidate before using cached copy.
+	c.Response().Header().Set("Cache-Control", "public, no-cache, must-revalidate")
+	c.Response().Header().Set("ETag", etag)
+	c.Response().Header().Set("Last-Modified", modTime.Format(http.TimeFormat))
+
+	if inm := c.Request().Header.Get("If-None-Match"); inm != "" && inm == etag {
+		return c.NoContent(http.StatusNotModified)
+	}
+
+	if ims := c.Request().Header.Get("If-Modified-Since"); ims != "" {
+		if t, parseErr := time.Parse(http.TimeFormat, ims); parseErr == nil && !modTime.After(t) {
+			return c.NoContent(http.StatusNotModified)
+		}
+	}
 
 	return c.File(webcamPath)
 }
