@@ -1,6 +1,6 @@
 <div class="flex flex-wrap gap-2 mb-4 sm:mb-6">
-    <a href="/statistics/daily" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .PageTitle "Denní statistiky" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">Denní</a>
-    <a href="/statistics/weekly" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .PageTitle "Týdenní statistiky" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">Týdenní</a>
-    <a href="/statistics/monthly" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .PageTitle "Měsíční statistiky" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">Měsíční</a>
-    <a href="/statistics/annual" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .PageTitle "Roční statistiky" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">Roční</a>
+    <a href="{{ localeURL .Locale "/statistics/daily" }}" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .StatsSection "daily" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">{{ index .I18n "daily_short" }}</a>
+    <a href="{{ localeURL .Locale "/statistics/weekly" }}" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .StatsSection "weekly" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">{{ index .I18n "weekly_short" }}</a>
+    <a href="{{ localeURL .Locale "/statistics/monthly" }}" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .StatsSection "monthly" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">{{ index .I18n "monthly_short" }}</a>
+    <a href="{{ localeURL .Locale "/statistics/annual" }}" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition {{ if eq .StatsSection "annual" }}bg-blue-500 text-white{{ else }}bg-white/50 text-gray-700 hover:bg-white{{ end }}">{{ index .I18n "annual_short" }}</a>
 </div>

@@ -8,7 +8,7 @@
         <div
             class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6 mb-4 sm:mb-6">
             <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-1">{{ .PageTitle }}</h1>
-            <p class="text-gray-600 text-xs sm:text-sm">Kompletní historie měsíčních průměrů.</p>
+            <p class="text-gray-600 text-xs sm:text-sm">{{ index .I18n "annual_stats_subtitle" }}</p>
         </div>
 
         {{ template "stats_nav.html" . }}
@@ -19,16 +19,16 @@
                 <table class="w-full text-left text-xs sm:text-sm">
                     <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase">
                         <tr>
-                            <th class="px-3 py-3 font-semibold">Období</th>
-                            <th class="px-3 py-3 font-semibold text-right">Ø Teplota</th>
-                            <th class="px-3 py-3 font-semibold text-right">Ø Tlak</th>
-                            <th class="px-3 py-3 font-semibold text-right">Ø Vlhkost</th>
+                            <th class="px-3 py-3 font-semibold">{{ index .I18n "period" }}</th>
+                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_temp" }}</th>
+                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_pressure" }}</th>
+                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_humidity" }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         {{ range .AnnualStats }}
                         <tr class="hover:bg-white/40 transition">
-                            <td class="px-3 py-3 font-medium text-gray-900">{{ .Month }} / {{ .Year }}</td>
+                            <td class="px-3 py-3 font-medium text-gray-900">{{ monthName $.Locale .Month }} / {{ .Year }}</td>
                             <td class="px-3 py-3 text-right text-gray-700">{{ if .AvgTemperature }}{{ printf "%.1f"
                                 .AvgTemperature }} °C{{ else }}--{{ end }}</td>
                             <td class="px-3 py-3 text-right text-gray-700">{{ if .AvgPressure }}{{ printf "%.1f"
@@ -38,8 +38,7 @@
                         </tr>
                         {{ else }}
                         <tr>
-                            <td colspan="4" class="px-3 py-8 text-center text-gray-500 italic">Zatím nejsou k dispozici
-                                žádná data.</td>
+                            <td colspan="4" class="px-3 py-8 text-center text-gray-500 italic">{{ index .I18n "no_data" }}</td>
                         </tr>
                         {{ end }}
                     </tbody>
@@ -51,5 +50,15 @@
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.statsI18n = {
+        temperature: {{ printf "%q" (index .I18n "temperature") }},
+        pressure: {{ printf "%q" (index .I18n "pressure") }},
+        humidity: {{ printf "%q" (index .I18n "humidity") }},
+        min: {{ printf "%q" (index .I18n "min") }},
+        average: {{ printf "%q" (index .I18n "average") }},
+        max: {{ printf "%q" (index .I18n "max") }}
+    };
+</script>
 <script src="/js/statistics-charts.js"></script>
 {{ template "footer.html" . }}

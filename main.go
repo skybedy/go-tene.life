@@ -15,6 +15,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/skybedy/laravel-tene.life/internal/i18n"
 	"github.com/skybedy/laravel-tene.life/internal/store"
 	"github.com/skybedy/laravel-tene.life/internal/utils"
 	"github.com/skybedy/laravel-tene.life/internal/web"
@@ -116,21 +117,17 @@ func main() {
 
 	// Template Renderer using Embed
 	renderer := &web.TemplateRenderer{
-		Templates: template.Must(template.ParseFS(viewsFS, "views/*.html", "views/statistics/*.html")),
+		Templates: template.Must(template.New("").Funcs(template.FuncMap{
+			"localeURL": i18n.LocaleURL,
+			"monthName": i18n.MonthName,
+		}).ParseFS(viewsFS, "views/*.html", "views/statistics/*.html")),
 	}
 
 	e.Renderer = renderer
 
-	// Routes
+	// Routes (default locale: cs)
 	e.GET("/", handler.IndexHandler)
 	e.GET("/webcam/big", handler.WebcamBigHandler)
-	e.GET("/webcam/image.jpg", handler.WebcamImageHandler) // New dynamic route
-	e.GET("/api/weather/hourly", handler.GetHourlyDataHandler)
-
-	// Health check endpoint
-	e.GET("/health", handler.HealthCheckHandler)
-
-	// Statistics
 	e.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/statistics/daily")
 	})
@@ -138,6 +135,33 @@ func main() {
 	e.GET("/statistics/weekly", handler.WeeklyStatisticsHandler)
 	e.GET("/statistics/monthly", handler.MonthlyStatisticsHandler)
 	e.GET("/statistics/annual", handler.AnnualStatisticsHandler)
+
+	// Routes with locale prefix: /en, /de, /fr ...
+	localized := e.Group("/:locale")
+	localized.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			if !i18n.IsSupportedLocale(c.Param("locale")) {
+				return echo.ErrNotFound
+			}
+			return next(c)
+		}
+	})
+	localized.GET("/", handler.IndexHandler)
+	localized.GET("/webcam/big", handler.WebcamBigHandler)
+	localized.GET("/statistics", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/statistics/daily"))
+	})
+	localized.GET("/statistics/daily", handler.DailyStatisticsHandler)
+	localized.GET("/statistics/weekly", handler.WeeklyStatisticsHandler)
+	localized.GET("/statistics/monthly", handler.MonthlyStatisticsHandler)
+	localized.GET("/statistics/annual", handler.AnnualStatisticsHandler)
+
+	// API and service routes
+	e.GET("/webcam/image.jpg", handler.WebcamImageHandler) // New dynamic route
+	e.GET("/api/weather/hourly", handler.GetHourlyDataHandler)
+
+	// Health check endpoint
+	e.GET("/health", handler.HealthCheckHandler)
 
 	// API Statistics
 	e.GET("/api/weather/daily", handler.GetDailyDataHandler)

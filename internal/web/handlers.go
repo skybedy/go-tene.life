@@ -16,6 +16,7 @@ import (
 	"sync"
 
 	"github.com/labstack/echo/v4"
+	"github.com/skybedy/laravel-tene.life/internal/i18n"
 	"github.com/skybedy/laravel-tene.life/internal/models"
 	"github.com/skybedy/laravel-tene.life/internal/store"
 	"github.com/skybedy/laravel-tene.life/internal/utils"
@@ -46,7 +47,19 @@ func NewHandler(ws *store.WeatherStore) *Handler {
 	}
 }
 
+func (h *Handler) getLocale(c echo.Context) string {
+	return i18n.NormalizeLocale(c.Param("locale"))
+}
+
+func (h *Handler) getCommonViewData(c echo.Context) (string, string, []models.LanguageOption, map[string]string) {
+	locale := h.getLocale(c)
+	currentPath := i18n.StripLocalePrefix(c.Request().URL.Path)
+	return locale, currentPath, i18n.SupportedLanguages(), i18n.Messages(locale)
+}
+
 func (h *Handler) IndexHandler(c echo.Context) error {
+	locale, currentPath, languages, messages := h.getCommonViewData(c)
+
 	// 1. Get Weather Data (with improved caching)
 	weather, seaTemp, err := h.getCachedWeatherData()
 	if err != nil {
@@ -54,8 +67,14 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		// Continue with cached data if available, or empty data
 		if weather == nil && seaTemp == nil {
 			return c.Render(http.StatusOK, "index.html", models.PageData{
-				FormattedDate: time.Now().Format("2. 1. 2006"),
-				FormattedTime: time.Now().Format("15:04"),
+				FormattedDate:  time.Now().Format("2. 1. 2006"),
+				FormattedTime:  time.Now().Format("15:04"),
+				Locale:         locale,
+				LocalePrefix:   i18n.LocalePrefix(locale),
+				CurrentPath:    currentPath,
+				CurrentSection: "home",
+				Languages:      languages,
+				I18n:           messages,
 			})
 		}
 	}
@@ -78,6 +97,12 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		FormattedDate:     ts.Format("2. 1. 2006"),
 		FormattedTime:     ts.Format("15:04"),
 		PageTitle:         "",
+		Locale:            locale,
+		LocalePrefix:      i18n.LocalePrefix(locale),
+		CurrentPath:       currentPath,
+		CurrentSection:    "home",
+		Languages:         languages,
+		I18n:              messages,
 	}
 
 	return c.Render(http.StatusOK, "index.html", data)
@@ -172,7 +197,16 @@ func (h *Handler) GetHourlyDataHandler(c echo.Context) error {
 }
 
 func (h *Handler) WebcamBigHandler(c echo.Context) error {
-	return c.Render(http.StatusOK, "webcam-big.html", nil)
+	locale, currentPath, languages, messages := h.getCommonViewData(c)
+	data := models.PageData{
+		Locale:         locale,
+		LocalePrefix:   i18n.LocalePrefix(locale),
+		CurrentPath:    currentPath,
+		CurrentSection: "home",
+		Languages:      languages,
+		I18n:           messages,
+	}
+	return c.Render(http.StatusOK, "webcam-big.html", data)
 }
 
 func (h *Handler) WebcamImageHandler(c echo.Context) error {
@@ -229,13 +263,21 @@ func (h *Handler) HealthCheckHandler(c echo.Context) error {
 }
 
 func (h *Handler) DailyStatisticsHandler(c echo.Context) error {
+	locale, currentPath, languages, messages := h.getCommonViewData(c)
 	stats, err := h.WeatherStore.GetDailyStats(30)
 	if err != nil {
 		log.Println("Error fetching daily stats:", err)
 	}
 	data := models.StatsPageData{
-		DailyStats: stats,
-		PageTitle:  "Denní statistiky",
+		DailyStats:     stats,
+		PageTitle:      i18n.T(locale, "daily_statistics"),
+		StatsSection:   "daily",
+		Locale:         locale,
+		LocalePrefix:   i18n.LocalePrefix(locale),
+		CurrentPath:    currentPath,
+		CurrentSection: "statistics",
+		Languages:      languages,
+		I18n:           messages,
 	}
 	err = c.Render(http.StatusOK, "daily.html", data)
 	if err != nil {
@@ -246,37 +288,61 @@ func (h *Handler) DailyStatisticsHandler(c echo.Context) error {
 }
 
 func (h *Handler) WeeklyStatisticsHandler(c echo.Context) error {
+	locale, currentPath, languages, messages := h.getCommonViewData(c)
 	stats, err := h.WeatherStore.GetWeeklyStats()
 	if err != nil {
 		log.Println("Error fetching weekly stats:", err)
 	}
 	data := models.StatsPageData{
-		WeeklyStats: stats,
-		PageTitle:   "Týdenní statistiky",
+		WeeklyStats:    stats,
+		PageTitle:      i18n.T(locale, "weekly_statistics"),
+		StatsSection:   "weekly",
+		Locale:         locale,
+		LocalePrefix:   i18n.LocalePrefix(locale),
+		CurrentPath:    currentPath,
+		CurrentSection: "statistics",
+		Languages:      languages,
+		I18n:           messages,
 	}
 	return c.Render(http.StatusOK, "weekly.html", data)
 }
 
 func (h *Handler) MonthlyStatisticsHandler(c echo.Context) error {
+	locale, currentPath, languages, messages := h.getCommonViewData(c)
 	stats, err := h.WeatherStore.GetMonthlyStats(12)
 	if err != nil {
 		log.Println("Error fetching monthly stats:", err)
 	}
 	data := models.StatsPageData{
-		MonthlyStats: stats,
-		PageTitle:    "Měsíční statistiky",
+		MonthlyStats:   stats,
+		PageTitle:      i18n.T(locale, "monthly_statistics"),
+		StatsSection:   "monthly",
+		Locale:         locale,
+		LocalePrefix:   i18n.LocalePrefix(locale),
+		CurrentPath:    currentPath,
+		CurrentSection: "statistics",
+		Languages:      languages,
+		I18n:           messages,
 	}
 	return c.Render(http.StatusOK, "monthly.html", data)
 }
 
 func (h *Handler) AnnualStatisticsHandler(c echo.Context) error {
+	locale, currentPath, languages, messages := h.getCommonViewData(c)
 	stats, err := h.WeatherStore.GetAnnualStats()
 	if err != nil {
 		log.Println("Error fetching annual stats:", err)
 	}
 	data := models.StatsPageData{
-		AnnualStats: stats,
-		PageTitle:   "Roční statistiky",
+		AnnualStats:    stats,
+		PageTitle:      i18n.T(locale, "annual_statistics"),
+		StatsSection:   "annual",
+		Locale:         locale,
+		LocalePrefix:   i18n.LocalePrefix(locale),
+		CurrentPath:    currentPath,
+		CurrentSection: "statistics",
+		Languages:      languages,
+		I18n:           messages,
 	}
 	return c.Render(http.StatusOK, "annual.html", data)
 }

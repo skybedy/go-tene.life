@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="{{ .Locale }}">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ if .PageTitle }}{{ .PageTitle }} | {{ end }}Tenerife | Los Cristianos | Webcam</title>
+    <title>{{ if .PageTitle }}{{ .PageTitle }} | {{ end }}{{ index .I18n "site_title_suffix" }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

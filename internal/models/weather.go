@@ -7,6 +7,11 @@ type WeatherData struct {
 	Humidity    float64 `json:"humidity"`
 }
 
+type LanguageOption struct {
+	Code string
+	Name string
+}
+
 type PageData struct {
 	Weather           *WeatherData
 	SeaTemperature    *float64
@@ -14,6 +19,12 @@ type PageData struct {
 	FormattedDate     string
 	FormattedTime     string
 	PageTitle         string
+	Locale            string
+	LocalePrefix      string
+	CurrentPath       string
+	CurrentSection    string
+	Languages         []LanguageOption
+	I18n              map[string]string
 }
 
 type WeatherHourly struct {
@@ -105,9 +116,16 @@ type WeatherMonthly struct {
 }
 
 type StatsPageData struct {
-	DailyStats   []WeatherDaily
-	WeeklyStats  []WeatherWeekly
-	MonthlyStats []WeatherMonthly
-	AnnualStats  []WeatherMonthly
-	PageTitle    string
+	DailyStats     []WeatherDaily
+	WeeklyStats    []WeatherWeekly
+	MonthlyStats   []WeatherMonthly
+	AnnualStats    []WeatherMonthly
+	PageTitle      string
+	StatsSection   string
+	Locale         string
+	LocalePrefix   string
+	CurrentPath    string
+	Languages      []LanguageOption
+	I18n           map[string]string
+	CurrentSection string
 }

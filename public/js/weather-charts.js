@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const i18n = window.chartI18n || {};
     const charts = {
         temperature: null,
         pressure: null,
@@ -46,9 +47,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    charts.temperature = initChart('temperatureChart', 'Teplota', '#ef4444', '°C');
-    charts.pressure = initChart('pressureChart', 'Tlak', '#3b82f6', ' hPa');
-    charts.humidity = initChart('humidityChart', 'Vlhkost', '#10b981', '%');
+    charts.temperature = initChart('temperatureChart', i18n.temperature || 'Temperature', '#ef4444', '°C');
+    charts.pressure = initChart('pressureChart', i18n.pressure || 'Pressure', '#3b82f6', ' hPa');
+    charts.humidity = initChart('humidityChart', i18n.humidity || 'Humidity', '#10b981', '%');
 
     async function updateCharts() {
         try {

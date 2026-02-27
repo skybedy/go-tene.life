@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const i18n = window.statsI18n || {};
     const charts = {
         temperature: null,
         pressure: null,
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isMulti) {
             datasets.push(
                 {
-                    label: 'Min',
+                    label: i18n.min || 'Min',
                     data: [],
                     borderColor: '#3b82f6',
                     borderWidth: 1,
@@ -24,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     pointRadius: 0
                 },
                 {
-                    label: 'Průměr',
+                    label: i18n.average || 'Average',
                     data: [],
                     borderColor: color,
                     backgroundColor: color + '20',
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     pointRadius: 2
                 },
                 {
-                    label: 'Max',
+                    label: i18n.max || 'Max',
                     data: [],
                     borderColor: '#ef4444',
                     borderWidth: 1,
@@ -91,9 +92,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Initialize charts if they exist on page
-    charts.temperature = initChart('temperatureChart', 'Teplota', '#ef4444', '°C', true); // Multi for min/avg/max
-    charts.pressure = initChart('pressureChart', 'Tlak', '#3b82f6', ' hPa');
-    charts.humidity = initChart('humidityChart', 'Vlhkost', '#10b981', '%');
+    charts.temperature = initChart('temperatureChart', i18n.temperature || 'Temperature', '#ef4444', '°C', true); // Multi for min/avg/max
+    charts.pressure = initChart('pressureChart', i18n.pressure || 'Pressure', '#3b82f6', ' hPa');
+    charts.humidity = initChart('humidityChart', i18n.humidity || 'Humidity', '#10b981', '%');
 
     async function loadDailyStats() {
         if (!charts.temperature) return;
@@ -159,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Just reuse the charts but fetch different data
         if (!charts.temperature) {
             // Re-init without multi if needed, but for now let's just use it
-            charts.temperature = initChart('temperatureChart', 'Teplota', '#ef4444', '°C');
+            charts.temperature = initChart('temperatureChart', i18n.temperature || 'Temperature', '#ef4444', '°C');
         }
         
         try {
