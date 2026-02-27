@@ -94,13 +94,14 @@ func main() {
 	e.Use(middleware.Secure())
 	e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
 		TokenLookup: "form:csrf",
+		Skipper: func(c echo.Context) bool {
+			// API endpoints are consumed by scripts/JS and do not post form tokens.
+			return len(c.Path()) >= 5 && c.Path()[:5] == "/api/"
+		},
 	}))
 
 	// Dynamic Webcam Image serving
-	webcamPath := os.Getenv("WEBCAM_IMAGE_PATH")
-	if webcamPath == "" {
-		webcamPath = "public/images/tenelife.jpg"
-	}
+	webcamPath := utils.EnvPathOrDefault("WEBCAM_IMAGE_PATH", "public/images/tenelife.jpg")
 	e.File("/images/tenelife.jpg", webcamPath)
 
 	// Static Files from Embed
@@ -125,7 +126,7 @@ func main() {
 	e.GET("/webcam/big", handler.WebcamBigHandler)
 	e.GET("/webcam/image.jpg", handler.WebcamImageHandler) // New dynamic route
 	e.GET("/api/weather/hourly", handler.GetHourlyDataHandler)
-	
+
 	// Health check endpoint
 	e.GET("/health", handler.HealthCheckHandler)
 
@@ -140,9 +141,14 @@ func main() {
 
 	// API Statistics
 	e.GET("/api/weather/daily", handler.GetDailyDataHandler)
+	e.GET("/api/weather/monthly-daily", handler.GetMonthlyDailyDataHandler)
 	e.GET("/api/weather/weekly", handler.GetWeeklyDataHandler)
 	e.GET("/api/weather/monthly", handler.GetMonthlyDataHandler)
 	e.GET("/api/weather/annual", handler.GetAnnualDataHandler)
+
+	// API Data Ingestion
+	e.POST("/api/weather/sea-temperature", handler.StoreSeaTemperatureHandler)
+	e.POST("/api/camera/upload", handler.CameraUploadHandler, middleware.BodyLimit("10M"))
 
 	// Start Server
 	port := os.Getenv("APP_PORT")

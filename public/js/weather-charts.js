@@ -52,7 +52,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function updateCharts() {
         try {
-            const response = await fetch('/api/weather/hourly');
+            const params = new URLSearchParams(window.location.search);
+            const selectedDate = params.get('date');
+            const endpoint = selectedDate
+                ? `/api/weather/hourly?date=${encodeURIComponent(selectedDate)}`
+                : '/api/weather/hourly';
+            const response = await fetch(endpoint);
             const data = await response.json();
 
             if (data.labels && data.datasets) {

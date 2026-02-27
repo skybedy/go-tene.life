@@ -1,6 +1,7 @@
 package web
 
 import (
+	"crypto/subtle"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -8,6 +9,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"sync"
@@ -91,25 +94,22 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) 
 	// Refresh cache if older than timeout or empty
 	if weather == nil || seaTemp == nil || cacheAge > h.cacheTimeout {
 		h.cacheMu.Lock()
-		
+
 		// Ensure unlock happens when we return
 		defer h.cacheMu.Unlock()
-		
+
 		// Double check after acquiring lock
 		if h.weatherCache == nil || h.seaTempCache == nil || time.Since(h.lastCache) > h.cacheTimeout {
 			// Update Weather JSON
-			weatherPath := os.Getenv("WEATHER_JSON_PATH")
-			if weatherPath == "" {
-				weatherPath = "public/files/weather.json"
-			}
-			
+			weatherPath := utils.EnvPathOrDefault("WEATHER_JSON_PATH", "public/files/weather.json")
+
 			file, err := os.Open(weatherPath)
 			if err != nil {
 				return h.weatherCache, h.seaTempCache, utils.NewInternalServerError(
 					"Failed to open weather file", err)
 			}
 			defer file.Close()
-			
+
 			decoder := json.NewDecoder(file)
 			newWeather := &models.WeatherData{}
 			if err := decoder.Decode(newWeather); err != nil {
@@ -118,7 +118,7 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) 
 			}
 			h.weatherCache = newWeather
 			weather = newWeather
-			
+
 			// Update Sea Temp from DB
 			newSeaTemp, err := h.WeatherStore.GetLatestSeaTemperature()
 			if err != nil {
@@ -127,7 +127,7 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) 
 			}
 			h.seaTempCache = newSeaTemp
 			seaTemp = newSeaTemp
-			
+
 			h.lastCache = time.Now()
 		} else {
 			weather = h.weatherCache
@@ -142,6 +142,13 @@ func (h *Handler) GetHourlyDataHandler(c echo.Context) error {
 	date := c.QueryParam("date")
 	if date == "" {
 		date = time.Now().Format("2006-01-02")
+	}
+	if _, err := time.Parse("2006-01-02", date); err != nil {
+		appErr := utils.NewBadRequestError("Date must be in YYYY-MM-DD format", err)
+		return c.JSON(appErr.Code, utils.ErrorResponse{
+			Error:   "bad_request",
+			Message: appErr.Message,
+		})
 	}
 
 	data, err := h.WeatherStore.GetHourlyData(date)
@@ -169,19 +176,7 @@ func (h *Handler) WebcamBigHandler(c echo.Context) error {
 }
 
 func (h *Handler) WebcamImageHandler(c echo.Context) error {
-	webcamPath := os.Getenv("WEBCAM_IMAGE_PATH")
-	if webcamPath == "" {
-		webcamPath = "public/images/tenelife.jpg"
-	}
-
-	// Validate webcam path
-	if !utils.IsSafePath(webcamPath) {
-		appErr := utils.NewForbiddenError("Invalid webcam image path", nil)
-		return c.JSON(appErr.Code, utils.ErrorResponse{
-			Error:   "forbidden",
-			Message: appErr.Message,
-		})
-	}
+	webcamPath := utils.EnvPathOrDefault("WEBCAM_IMAGE_PATH", "public/images/tenelife.jpg")
 
 	// Disable caching for the webcam image to ensure it's always fresh
 	c.Response().Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
@@ -204,11 +199,8 @@ func (h *Handler) HealthCheckHandler(c echo.Context) error {
 	}
 
 	// Check if we can read weather data
-	weatherPath := os.Getenv("WEATHER_JSON_PATH")
-	if weatherPath == "" {
-		weatherPath = "public/files/weather.json"
-	}
-	
+	weatherPath := utils.EnvPathOrDefault("WEATHER_JSON_PATH", "public/files/weather.json")
+
 	if _, err := os.Stat(weatherPath); err != nil {
 		appErr := utils.NewInternalServerError("Weather data file not accessible", err)
 		return c.JSON(appErr.Code, utils.ErrorResponse{
@@ -218,11 +210,8 @@ func (h *Handler) HealthCheckHandler(c echo.Context) error {
 	}
 
 	// Check if we can read webcam image
-	webcamPath := os.Getenv("WEBCAM_IMAGE_PATH")
-	if webcamPath == "" {
-		webcamPath = "public/images/tenelife.jpg"
-	}
-	
+	webcamPath := utils.EnvPathOrDefault("WEBCAM_IMAGE_PATH", "public/images/tenelife.jpg")
+
 	if _, err := os.Stat(webcamPath); err != nil {
 		appErr := utils.NewInternalServerError("Webcam image not accessible", err)
 		return c.JSON(appErr.Code, utils.ErrorResponse{
@@ -232,7 +221,7 @@ func (h *Handler) HealthCheckHandler(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]string{
-		"status":  "healthy",
+		"status":   "healthy",
 		"database": "ok",
 		"weather":  "ok",
 		"webcam":   "ok",
@@ -248,7 +237,12 @@ func (h *Handler) DailyStatisticsHandler(c echo.Context) error {
 		DailyStats: stats,
 		PageTitle:  "Denní statistiky",
 	}
-	return c.Render(http.StatusOK, "daily.html", data)
+	err = c.Render(http.StatusOK, "daily.html", data)
+	if err != nil {
+		log.Println("RENDER ERROR:", err)
+		return err
+	}
+	return nil
 }
 
 func (h *Handler) WeeklyStatisticsHandler(c echo.Context) error {
@@ -289,8 +283,29 @@ func (h *Handler) AnnualStatisticsHandler(c echo.Context) error {
 
 // API for Statistics Charts
 
+// API for Statistics Charts
+
 func (h *Handler) GetDailyDataHandler(c echo.Context) error {
-	stats, err := h.WeatherStore.GetDailyStats(7) // Default to 7 days
+	daysStr := c.QueryParam("days")
+	days := 7
+	if daysStr != "" {
+		if d, err := strconv.Atoi(daysStr); err == nil {
+			days = d
+		}
+	}
+
+	endDate := c.QueryParam("end_date")
+	if endDate == "" {
+		endDate = time.Now().Format("2006-01-02")
+	}
+
+	startTs := time.Now()
+	if t, err := time.Parse("2006-01-02", endDate); err == nil {
+		startTs = t
+	}
+	startDate := startTs.AddDate(0, 0, -(days - 1)).Format("2006-01-02")
+
+	stats, err := h.WeatherStore.GetDailyStatsByRange(startDate, endDate)
 	if err != nil {
 		appErr := utils.NewInternalServerError("Failed to get daily stats", err)
 		return c.JSON(appErr.Code, utils.ErrorResponse{
@@ -298,8 +313,82 @@ func (h *Handler) GetDailyDataHandler(c echo.Context) error {
 			Message: appErr.Message,
 		})
 	}
-	// Format for Chart.js
-	return c.JSON(http.StatusOK, stats)
+
+	response := models.DailyChartResponse{}
+	for _, s := range stats {
+		// Format label as j.n. (day.month.)
+		t, _ := time.Parse("2006-01-02", s.Date)
+		response.Labels = append(response.Labels, t.Format("2.1."))
+		response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, s.AvgTemperature)
+		response.Datasets.MinTemperature = append(response.Datasets.MinTemperature, s.MinTemperature)
+		response.Datasets.MaxTemperature = append(response.Datasets.MaxTemperature, s.MaxTemperature)
+		response.Datasets.AvgPressure = append(response.Datasets.AvgPressure, s.AvgPressure)
+		response.Datasets.AvgHumidity = append(response.Datasets.AvgHumidity, s.AvgHumidity)
+		response.Datasets.SeaTemperature = append(response.Datasets.SeaTemperature, s.SeaTemperature)
+	}
+
+	return c.JSON(http.StatusOK, response)
+}
+
+func (h *Handler) GetMonthlyDailyDataHandler(c echo.Context) error {
+	yearStr := c.QueryParam("year")
+	monthStr := c.QueryParam("month")
+
+	year, _ := strconv.Atoi(yearStr)
+	month, _ := strconv.Atoi(monthStr)
+
+	if year == 0 {
+		year = time.Now().Year()
+	}
+	if month == 0 {
+		month = int(time.Now().Month())
+	}
+
+	startDate := fmt.Sprintf("%04d-%02d-01", year, month)
+	// Calculate end of month
+	t := time.Date(year, time.Month(month)+1, 0, 0, 0, 0, 0, time.UTC)
+	endDate := t.Format("2006-01-02")
+
+	stats, err := h.WeatherStore.GetDailyStatsByRange(startDate, endDate)
+	if err != nil {
+		appErr := utils.NewInternalServerError("Failed to get monthly daily stats", err)
+		return c.JSON(appErr.Code, utils.ErrorResponse{
+			Error:   "internal_server_error",
+			Message: appErr.Message,
+		})
+	}
+
+	response := models.DailyChartResponse{}
+	daysInMonth := t.Day()
+
+	// Pre-fill with nulls/zeros or just loop through records
+	// To match Laravel's behavior of showing all days in month:
+	for day := 1; day <= daysInMonth; day++ {
+		dateStr := fmt.Sprintf("%04d-%02d-%02d", year, month, day)
+		response.Labels = append(response.Labels, strconv.Itoa(day))
+
+		var found *models.WeatherDaily
+		for _, s := range stats {
+			if s.Date == dateStr {
+				found = &s
+				break
+			}
+		}
+
+		if found != nil {
+			response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, found.AvgTemperature)
+			response.Datasets.AvgPressure = append(response.Datasets.AvgPressure, found.AvgPressure)
+			response.Datasets.AvgHumidity = append(response.Datasets.AvgHumidity, found.AvgHumidity)
+			response.Datasets.SeaTemperature = append(response.Datasets.SeaTemperature, found.SeaTemperature)
+		} else {
+			response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, nil)
+			response.Datasets.AvgPressure = append(response.Datasets.AvgPressure, nil)
+			response.Datasets.AvgHumidity = append(response.Datasets.AvgHumidity, nil)
+			response.Datasets.SeaTemperature = append(response.Datasets.SeaTemperature, nil)
+		}
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func (h *Handler) GetMonthlyDataHandler(c echo.Context) error {
@@ -311,7 +400,17 @@ func (h *Handler) GetMonthlyDataHandler(c echo.Context) error {
 			Message: appErr.Message,
 		})
 	}
-	return c.JSON(http.StatusOK, stats)
+
+	response := models.DailyChartResponse{} // Reusing structure or could use Generic
+	for i := len(stats) - 1; i >= 0; i-- {  // Reverse to show chronological
+		s := stats[i]
+		response.Labels = append(response.Labels, fmt.Sprintf("%d/%d", s.Month, s.Year))
+		response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, s.AvgTemperature)
+		response.Datasets.AvgPressure = append(response.Datasets.AvgPressure, s.AvgPressure)
+		response.Datasets.AvgHumidity = append(response.Datasets.AvgHumidity, s.AvgHumidity)
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func (h *Handler) GetWeeklyDataHandler(c echo.Context) error {
@@ -323,7 +422,28 @@ func (h *Handler) GetWeeklyDataHandler(c echo.Context) error {
 			Message: appErr.Message,
 		})
 	}
-	return c.JSON(http.StatusOK, stats)
+
+	response := models.DailyChartResponse{}
+	// Take only last 20 weeks and reverse
+	limit := 20
+	if len(stats) < limit {
+		limit = len(stats)
+	}
+	for i := limit - 1; i >= 0; i-- {
+		s := stats[i]
+		label := fmt.Sprintf("%d/W%d", s.Year, s.Week)
+		if s.WeekStart != "" && s.WeekEnd != "" {
+			t1, _ := time.Parse("2006-01-02", s.WeekStart)
+			t2, _ := time.Parse("2006-01-02", s.WeekEnd)
+			label = fmt.Sprintf("%d/%d (%s-%s)", s.Week, s.Year, t1.Format("2.1."), t2.Format("2.1."))
+		}
+		response.Labels = append(response.Labels, label)
+		response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, s.AvgTemperature)
+		response.Datasets.AvgPressure = append(response.Datasets.AvgPressure, s.AvgPressure)
+		response.Datasets.AvgHumidity = append(response.Datasets.AvgHumidity, s.AvgHumidity)
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func (h *Handler) GetAnnualDataHandler(c echo.Context) error {
@@ -335,5 +455,135 @@ func (h *Handler) GetAnnualDataHandler(c echo.Context) error {
 			Message: appErr.Message,
 		})
 	}
-	return c.JSON(http.StatusOK, stats)
+
+	response := models.DailyChartResponse{}
+	for i := len(stats) - 1; i >= 0; i-- {
+		s := stats[i]
+		response.Labels = append(response.Labels, fmt.Sprintf("%d/%d", s.Month, s.Year))
+		response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, s.AvgTemperature)
+		response.Datasets.AvgPressure = append(response.Datasets.AvgPressure, s.AvgPressure)
+		response.Datasets.AvgHumidity = append(response.Datasets.AvgHumidity, s.AvgHumidity)
+	}
+
+	return c.JSON(http.StatusOK, response)
+}
+
+func (h *Handler) StoreSeaTemperatureHandler(c echo.Context) error {
+	type SeaTempRequest struct {
+		Date        string  `json:"date"`
+		Temperature float64 `json:"temperature"`
+	}
+
+	req := new(SeaTempRequest)
+	if err := c.Bind(req); err != nil {
+		appErr := utils.NewBadRequestError("Invalid request format", err)
+		return c.JSON(appErr.Code, utils.ErrorResponse{
+			Error:   "bad_request",
+			Message: appErr.Message,
+		})
+	}
+
+	if req.Date == "" || req.Temperature < -10 || req.Temperature > 50 {
+		appErr := utils.NewBadRequestError("Invalid date or temperature value", nil)
+		return c.JSON(appErr.Code, utils.ErrorResponse{
+			Error:   "bad_request",
+			Message: appErr.Message,
+		})
+	}
+	if _, err := time.Parse("2006-01-02", req.Date); err != nil {
+		appErr := utils.NewBadRequestError("Date must be in YYYY-MM-DD format", err)
+		return c.JSON(appErr.Code, utils.ErrorResponse{
+			Error:   "bad_request",
+			Message: appErr.Message,
+		})
+	}
+
+	err := h.WeatherStore.StoreSeaTemperature(req.Date, req.Temperature)
+	if err != nil {
+		appErr := utils.NewInternalServerError("Failed to store sea temperature", err)
+		return c.JSON(appErr.Code, utils.ErrorResponse{
+			Error:   "internal_server_error",
+			Message: appErr.Message,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"message": "Sea temperature saved successfully",
+	})
+}
+
+func (h *Handler) CameraUploadHandler(c echo.Context) error {
+	// Protect upload endpoint with a static token.
+	// Accepted locations: Authorization: Bearer <token> or X-API-Key header.
+	if !isAuthorizedUploadRequest(c) {
+		appErr := utils.NewUnauthorizedError("Unauthorized upload request", nil)
+		return c.JSON(appErr.Code, utils.ErrorResponse{
+			Error:   "unauthorized",
+			Message: appErr.Message,
+		})
+	}
+
+	// 2. Determine where to save
+	webcamPath := utils.EnvPathOrDefault("WEBCAM_IMAGE_PATH", "public/images/tenelife.jpg")
+
+	// 3. Handle different upload methods (multipart vs raw body)
+	file, err := c.FormFile("image")
+	if err == nil {
+		// Multipart file
+		src, err := file.Open()
+		if err != nil {
+			return err
+		}
+		defer src.Close()
+
+		dst, err := os.Create(webcamPath)
+		if err != nil {
+			return err
+		}
+		defer dst.Close()
+
+		if _, err = io.Copy(dst, src); err != nil {
+			return err
+		}
+	} else {
+		// Try raw body
+		body, err := io.ReadAll(io.LimitReader(c.Request().Body, 10*1024*1024))
+		if err != nil || len(body) == 0 {
+			appErr := utils.NewBadRequestError("No image data received", err)
+			return c.JSON(appErr.Code, utils.ErrorResponse{
+				Error:   "bad_request",
+				Message: appErr.Message,
+			})
+		}
+		if err := os.WriteFile(webcamPath, body, 0644); err != nil {
+			return err
+		}
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"path":    webcamPath,
+	})
+}
+
+func isAuthorizedUploadRequest(c echo.Context) bool {
+	expectedToken := os.Getenv("CAMERA_UPLOAD_TOKEN")
+	if expectedToken == "" {
+		// Secure-by-default: if token is not configured, reject uploads.
+		return false
+	}
+
+	gotToken := strings.TrimSpace(c.Request().Header.Get("X-API-Key"))
+	if gotToken == "" {
+		auth := strings.TrimSpace(c.Request().Header.Get("Authorization"))
+		if strings.HasPrefix(strings.ToLower(auth), "bearer ") {
+			gotToken = strings.TrimSpace(auth[7:])
+		}
+	}
+	if gotToken == "" {
+		return false
+	}
+
+	return subtle.ConstantTimeCompare([]byte(gotToken), []byte(expectedToken)) == 1
 }
