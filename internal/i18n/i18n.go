@@ -253,6 +253,29 @@ func MonthName(locale string, month int) string {
 	return T(locale, key)
 }
 
+func LanguageFlag(locale string) string {
+	switch NormalizeLocale(locale) {
+	case "cs":
+		return "🇨🇿"
+	case "en":
+		return "🇬🇧"
+	case "es":
+		return "🇪🇸"
+	case "pl":
+		return "🇵🇱"
+	case "de":
+		return "🇩🇪"
+	case "fr":
+		return "🇫🇷"
+	case "it":
+		return "🇮🇹"
+	case "hu":
+		return "🇭🇺"
+	default:
+		return "🌐"
+	}
+}
+
 var extraLocaleMessages = map[string]map[string]string{
 	"es": {
 		"home": "Webcam", "statistics": "Estadísticas Extendidas", "daily_statistics": "Estadísticas Diarias", "weekly_statistics": "Estadísticas Semanales", "monthly_statistics": "Estadísticas Mensuales", "annual_statistics": "Estadísticas Anuales", "daily_short": "Diarias", "weekly_short": "Semanales", "monthly_short": "Mensuales", "annual_short": "Anuales", "webcam_title": "Cámara Web – Tenerife, Los Cristianos", "webcam_view_alt": "Vista de la webcam", "location_heading": "Ubicación y Dirección de Vista", "location_description": "Avenida Ámsterdam, noreste – vista de Montaña el Mojón 250 m snm y Roque de Ichasagua 1001, más adelante, a la derecha detrás del árbol, hacia Morros del Viento 406 y con cielo despejado también al fondo Pico del Teide 3715, Pico Viejo 3135 y Alto de Guajara 2715.", "weather_source_heading": "Sobre la Fuente de Datos Meteorológicos", "weather_source_description": "Los datos de temperatura, presión y humedad actuales se recopilan de nuestra propia estación meteorológica y sensor de temperatura en un lugar permanentemente sombreado, sin luz solar directa, por lo que son valores puros a la sombra.", "hobby_disclaimer": "Tenga en cuenta también que la información meteorológica aquí proporcionada es solo un proyecto de hobby con datos obtenidos mediante equipos y métodos meteorológicos amateur, sin ninguna ambición de competir con fuentes meteorológicas tradicionales.", "temperature": "Temperatura", "air_temperature": "Temperatura del Aire", "sea_temperature": "Temperatura del Mar", "pressure": "Presión", "atmospheric_pressure": "Presión Atmosférica", "humidity": "Humedad", "relative_humidity": "Humedad Relativa", "weather_unavailable": "Los datos meteorológicos no están disponibles actualmente", "weather_data_title": "Datos Meteorológicos", "weather_data_subtitle": "Los gráficos muestran promedios por hora desde la medianoche de hoy", "temperature_chart": "Temperatura (°C)", "pressure_chart": "Presión Atmosférica (hPa)", "humidity_chart": "Humedad Relativa (%)", "daily_stats_subtitle": "Resumen de los datos meteorológicos de los últimos 30 días.", "weekly_stats_subtitle": "Promedios semanales y extremos de datos meteorológicos.", "monthly_stats_subtitle": "Resumen mensual del último año.", "annual_stats_subtitle": "Historial completo de promedios mensuales.", "daily_temp_chart_title": "Temperatura de los últimos 7 días (°C)", "daily_pressure_chart_title": "Presión de los últimos 7 días (hPa)", "daily_humidity_chart_title": "Humedad de los últimos 7 días (%)", "weekly_temp_chart_title": "Temperatura (promedios semanales) °C", "monthly_temp_chart_title": "Temperatura (promedios mensuales) °C", "go_to_detail_charts": "Ir a gráficos detallados del día:", "show": "Mostrar", "table_overview": "Resumen en Tabla", "table_overview_30": "Resumen en Tabla (últimos 30 días)", "date": "Fecha", "week_year": "Semana / Año", "month_year": "Mes / Año", "period": "Período", "avg_temp": "Temp. Prom.", "min_max": "Mín / Máx", "avg_pressure": "Presión Prom.", "avg_humidity": "Humedad Prom.", "sea": "Mar", "no_data": "No hay datos disponibles aún.", "average": "Promedio:", "min": "Mín", "max": "Máx", "back": "Volver", "webcam_big_title": "Webcam – Vista Grande", "webcam_big_alt": "Webcam - vista grande", "site_title_suffix": "Tenerife | Los Cristianos | Webcam",

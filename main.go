@@ -118,8 +118,9 @@ func main() {
 	// Template Renderer using Embed
 	renderer := &web.TemplateRenderer{
 		Templates: template.Must(template.New("").Funcs(template.FuncMap{
-			"localeURL": i18n.LocaleURL,
-			"monthName": i18n.MonthName,
+			"localeURL":    i18n.LocaleURL,
+			"monthName":    i18n.MonthName,
+			"languageFlag": i18n.LanguageFlag,
 		}).ParseFS(viewsFS, "views/*.html", "views/statistics/*.html")),
 	}
 
@@ -146,6 +147,7 @@ func main() {
 			return next(c)
 		}
 	})
+	localized.GET("", handler.IndexHandler)
 	localized.GET("/", handler.IndexHandler)
 	localized.GET("/webcam/big", handler.WebcamBigHandler)
 	localized.GET("/statistics", func(c echo.Context) error {
