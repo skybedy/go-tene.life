@@ -1,21 +1,21 @@
 <nav class="bg-white/30 backdrop-blur-sm border-b border-gray-300 shadow-sm relative z-50">
     <div class="mx-auto w-full sm:w-3/4 px-3 sm:px-4 md:px-6 lg:px-8">
-        <div class="flex items-center py-5 sm:pb-4">
-            <div class="flex-shrink-0 -mt-4 sm:-mt-5.5">
+        <div class="flex items-center py-4 sm:py-5 md:py-4 min-w-0">
+            <div class="flex-shrink-0 -mt-3 sm:-mt-5.5">
                 <a href="{{ localeURL .Locale "/" }}" class="block">
                     <img src="/images/tenelife-logo.png" alt="TeneLife Logo" class="h-8 sm:h-10 md:h-12 w-auto">
                 </a>
             </div>
 
-            <div class="flex gap-2 sm:gap-4 md:gap-6 ml-4 sm:ml-6 md:ml-8">
+            <div class="hidden md:flex items-center gap-2 lg:gap-4 ml-6 lg:ml-8">
                 <a href="{{ localeURL .Locale "/" }}"
-                    class="px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm md:text-base font-medium rounded-lg hover:bg-white/50 transition {{ if eq .CurrentSection "home" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                    class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "home" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                     {{ index .I18n "home" }}
                 </a>
 
                 <div class="relative group">
                     <button
-                        class="flex items-center gap-1 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm md:text-base font-medium rounded-lg hover:bg-white/50 transition {{ if eq .CurrentSection "statistics" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                        class="flex items-center gap-1 px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "statistics" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                         {{ index .I18n "statistics" }}
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -26,20 +26,54 @@
                     <div
                         class="absolute left-0 mt-1 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
                         <a href="{{ localeURL .Locale "/statistics/daily" }}"
-                            class="block px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "daily_statistics" }}</a>
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "daily_statistics" }}</a>
                         <a href="{{ localeURL .Locale "/statistics/weekly" }}"
-                            class="block px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "weekly_statistics" }}</a>
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "weekly_statistics" }}</a>
                         <a href="{{ localeURL .Locale "/statistics/monthly" }}"
-                            class="block px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "monthly_statistics" }}</a>
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "monthly_statistics" }}</a>
                         <a href="{{ localeURL .Locale "/statistics/annual" }}"
-                            class="block px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "annual_statistics" }}</a>
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "annual_statistics" }}</a>
                     </div>
                 </div>
             </div>
 
-            <div class="relative group ml-auto xl:hidden">
+            <div class="ml-auto flex items-center gap-1.5 md:hidden">
+                <div class="relative">
+                    <button id="mobileLangToggle" type="button"
+                        class="flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-gray-700 hover:bg-white/50 rounded-lg transition whitespace-nowrap"
+                        aria-expanded="false" aria-controls="mobileLangMenu">
+                        <span>{{ languageFlag .Locale }}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div id="mobileLangMenu"
+                        class="hidden absolute right-0 mt-1 w-36 max-w-[calc(100vw-1rem)] bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 z-50 py-1">
+                        {{ range .Languages }}
+                        <a href="{{ localeURL .Code $.CurrentPath }}"
+                            class="flex items-center gap-2 px-3 py-2 text-xs {{ if eq .Code $.Locale }}font-semibold text-blue-700 bg-blue-50/70{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }} transition"><span>{{ languageFlag .Code }}</span><span class="truncate">{{ .Name }}</span></a>
+                        {{ end }}
+                    </div>
+                </div>
+
+                <button id="mobileMenuToggle" type="button"
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-300 bg-white/70 text-gray-700 hover:bg-white transition"
+                    aria-expanded="false" aria-controls="mobileMainMenu">
+                    <svg id="mobileMenuIconOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg id="mobileMenuIconClose" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="relative group ml-auto hidden md:block xl:hidden">
                 <button
-                    class="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-white/50 rounded-lg transition">
+                    class="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-sm font-medium text-gray-700 hover:bg-white/50 rounded-lg transition whitespace-nowrap">
                     <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
@@ -56,7 +90,7 @@
                     class="absolute right-0 mt-1 w-44 bg-white/90 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
                     {{ range .Languages }}
                     <a href="{{ localeURL .Code $.CurrentPath }}"
-                        class="flex items-center gap-2 px-4 py-2 text-xs sm:text-sm {{ if eq .Code $.Locale }}font-semibold text-blue-700 bg-blue-50/70{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }} transition"><span>{{ languageFlag .Code }}</span><span>{{ .Name }}</span></a>
+                        class="flex items-center gap-2 px-4 py-2 text-sm {{ if eq .Code $.Locale }}font-semibold text-blue-700 bg-blue-50/70{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }} transition"><span>{{ languageFlag .Code }}</span><span>{{ .Name }}</span></a>
                     {{ end }}
                 </div>
             </div>
@@ -71,5 +105,59 @@
                 {{ end }}
             </div>
         </div>
+
+        <div id="mobileMainMenu" class="md:hidden hidden pb-3">
+            <div class="bg-white/85 backdrop-blur-md rounded-xl shadow-lg border border-gray-200 p-2 space-y-1">
+                <a href="{{ localeURL .Locale "/" }}"
+                    class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "home" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
+                    {{ index .I18n "home" }}
+                </a>
+                <a href="{{ localeURL .Locale "/statistics/daily" }}"
+                    class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                    {{ index .I18n "daily_statistics" }}
+                </a>
+                <a href="{{ localeURL .Locale "/statistics/weekly" }}"
+                    class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                    {{ index .I18n "weekly_statistics" }}
+                </a>
+                <a href="{{ localeURL .Locale "/statistics/monthly" }}"
+                    class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                    {{ index .I18n "monthly_statistics" }}
+                </a>
+                <a href="{{ localeURL .Locale "/statistics/annual" }}"
+                    class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                    {{ index .I18n "annual_statistics" }}
+                </a>
+            </div>
+        </div>
     </div>
 </nav>
+
+<script>
+    (() => {
+        const menuToggle = document.getElementById('mobileMenuToggle');
+        const mainMenu = document.getElementById('mobileMainMenu');
+        const iconOpen = document.getElementById('mobileMenuIconOpen');
+        const iconClose = document.getElementById('mobileMenuIconClose');
+        const langToggle = document.getElementById('mobileLangToggle');
+        const langMenu = document.getElementById('mobileLangMenu');
+
+        if (!menuToggle || !mainMenu || !iconOpen || !iconClose || !langToggle || !langMenu) {
+            return;
+        }
+
+        menuToggle.addEventListener('click', () => {
+            const isOpen = !mainMenu.classList.contains('hidden');
+            mainMenu.classList.toggle('hidden');
+            iconOpen.classList.toggle('hidden');
+            iconClose.classList.toggle('hidden');
+            menuToggle.setAttribute('aria-expanded', String(!isOpen));
+        });
+
+        langToggle.addEventListener('click', () => {
+            const isOpen = !langMenu.classList.contains('hidden');
+            langMenu.classList.toggle('hidden');
+            langToggle.setAttribute('aria-expanded', String(!isOpen));
+        });
+    })();
+</script>
