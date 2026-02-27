@@ -20,6 +20,14 @@ var languages = []models.LanguageOption{
 	{Code: "hu", Name: "Magyar"},
 }
 
+var supportedLocales = func() map[string]struct{} {
+	m := make(map[string]struct{}, len(languages))
+	for _, lang := range languages {
+		m[lang.Code] = struct{}{}
+	}
+	return m
+}()
+
 var dictionary = map[string]map[string]string{
 	"cs": {
 		"home":                       "Webkamera",
@@ -154,7 +162,7 @@ func SupportedLanguages() []models.LanguageOption {
 }
 
 func IsSupportedLocale(locale string) bool {
-	_, ok := dictionary[locale]
+	_, ok := supportedLocales[locale]
 	return ok
 }
 
