@@ -117,20 +117,15 @@
                         {{ range .DailyStats }}
                         <tr class="hover:bg-white/40 transition">
                             <td class="px-3 py-3 font-medium text-gray-900">{{ .Date }}</td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ if .AvgTemperature }}{{ printf "%.1f"
-                                .AvgTemperature }} °C{{ else }}--{{ end }}</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgTemperature }} °C</td>
                             <td class="px-3 py-3 text-right text-gray-500">
-                                <span class="text-blue-600">{{ if .MinTemperature }}{{ printf "%.1f" .MinTemperature
-                                    }}{{ else }}--{{ end }}</span> /
-                                <span class="text-red-600">{{ if .MaxTemperature }}{{ printf "%.1f" .MaxTemperature }}{{
-                                    else }}--{{ end }}</span>
+                                <span class="text-blue-600">{{ f1 .MinTemperature }}</span> /
+                                <span class="text-red-600">{{ f1 .MaxTemperature }}</span>
                             </td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ if .AvgPressure }}{{ printf "%.1f"
-                                .AvgPressure }} hPa{{ else }}--{{ end }}</td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ if .AvgHumidity }}{{ printf "%.0f"
-                                .AvgHumidity }} %{{ else }}--{{ end }}</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgPressure }} hPa</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ f0 .AvgHumidity }} %</td>
                             <td class="px-3 py-3 text-right text-gray-700">
-                                {{ if .SeaTemperature }}{{ printf "%.1f" .SeaTemperature }} °C{{ else }}-{{ end }}
+                                {{ if .SeaTemperature }}{{ f1 .SeaTemperature }} °C{{ else }}-{{ end }}
                             </td>
                         </tr>
                         {{ else }}

@@ -29,12 +29,9 @@
                         {{ range .AnnualStats }}
                         <tr class="hover:bg-white/40 transition">
                             <td class="px-3 py-3 font-medium text-gray-900">{{ monthName $.Locale .Month }} / {{ .Year }}</td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ if .AvgTemperature }}{{ printf "%.1f"
-                                .AvgTemperature }} °C{{ else }}--{{ end }}</td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ if .AvgPressure }}{{ printf "%.1f"
-                                .AvgPressure }} hPa{{ else }}--{{ end }}</td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ if .AvgHumidity }}{{ printf "%.0f"
-                                .AvgHumidity }} %{{ else }}--{{ end }}</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgTemperature }} °C</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgPressure }} hPa</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ f0 .AvgHumidity }} %</td>
                         </tr>
                         {{ else }}
                         <tr>

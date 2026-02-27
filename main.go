@@ -121,6 +121,24 @@ func main() {
 			"localeURL":    i18n.LocaleURL,
 			"monthName":    i18n.MonthName,
 			"languageFlag": i18n.LanguageFlag,
+			"f1": func(v *float64) string {
+				if v == nil {
+					return "--"
+				}
+				return fmt.Sprintf("%.1f", *v)
+			},
+			"f0": func(v *float64) string {
+				if v == nil {
+					return "--"
+				}
+				return fmt.Sprintf("%.0f", *v)
+			},
+			"dateOnly": func(v string) string {
+				if len(v) >= 10 {
+					return v[:10]
+				}
+				return v
+			},
 		}).ParseFS(viewsFS, "views/*.html", "views/statistics/*.html")),
 	}
 
