@@ -18,6 +18,15 @@
             font-family: 'Instrument Sans', sans-serif;
         }
     </style>
+    {{ if .GAEnabled }}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ .GAMeasurementID }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', {{ printf "%q" .GAMeasurementID }});
+    </script>
+    {{ end }}
 </head>
 
 <body class="min-h-screen bg-gray-100">

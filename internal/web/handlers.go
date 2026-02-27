@@ -51,14 +51,30 @@ func (h *Handler) getLocale(c echo.Context) string {
 	return i18n.NormalizeLocale(c.Param("locale"))
 }
 
-func (h *Handler) getCommonViewData(c echo.Context) (string, string, []models.LanguageOption, map[string]string) {
+func (h *Handler) getGAConfig() (bool, string) {
+	measurementID := strings.TrimSpace(os.Getenv("GA_MEASUREMENT_ID"))
+	if measurementID == "" {
+		return false, ""
+	}
+
+	env := strings.ToLower(strings.TrimSpace(os.Getenv("APP_ENV")))
+	switch env {
+	case "", "local", "development", "dev", "testing", "test":
+		return false, ""
+	default:
+		return true, measurementID
+	}
+}
+
+func (h *Handler) getCommonViewData(c echo.Context) (string, string, []models.LanguageOption, map[string]string, bool, string) {
 	locale := h.getLocale(c)
 	currentPath := i18n.StripLocalePrefix(c.Request().URL.Path)
-	return locale, currentPath, i18n.SupportedLanguages(), i18n.Messages(locale)
+	gaEnabled, gaMeasurementID := h.getGAConfig()
+	return locale, currentPath, i18n.SupportedLanguages(), i18n.Messages(locale), gaEnabled, gaMeasurementID
 }
 
 func (h *Handler) IndexHandler(c echo.Context) error {
-	locale, currentPath, languages, messages := h.getCommonViewData(c)
+	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 
 	// 1. Get Weather Data (with improved caching)
 	weather, seaTemp, err := h.getCachedWeatherData()
@@ -67,14 +83,16 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		// Continue with cached data if available, or empty data
 		if weather == nil && seaTemp == nil {
 			return c.Render(http.StatusOK, "index.html", models.PageData{
-				FormattedDate:  time.Now().Format("2. 1. 2006"),
-				FormattedTime:  time.Now().Format("15:04"),
-				Locale:         locale,
-				LocalePrefix:   i18n.LocalePrefix(locale),
-				CurrentPath:    currentPath,
-				CurrentSection: "home",
-				Languages:      languages,
-				I18n:           messages,
+				FormattedDate:   time.Now().Format("2. 1. 2006"),
+				FormattedTime:   time.Now().Format("15:04"),
+				Locale:          locale,
+				LocalePrefix:    i18n.LocalePrefix(locale),
+				CurrentPath:     currentPath,
+				CurrentSection:  "home",
+				Languages:       languages,
+				I18n:            messages,
+				GAEnabled:       gaEnabled,
+				GAMeasurementID: gaMeasurementID,
 			})
 		}
 	}
@@ -130,6 +148,8 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		CurrentSection:    "home",
 		Languages:         languages,
 		I18n:              messages,
+		GAEnabled:         gaEnabled,
+		GAMeasurementID:   gaMeasurementID,
 	}
 
 	return c.Render(http.StatusOK, "index.html", data)
@@ -224,14 +244,16 @@ func (h *Handler) GetHourlyDataHandler(c echo.Context) error {
 }
 
 func (h *Handler) WebcamBigHandler(c echo.Context) error {
-	locale, currentPath, languages, messages := h.getCommonViewData(c)
+	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	data := models.PageData{
-		Locale:         locale,
-		LocalePrefix:   i18n.LocalePrefix(locale),
-		CurrentPath:    currentPath,
-		CurrentSection: "home",
-		Languages:      languages,
-		I18n:           messages,
+		Locale:          locale,
+		LocalePrefix:    i18n.LocalePrefix(locale),
+		CurrentPath:     currentPath,
+		CurrentSection:  "home",
+		Languages:       languages,
+		I18n:            messages,
+		GAEnabled:       gaEnabled,
+		GAMeasurementID: gaMeasurementID,
 	}
 	return c.Render(http.StatusOK, "webcam-big.html", data)
 }
@@ -290,21 +312,23 @@ func (h *Handler) HealthCheckHandler(c echo.Context) error {
 }
 
 func (h *Handler) DailyStatisticsHandler(c echo.Context) error {
-	locale, currentPath, languages, messages := h.getCommonViewData(c)
+	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	stats, err := h.WeatherStore.GetDailyStats(30)
 	if err != nil {
 		log.Println("Error fetching daily stats:", err)
 	}
 	data := models.StatsPageData{
-		DailyStats:     stats,
-		PageTitle:      i18n.T(locale, "daily_statistics"),
-		StatsSection:   "daily",
-		Locale:         locale,
-		LocalePrefix:   i18n.LocalePrefix(locale),
-		CurrentPath:    currentPath,
-		CurrentSection: "statistics",
-		Languages:      languages,
-		I18n:           messages,
+		DailyStats:      stats,
+		PageTitle:       i18n.T(locale, "daily_statistics"),
+		StatsSection:    "daily",
+		Locale:          locale,
+		LocalePrefix:    i18n.LocalePrefix(locale),
+		CurrentPath:     currentPath,
+		CurrentSection:  "statistics",
+		Languages:       languages,
+		I18n:            messages,
+		GAEnabled:       gaEnabled,
+		GAMeasurementID: gaMeasurementID,
 	}
 	err = c.Render(http.StatusOK, "daily.html", data)
 	if err != nil {
@@ -315,61 +339,67 @@ func (h *Handler) DailyStatisticsHandler(c echo.Context) error {
 }
 
 func (h *Handler) WeeklyStatisticsHandler(c echo.Context) error {
-	locale, currentPath, languages, messages := h.getCommonViewData(c)
+	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	stats, err := h.WeatherStore.GetWeeklyStats()
 	if err != nil {
 		log.Println("Error fetching weekly stats:", err)
 	}
 	data := models.StatsPageData{
-		WeeklyStats:    stats,
-		PageTitle:      i18n.T(locale, "weekly_statistics"),
-		StatsSection:   "weekly",
-		Locale:         locale,
-		LocalePrefix:   i18n.LocalePrefix(locale),
-		CurrentPath:    currentPath,
-		CurrentSection: "statistics",
-		Languages:      languages,
-		I18n:           messages,
+		WeeklyStats:     stats,
+		PageTitle:       i18n.T(locale, "weekly_statistics"),
+		StatsSection:    "weekly",
+		Locale:          locale,
+		LocalePrefix:    i18n.LocalePrefix(locale),
+		CurrentPath:     currentPath,
+		CurrentSection:  "statistics",
+		Languages:       languages,
+		I18n:            messages,
+		GAEnabled:       gaEnabled,
+		GAMeasurementID: gaMeasurementID,
 	}
 	return c.Render(http.StatusOK, "weekly.html", data)
 }
 
 func (h *Handler) MonthlyStatisticsHandler(c echo.Context) error {
-	locale, currentPath, languages, messages := h.getCommonViewData(c)
+	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	stats, err := h.WeatherStore.GetMonthlyStats(12)
 	if err != nil {
 		log.Println("Error fetching monthly stats:", err)
 	}
 	data := models.StatsPageData{
-		MonthlyStats:   stats,
-		PageTitle:      i18n.T(locale, "monthly_statistics"),
-		StatsSection:   "monthly",
-		Locale:         locale,
-		LocalePrefix:   i18n.LocalePrefix(locale),
-		CurrentPath:    currentPath,
-		CurrentSection: "statistics",
-		Languages:      languages,
-		I18n:           messages,
+		MonthlyStats:    stats,
+		PageTitle:       i18n.T(locale, "monthly_statistics"),
+		StatsSection:    "monthly",
+		Locale:          locale,
+		LocalePrefix:    i18n.LocalePrefix(locale),
+		CurrentPath:     currentPath,
+		CurrentSection:  "statistics",
+		Languages:       languages,
+		I18n:            messages,
+		GAEnabled:       gaEnabled,
+		GAMeasurementID: gaMeasurementID,
 	}
 	return c.Render(http.StatusOK, "monthly.html", data)
 }
 
 func (h *Handler) AnnualStatisticsHandler(c echo.Context) error {
-	locale, currentPath, languages, messages := h.getCommonViewData(c)
+	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	stats, err := h.WeatherStore.GetAnnualStats()
 	if err != nil {
 		log.Println("Error fetching annual stats:", err)
 	}
 	data := models.StatsPageData{
-		AnnualStats:    stats,
-		PageTitle:      i18n.T(locale, "annual_statistics"),
-		StatsSection:   "annual",
-		Locale:         locale,
-		LocalePrefix:   i18n.LocalePrefix(locale),
-		CurrentPath:    currentPath,
-		CurrentSection: "statistics",
-		Languages:      languages,
-		I18n:           messages,
+		AnnualStats:     stats,
+		PageTitle:       i18n.T(locale, "annual_statistics"),
+		StatsSection:    "annual",
+		Locale:          locale,
+		LocalePrefix:    i18n.LocalePrefix(locale),
+		CurrentPath:     currentPath,
+		CurrentSection:  "statistics",
+		Languages:       languages,
+		I18n:            messages,
+		GAEnabled:       gaEnabled,
+		GAMeasurementID: gaMeasurementID,
 	}
 	return c.Render(http.StatusOK, "annual.html", data)
 }
