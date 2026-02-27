@@ -16,6 +16,10 @@ type PageData struct {
 	Weather           *WeatherData
 	SeaTemperature    *float64
 	SeaTemperatureVal float64
+	DayMaxTemperature *float64
+	DayMinTemperature *float64
+	DayMaxTime        string
+	DayMinTime        string
 	FormattedDate     string
 	FormattedTime     string
 	PageTitle         string
