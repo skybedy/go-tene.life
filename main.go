@@ -154,7 +154,7 @@ func main() {
 
 	e.Renderer = renderer
 
-	// Routes (default locale: en)
+	// Routes (default locale: cs)
 	e.GET("/", handler.IndexHandler)
 	e.GET("/webcam/big", handler.WebcamBigHandler)
 	e.GET("/statistics", func(c echo.Context) error {
