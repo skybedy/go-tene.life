@@ -2,6 +2,7 @@ package store
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/skybedy/laravel-tene.life/internal/models"
 )
@@ -65,6 +66,31 @@ func (s *WeatherStore) GetDailyStats(limit int) ([]models.WeatherDaily, error) {
 	                 avg_pressure, min_pressure, max_pressure, avg_humidity, min_humidity, max_humidity, samples_count 
 	          FROM weather_daily ORDER BY date DESC LIMIT ?`
 	rows, err := s.DB.Query(query, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var d models.WeatherDaily
+		err := rows.Scan(&d.Date, &d.SeaTemperature, &d.AvgTemperature, &d.MinTemperature, &d.MaxTemperature,
+			&d.AvgPressure, &d.MinPressure, &d.MaxPressure, &d.AvgHumidity, &d.MinHumidity, &d.MaxHumidity, &d.SamplesCount)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, d)
+	}
+	return results, nil
+}
+
+func (s *WeatherStore) GetDailyStatsByRange(startDate, endDate string) ([]models.WeatherDaily, error) {
+	var results []models.WeatherDaily
+	query := `SELECT date, sea_temperature, avg_temperature, min_temperature, max_temperature, 
+	                 avg_pressure, min_pressure, max_pressure, avg_humidity, min_humidity, max_humidity, samples_count 
+	          FROM weather_daily 
+	          WHERE date BETWEEN ? AND ? 
+	          ORDER BY date ASC`
+	rows, err := s.DB.Query(query, startDate, endDate)
 	if err != nil {
 		return nil, err
 	}
@@ -149,4 +175,73 @@ func (s *WeatherStore) GetAnnualStats() ([]models.WeatherMonthly, error) {
 		results = append(results, m)
 	}
 	return results, nil
+}
+
+func (s *WeatherStore) StoreSeaTemperature(date string, temp float64) error {
+	query := `INSERT INTO weather_daily (date, sea_temperature) 
+	          VALUES (?, ?) 
+	          ON DUPLICATE KEY UPDATE sea_temperature = VALUES(sea_temperature)`
+	_, err := s.DB.Exec(query, date, temp)
+	return err
+}
+
+func (s *WeatherStore) GetDailyTemperatureExtremes(date string) (*float64, string, *float64, string, error) {
+	query := `
+		SELECT
+			(SELECT temperature
+			 FROM weather
+			 WHERE DATE(measured_at) = ?
+			 ORDER BY temperature DESC, measured_at ASC
+			 LIMIT 1) AS max_temperature,
+			(SELECT measured_at
+			 FROM weather
+			 WHERE DATE(measured_at) = ?
+			 ORDER BY temperature DESC, measured_at ASC
+			 LIMIT 1) AS max_measured_at,
+			(SELECT temperature
+			 FROM weather
+			 WHERE DATE(measured_at) = ?
+			 ORDER BY temperature ASC, measured_at ASC
+			 LIMIT 1) AS min_temperature,
+			(SELECT measured_at
+			 FROM weather
+			 WHERE DATE(measured_at) = ?
+			 ORDER BY temperature ASC, measured_at ASC
+			 LIMIT 1) AS min_measured_at
+	`
+
+	var maxTemp sql.NullFloat64
+	var maxAt sql.NullTime
+	var minTemp sql.NullFloat64
+	var minAt sql.NullTime
+
+	if err := s.DB.QueryRow(query, date, date, date, date).Scan(&maxTemp, &maxAt, &minTemp, &minAt); err != nil {
+		return nil, "", nil, "", err
+	}
+
+	var maxPtr *float64
+	var minPtr *float64
+	maxTime := ""
+	minTime := ""
+
+	if maxTemp.Valid {
+		v := maxTemp.Float64
+		maxPtr = &v
+	}
+	if minTemp.Valid {
+		v := minTemp.Float64
+		minPtr = &v
+	}
+	if maxAt.Valid {
+		maxTime = formatTimeHM(maxAt.Time)
+	}
+	if minAt.Valid {
+		minTime = formatTimeHM(minAt.Time)
+	}
+
+	return maxPtr, maxTime, minPtr, minTime, nil
+}
+
+func formatTimeHM(ts time.Time) string {
+	return ts.Format("15:04")
 }

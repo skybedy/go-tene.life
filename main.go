@@ -15,6 +15,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/skybedy/laravel-tene.life/internal/i18n"
 	"github.com/skybedy/laravel-tene.life/internal/store"
 	"github.com/skybedy/laravel-tene.life/internal/utils"
 	"github.com/skybedy/laravel-tene.life/internal/web"
@@ -94,13 +95,14 @@ func main() {
 	e.Use(middleware.Secure())
 	e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
 		TokenLookup: "form:csrf",
+		Skipper: func(c echo.Context) bool {
+			// API endpoints are consumed by scripts/JS and do not post form tokens.
+			return len(c.Path()) >= 5 && c.Path()[:5] == "/api/"
+		},
 	}))
 
 	// Dynamic Webcam Image serving
-	webcamPath := os.Getenv("WEBCAM_IMAGE_PATH")
-	if webcamPath == "" {
-		webcamPath = "public/images/tenelife.jpg"
-	}
+	webcamPath := utils.EnvPathOrDefault("WEBCAM_IMAGE_PATH", "public/images/tenelife.jpg")
 	e.File("/images/tenelife.jpg", webcamPath)
 
 	// Static Files from Embed
@@ -115,21 +117,46 @@ func main() {
 
 	// Template Renderer using Embed
 	renderer := &web.TemplateRenderer{
-		Templates: template.Must(template.ParseFS(viewsFS, "views/*.html", "views/statistics/*.html")),
+		Templates: template.Must(template.New("").Funcs(template.FuncMap{
+			"localeURL":    i18n.LocaleURL,
+			"monthName":    i18n.MonthName,
+			"languageFlag": i18n.LanguageFlag,
+			"f1": func(v *float64) string {
+				if v == nil {
+					return "--"
+				}
+				return fmt.Sprintf("%.1f", *v)
+			},
+			"f0": func(v *float64) string {
+				if v == nil {
+					return "--"
+				}
+				return fmt.Sprintf("%.0f", *v)
+			},
+			"dateOnly": func(v string) string {
+				if len(v) >= 10 {
+					return v[:10]
+				}
+				return v
+			},
+			"shortDate": func(v string) string {
+				if len(v) < 10 {
+					return v
+				}
+				var y, m, d int
+				if _, err := fmt.Sscanf(v[:10], "%d-%d-%d", &y, &m, &d); err != nil {
+					return v[:10]
+				}
+				return fmt.Sprintf("%d.%d", d, m)
+			},
+		}).ParseFS(viewsFS, "views/*.html", "views/statistics/*.html")),
 	}
 
 	e.Renderer = renderer
 
-	// Routes
+	// Routes (default locale: cs)
 	e.GET("/", handler.IndexHandler)
 	e.GET("/webcam/big", handler.WebcamBigHandler)
-	e.GET("/webcam/image.jpg", handler.WebcamImageHandler) // New dynamic route
-	e.GET("/api/weather/hourly", handler.GetHourlyDataHandler)
-	
-	// Health check endpoint
-	e.GET("/health", handler.HealthCheckHandler)
-
-	// Statistics
 	e.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/statistics/daily")
 	})
@@ -138,11 +165,44 @@ func main() {
 	e.GET("/statistics/monthly", handler.MonthlyStatisticsHandler)
 	e.GET("/statistics/annual", handler.AnnualStatisticsHandler)
 
+	// Routes with locale prefix: /en, /de, /fr ...
+	localized := e.Group("/:locale")
+	localized.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			if !i18n.IsSupportedLocale(c.Param("locale")) {
+				return echo.ErrNotFound
+			}
+			return next(c)
+		}
+	})
+	localized.GET("", handler.IndexHandler)
+	localized.GET("/", handler.IndexHandler)
+	localized.GET("/webcam/big", handler.WebcamBigHandler)
+	localized.GET("/statistics", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/statistics/daily"))
+	})
+	localized.GET("/statistics/daily", handler.DailyStatisticsHandler)
+	localized.GET("/statistics/weekly", handler.WeeklyStatisticsHandler)
+	localized.GET("/statistics/monthly", handler.MonthlyStatisticsHandler)
+	localized.GET("/statistics/annual", handler.AnnualStatisticsHandler)
+
+	// API and service routes
+	e.GET("/webcam/image.jpg", handler.WebcamImageHandler) // New dynamic route
+	e.GET("/api/weather/hourly", handler.GetHourlyDataHandler)
+
+	// Health check endpoint
+	e.GET("/health", handler.HealthCheckHandler)
+
 	// API Statistics
 	e.GET("/api/weather/daily", handler.GetDailyDataHandler)
+	e.GET("/api/weather/monthly-daily", handler.GetMonthlyDailyDataHandler)
 	e.GET("/api/weather/weekly", handler.GetWeeklyDataHandler)
 	e.GET("/api/weather/monthly", handler.GetMonthlyDataHandler)
 	e.GET("/api/weather/annual", handler.GetAnnualDataHandler)
+
+	// API Data Ingestion
+	e.POST("/api/weather/sea-temperature", handler.StoreSeaTemperatureHandler)
+	e.POST("/api/camera/upload", handler.CameraUploadHandler, middleware.BodyLimit("10M"))
 
 	// Start Server
 	port := os.Getenv("APP_PORT")

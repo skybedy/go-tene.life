@@ -1,18 +1,28 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="{{ .Locale }}" translate="no">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Webkamera – Velký náhled</title>
+    <meta name="google" content="notranslate">
+    <title>{{ index .I18n "webcam_big_title" }}</title>
     <link rel="stylesheet" href="/css/app.css">
+    {{ if .GAEnabled }}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ .GAMeasurementID }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', {{ printf "%q" .GAMeasurementID }});
+    </script>
+    {{ end }}
 </head>
 
 <body class="bg-black min-h-screen flex flex-col items-center justify-center p-2 sm:p-4">
     <div class="w-full max-w-6xl relative">
-        <img src="/webcam/image.jpg" alt="Webkamera - velký náhled" class="w-full h-auto rounded-lg shadow-2xl">
+        <img src="/webcam/image.jpg" alt="{{ index .I18n "webcam_big_alt" }}" class="w-full h-auto rounded-lg shadow-2xl">
 
-        <a href="/"
+        <a href="{{ localeURL .Locale "/" }}"
             class="absolute top-4 left-4 bg-black/60 hover:bg-white/20 text-white p-2 rounded-full backdrop-blur-md transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
