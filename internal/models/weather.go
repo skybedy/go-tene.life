@@ -14,6 +14,7 @@ type LanguageOption struct {
 
 type PageData struct {
 	Weather           *WeatherData
+	WebcamImageURL    string
 	SeaTemperature    *float64
 	SeaTemperatureVal float64
 	DayMaxTemperature *float64

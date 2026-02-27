@@ -73,8 +73,18 @@ func (h *Handler) getCommonViewData(c echo.Context) (string, string, []models.La
 	return locale, currentPath, i18n.SupportedLanguages(), i18n.Messages(locale), gaEnabled, gaMeasurementID
 }
 
+func (h *Handler) webcamImageURL() string {
+	webcamPath := utils.EnvPathOrDefault("WEBCAM_IMAGE_PATH", "public/images/tenelife.jpg")
+	info, err := os.Stat(webcamPath)
+	if err != nil {
+		return "/webcam/image.jpg"
+	}
+	return fmt.Sprintf("/webcam/image.jpg?v=%d", info.ModTime().Unix())
+}
+
 func (h *Handler) IndexHandler(c echo.Context) error {
 	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
+	webcamImageURL := h.webcamImageURL()
 
 	// 1. Get Weather Data (with improved caching)
 	weather, seaTemp, err := h.getCachedWeatherData()
@@ -85,6 +95,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 			return c.Render(http.StatusOK, "index.html", models.PageData{
 				FormattedDate:   time.Now().Format("2. 1. 2006"),
 				FormattedTime:   time.Now().Format("15:04"),
+				WebcamImageURL:  webcamImageURL,
 				Locale:          locale,
 				LocalePrefix:    i18n.LocalePrefix(locale),
 				CurrentPath:     currentPath,
@@ -131,6 +142,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 
 	data := models.PageData{
 		Weather:           weather,
+		WebcamImageURL:    webcamImageURL,
 		SeaTemperature:    seaTemp,
 		SeaTemperatureVal: seaTempVal,
 		DayMaxTemperature: dayMaxTemperature,
@@ -250,6 +262,7 @@ func (h *Handler) WebcamBigHandler(c echo.Context) error {
 		LocalePrefix:    i18n.LocalePrefix(locale),
 		CurrentPath:     currentPath,
 		CurrentSection:  "home",
+		WebcamImageURL:  h.webcamImageURL(),
 		Languages:       languages,
 		I18n:            messages,
 		GAEnabled:       gaEnabled,
