@@ -11,7 +11,21 @@
             <p class="text-gray-600 text-xs sm:text-sm">Týdenní průměry a extrémy meteorologických dat.</p>
         </div>
 
-        {{ template "statistics/stats_nav.html" . }}
+        {{ template "stats_nav.html" . }}
+
+        <!-- Charts Section -->
+        <div class="space-y-4 mb-6">
+            <div
+                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">Teplota (týdenní
+                    průměry) °C</h2>
+                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">Tabulkový přehled</h2>
 
         <!-- Stats Table -->
         <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden mb-8">
@@ -31,9 +45,12 @@
                         <tr class="hover:bg-white/40 transition">
                             <td class="px-3 py-3 font-medium text-gray-900">{{ .Week }} / {{ .Year }}</td>
                             <td class="px-3 py-3 text-gray-500">{{ .WeekStart }} - {{ .WeekEnd }}</td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ printf "%.1f" .AvgTemperature }} °C</td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ printf "%.1f" .AvgPressure }} hPa</td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ printf "%.0f" .AvgHumidity }} %</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ if .AvgTemperature }}{{ printf "%.1f"
+                                .AvgTemperature }} °C{{ else }}--{{ end }}</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ if .AvgPressure }}{{ printf "%.1f"
+                                .AvgPressure }} hPa{{ else }}--{{ end }}</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ if .AvgHumidity }}{{ printf "%.0f"
+                                .AvgHumidity }} %{{ else }}--{{ end }}</td>
                         </tr>
                         {{ else }}
                         <tr>
