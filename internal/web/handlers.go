@@ -87,11 +87,19 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 
 	var dayMaxTemperature *float64
 	var dayMinTemperature *float64
+	dayMaxTempText := ""
+	dayMinTempText := ""
 	dayMaxTime := ""
 	dayMinTime := ""
 	if maxTemp, maxTime, minTemp, minTime, extErr := h.WeatherStore.GetDailyTemperatureExtremes(ts.Format("2006-01-02")); extErr == nil {
 		dayMaxTemperature = maxTemp
 		dayMinTemperature = minTemp
+		if maxTemp != nil {
+			dayMaxTempText = fmt.Sprintf("%.1f", *maxTemp)
+		}
+		if minTemp != nil {
+			dayMinTempText = fmt.Sprintf("%.1f", *minTemp)
+		}
 		dayMaxTime = maxTime
 		dayMinTime = minTime
 	} else {
@@ -109,6 +117,8 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		SeaTemperatureVal: seaTempVal,
 		DayMaxTemperature: dayMaxTemperature,
 		DayMinTemperature: dayMinTemperature,
+		DayMaxTempText:    dayMaxTempText,
+		DayMinTempText:    dayMinTempText,
 		DayMaxTime:        dayMaxTime,
 		DayMinTime:        dayMinTime,
 		FormattedDate:     ts.Format("2. 1. 2006"),

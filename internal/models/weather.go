@@ -18,6 +18,8 @@ type PageData struct {
 	SeaTemperatureVal float64
 	DayMaxTemperature *float64
 	DayMinTemperature *float64
+	DayMaxTempText    string
+	DayMinTempText    string
 	DayMaxTime        string
 	DayMinTime        string
 	FormattedDate     string

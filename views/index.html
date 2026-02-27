@@ -35,13 +35,13 @@
                                 {{ if .DayMaxTemperature }}
                                 <div class="flex justify-between text-red-300">
                                     <span>↑ {{ index .I18n "max" }}: ({{ .DayMaxTime }})</span>
-                                    <span>{{ printf "%.1f" .DayMaxTemperature }} °C</span>
+                                    <span>{{ .DayMaxTempText }} °C</span>
                                 </div>
                                 {{ end }}
                                 {{ if .DayMinTemperature }}
                                 <div class="flex justify-between text-blue-300">
                                     <span>↓ {{ index .I18n "min" }}: ({{ .DayMinTime }})</span>
-                                    <span>{{ printf "%.1f" .DayMinTemperature }} °C</span>
+                                    <span>{{ .DayMinTempText }} °C</span>
                                 </div>
                                 {{ end }}
                             </td>
