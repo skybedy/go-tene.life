@@ -90,7 +90,7 @@
                         <input type="date" id="selectedDate"
                             class="grow px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             value="{{ if .DailyStats }}{{ (index .DailyStats 0).Date }}{{ end }}" min="2025-11-01">
-                        <button onclick="window.location.href='{{ localeURL .Locale \"/\" }}?date=' + document.getElementById('selectedDate').value"
+                        <button onclick="window.location.href='{{ localeURL .Locale "/" }}?date=' + document.getElementById('selectedDate').value"
                             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm">
                             {{ index .I18n "show" }}
                         </button>
