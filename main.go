@@ -139,6 +139,16 @@ func main() {
 				}
 				return v
 			},
+			"shortDate": func(v string) string {
+				if len(v) < 10 {
+					return v
+				}
+				var y, m, d int
+				if _, err := fmt.Sscanf(v[:10], "%d-%d-%d", &y, &m, &d); err != nil {
+					return v[:10]
+				}
+				return fmt.Sprintf("%d.%d", d, m)
+			},
 		}).ParseFS(viewsFS, "views/*.html", "views/statistics/*.html")),
 	}
 

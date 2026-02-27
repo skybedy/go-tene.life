@@ -43,7 +43,7 @@
                         {{ range .WeeklyStats }}
                         <tr class="hover:bg-white/40 transition">
                             <td class="px-3 py-3 font-medium text-gray-900">{{ .Week }} / {{ .Year }}</td>
-                            <td class="px-3 py-3 text-gray-500">{{ dateOnly .WeekStart }} - {{ dateOnly .WeekEnd }}</td>
+                            <td class="px-3 py-3 text-gray-500">{{ shortDate .WeekStart }}-{{ shortDate .WeekEnd }}</td>
                             <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgTemperature }} °C</td>
                             <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgPressure }} hPa</td>
                             <td class="px-3 py-3 text-right text-gray-700">{{ f0 .AvgHumidity }} %</td>
