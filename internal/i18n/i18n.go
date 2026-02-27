@@ -7,7 +7,7 @@ import (
 	"github.com/skybedy/laravel-tene.life/internal/models"
 )
 
-const DefaultLocale = "cs"
+const DefaultLocale = "en"
 
 var languages = []models.LanguageOption{
 	{Code: "cs", Name: "Čeština"},

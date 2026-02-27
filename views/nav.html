@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="relative group ml-auto">
+            <div class="relative group ml-auto xl:hidden">
                 <button
                     class="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-white/50 rounded-lg transition">
                     <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,6 +59,16 @@
                         class="flex items-center gap-2 px-4 py-2 text-xs sm:text-sm {{ if eq .Code $.Locale }}font-semibold text-blue-700 bg-blue-50/70{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }} transition"><span>{{ languageFlag .Code }}</span><span>{{ .Name }}</span></a>
                     {{ end }}
                 </div>
+            </div>
+
+            <div class="hidden xl:flex items-center gap-1.5 ml-auto">
+                {{ range .Languages }}
+                <a href="{{ localeURL .Code $.CurrentPath }}"
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-lg border text-base leading-none transition {{ if eq .Code $.Locale }}border-blue-300 bg-blue-50 ring-1 ring-blue-200{{ else }}border-gray-200 bg-white/70 hover:bg-blue-50 hover:border-blue-200{{ end }}"
+                    title="{{ .Name }}">
+                    {{ languageFlag .Code }}
+                </a>
+                {{ end }}
             </div>
         </div>
     </div>
