@@ -1213,8 +1213,14 @@
   .text-\[0\.6rem\] {
     font-size: 0.6rem;
   }
+  .text-\[0\.7rem\] {
+    font-size: 0.7rem;
+  }
   .text-\[0\.9em\] {
     font-size: 0.9em;
+  }
+  .text-\[0\.58rem\] {
+    font-size: 0.58rem;
   }
   .text-\[0\.65rem\] {
     font-size: 0.65rem;
@@ -1694,6 +1700,11 @@
       display: block;
     }
   }
+  .sm\:hidden {
+    @media (width >= 40rem) {
+      display: none;
+    }
+  }
   .sm\:inline {
     @media (width >= 40rem) {
       display: inline;
@@ -1848,6 +1859,11 @@
       padding-block: calc(var(--spacing) * 2.5);
     }
   }
+  .sm\:py-3 {
+    @media (width >= 40rem) {
+      padding-block: calc(var(--spacing) * 3);
+    }
+  }
   .sm\:py-4 {
     @media (width >= 40rem) {
       padding-block: calc(var(--spacing) * 4);
@@ -1923,6 +1939,11 @@
     @media (width >= 40rem) {
       --tw-font-weight: var(--font-weight-bold);
       font-weight: var(--font-weight-bold);
+    }
+  }
+  .sm\:normal-case {
+    @media (width >= 40rem) {
+      text-transform: none;
     }
   }
   .md\:top-3\.5 {
