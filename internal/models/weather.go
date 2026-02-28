@@ -17,6 +17,8 @@ type PageData struct {
 	WebcamImageURL    string
 	SeaTemperature    *float64
 	SeaTemperatureVal float64
+	NextHighTide      string
+	NextLowTide       string
 	DayMaxTemperature *float64
 	DayMinTemperature *float64
 	DayMaxTempText    string

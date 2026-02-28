@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -32,18 +33,24 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 }
 
 type Handler struct {
-	WeatherStore *store.WeatherStore
-	weatherCache *models.WeatherData
-	seaTempCache *float64
-	cacheMu      sync.RWMutex
-	lastCache    time.Time
-	cacheTimeout time.Duration
+	WeatherStore  *store.WeatherStore
+	weatherCache  *models.WeatherData
+	seaTempCache  *float64
+	tideHighCache string
+	tideLowCache  string
+	tideDateCache string
+	lastTideCache time.Time
+	cacheMu       sync.RWMutex
+	lastCache     time.Time
+	cacheTimeout  time.Duration
+	tideTimeout   time.Duration
 }
 
 func NewHandler(ws *store.WeatherStore) *Handler {
 	return &Handler{
 		WeatherStore: ws,
 		cacheTimeout: 30 * time.Second, // Default cache timeout
+		tideTimeout:  15 * time.Minute,
 	}
 }
 
@@ -140,11 +147,15 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		seaTempVal = *seaTemp
 	}
 
+	nextHighTide, nextLowTide := h.getCachedTideData(ts)
+
 	data := models.PageData{
 		Weather:           weather,
 		WebcamImageURL:    webcamImageURL,
 		SeaTemperature:    seaTemp,
 		SeaTemperatureVal: seaTempVal,
+		NextHighTide:      nextHighTide,
+		NextLowTide:       nextLowTide,
 		DayMaxTemperature: dayMaxTemperature,
 		DayMinTemperature: dayMinTemperature,
 		DayMaxTempText:    dayMaxTempText,
@@ -224,6 +235,137 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) 
 	}
 
 	return weather, seaTemp, nil
+}
+
+func (h *Handler) getCachedTideData(reference time.Time) (string, string) {
+	_ = reference
+	apiKey := strings.TrimSpace(os.Getenv("TIDE_API_KEY"))
+	if apiKey == "" {
+		return "", ""
+	}
+
+	loc := time.Local
+	if tz := strings.TrimSpace(os.Getenv("TIDE_TIMEZONE")); tz != "" {
+		if loaded, err := time.LoadLocation(tz); err == nil {
+			loc = loaded
+		}
+	}
+	now := time.Now().In(loc)
+	dateKey := now.Format("2006-01-02")
+
+	h.cacheMu.RLock()
+	cachedHigh := h.tideHighCache
+	cachedLow := h.tideLowCache
+	cachedDate := h.tideDateCache
+	cacheAge := time.Since(h.lastTideCache)
+	h.cacheMu.RUnlock()
+
+	if cachedDate == dateKey && cacheAge <= h.tideTimeout {
+		return cachedHigh, cachedLow
+	}
+
+	h.cacheMu.Lock()
+	defer h.cacheMu.Unlock()
+
+	if h.tideDateCache == dateKey && time.Since(h.lastTideCache) <= h.tideTimeout {
+		return h.tideHighCache, h.tideLowCache
+	}
+
+	nextHigh, nextLow, err := fetchWorldTidesTodayExtremes(now, apiKey, loc)
+	if err != nil {
+		log.Printf("Error fetching tide data: %v", err)
+		return h.tideHighCache, h.tideLowCache
+	}
+
+	h.tideHighCache = nextHigh
+	h.tideLowCache = nextLow
+	h.tideDateCache = dateKey
+	h.lastTideCache = time.Now()
+
+	return nextHigh, nextLow
+}
+
+type worldTidesResponse struct {
+	Status   int    `json:"status"`
+	ErrorMsg string `json:"error"`
+	Extremes []struct {
+		DT     int64   `json:"dt"`
+		Type   string  `json:"type"`
+		Date   string  `json:"date"`
+		Height float64 `json:"height"`
+	} `json:"extremes"`
+}
+
+func fetchWorldTidesTodayExtremes(reference time.Time, apiKey string, loc *time.Location) (string, string, error) {
+	lat := strings.TrimSpace(os.Getenv("TIDE_LAT"))
+	if lat == "" {
+		lat = "28.0436"
+	}
+	lon := strings.TrimSpace(os.Getenv("TIDE_LON"))
+	if lon == "" {
+		lon = "-16.7215"
+	}
+
+	reqURL := url.URL{
+		Scheme: "https",
+		Host:   "www.worldtides.info",
+		Path:   "/api/v3",
+	}
+	q := reqURL.Query()
+	dayStart := time.Date(reference.Year(), reference.Month(), reference.Day(), 0, 0, 0, 0, loc)
+	q.Set("extremes", "true")
+	q.Set("lat", lat)
+	q.Set("lon", lon)
+	// Request data from local midnight so today's already elapsed tides are included.
+	q.Set("start", strconv.FormatInt(dayStart.Unix(), 10))
+	q.Set("days", "1")
+	q.Set("key", apiKey)
+	reqURL.RawQuery = q.Encode()
+
+	client := &http.Client{Timeout: 8 * time.Second}
+	resp, err := client.Get(reqURL.String())
+	if err != nil {
+		return "", "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(io.LimitReader(resp.Body, 512))
+		return "", "", fmt.Errorf("worldtides status %d: %s", resp.StatusCode, strings.TrimSpace(string(body)))
+	}
+
+	var payload worldTidesResponse
+	if err := json.NewDecoder(resp.Body).Decode(&payload); err != nil {
+		return "", "", err
+	}
+	if payload.Status != 0 && payload.Status != http.StatusOK {
+		return "", "", fmt.Errorf("worldtides payload status %d: %s", payload.Status, payload.ErrorMsg)
+	}
+
+	refDate := reference.Format("2006-01-02")
+	highTimes := make([]string, 0, 2)
+	lowTimes := make([]string, 0, 2)
+
+	for _, item := range payload.Extremes {
+		eventTime := time.Unix(item.DT, 0).In(loc)
+		if eventTime.Format("2006-01-02") != refDate {
+			continue
+		}
+
+		switch strings.ToLower(item.Type) {
+		case "high":
+			highTimes = append(highTimes, formatTideTime(reference, eventTime))
+		case "low":
+			lowTimes = append(lowTimes, formatTideTime(reference, eventTime))
+		}
+	}
+
+	return strings.Join(highTimes, ", "), strings.Join(lowTimes, ", "), nil
+}
+
+func formatTideTime(reference, tideTime time.Time) string {
+	_ = reference
+	return strings.TrimPrefix(tideTime.Format("15:04"), "0")
 }
 
 func (h *Handler) GetHourlyDataHandler(c echo.Context) error {

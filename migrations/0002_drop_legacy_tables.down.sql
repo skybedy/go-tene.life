@@ -1,0 +1,2 @@
+-- Irreversible cleanup migration.
+-- No rollback is provided for dropped legacy tables.

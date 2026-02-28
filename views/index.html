@@ -66,6 +66,16 @@
                                 {{ end }}
                             </td>
                         </tr>
+                        {{ if or .NextHighTide .NextLowTide }}
+                        <tr>
+                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "tide_high" }}</td>
+                            <td class="text-right pt-0.5 sm:pt-1">{{ if .NextHighTide }}{{ .NextHighTide }}{{ else }}-{{ end }}</td>
+                        </tr>
+                        <tr>
+                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "tide_low" }}</td>
+                            <td class="text-right pt-0.5 sm:pt-1">{{ if .NextLowTide }}{{ .NextLowTide }}{{ else }}-{{ end }}</td>
+                        </tr>
+                        {{ end }}
                     </table>
                     {{ else }}
                     <p>{{ index .I18n "weather_unavailable" }}</p>
