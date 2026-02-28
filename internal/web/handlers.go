@@ -592,6 +592,23 @@ func (h *Handler) WeeklyStatisticsHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "weekly.html", data)
 }
 
+func (h *Handler) RecentStatisticsHandler(c echo.Context) error {
+	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
+	data := models.StatsPageData{
+		PageTitle:       i18n.T(locale, "recent_statistics"),
+		StatsSection:    "recent",
+		Locale:          locale,
+		LocalePrefix:    i18n.LocalePrefix(locale),
+		CurrentPath:     currentPath,
+		CurrentSection:  "statistics",
+		Languages:       languages,
+		I18n:            messages,
+		GAEnabled:       gaEnabled,
+		GAMeasurementID: gaMeasurementID,
+	}
+	return c.Render(http.StatusOK, "recent.html", data)
+}
+
 func (h *Handler) MonthlyStatisticsHandler(c echo.Context) error {
 	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	stats, err := h.WeatherStore.GetMonthlyStats(12)
@@ -671,9 +688,7 @@ func (h *Handler) GetDailyDataHandler(c echo.Context) error {
 
 	response := models.DailyChartResponse{}
 	for _, s := range stats {
-		// Format label as j.n. (day.month.)
-		t, _ := time.Parse("2006-01-02", s.Date)
-		response.Labels = append(response.Labels, t.Format("2.1."))
+		response.Labels = append(response.Labels, formatDayMonthLabel(s.Date))
 		response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, s.AvgTemperature)
 		response.Datasets.MinTemperature = append(response.Datasets.MinTemperature, s.MinTemperature)
 		response.Datasets.MaxTemperature = append(response.Datasets.MaxTemperature, s.MaxTemperature)
@@ -788,9 +803,7 @@ func (h *Handler) GetWeeklyDataHandler(c echo.Context) error {
 		s := stats[i]
 		label := fmt.Sprintf("%d/W%d", s.Year, s.Week)
 		if s.WeekStart != "" && s.WeekEnd != "" {
-			t1, _ := time.Parse("2006-01-02", s.WeekStart)
-			t2, _ := time.Parse("2006-01-02", s.WeekEnd)
-			label = fmt.Sprintf("%d/%d (%s-%s)", s.Week, s.Year, t1.Format("2.1."), t2.Format("2.1."))
+			label = fmt.Sprintf("%d/%d (%s-%s)", s.Week, s.Year, formatDayMonthLabel(s.WeekStart), formatDayMonthLabel(s.WeekEnd))
 		}
 		response.Labels = append(response.Labels, label)
 		response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, s.AvgTemperature)
@@ -866,6 +879,33 @@ func (h *Handler) StoreSeaTemperatureHandler(c echo.Context) error {
 		"success": true,
 		"message": "Sea temperature saved successfully",
 	})
+}
+
+func formatDayMonthLabel(raw string) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return ""
+	}
+
+	layouts := []string{
+		"2006-01-02",
+		"2006-01-02 15:04:05",
+		"2006-01-02T15:04:05",
+		time.RFC3339,
+	}
+	for _, layout := range layouts {
+		if t, err := time.Parse(layout, raw); err == nil {
+			return t.Format("2.1.")
+		}
+	}
+
+	if len(raw) >= 10 {
+		if t, err := time.Parse("2006-01-02", raw[:10]); err == nil {
+			return t.Format("2.1.")
+		}
+	}
+
+	return raw
 }
 
 func (h *Handler) CameraUploadHandler(c echo.Context) error {

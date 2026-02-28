@@ -27,6 +27,8 @@
                         class="absolute left-0 mt-1 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
                         <a href="{{ localeURL .Locale "/statistics/daily" }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "daily_statistics" }}</a>
+                        <a href="{{ localeURL .Locale "/statistics/recent" }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "recent_statistics" }}</a>
                         <a href="{{ localeURL .Locale "/statistics/weekly" }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "weekly_statistics" }}</a>
                         <a href="{{ localeURL .Locale "/statistics/monthly" }}"
@@ -115,6 +117,10 @@
                 <a href="{{ localeURL .Locale "/statistics/daily" }}"
                     class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                     {{ index .I18n "daily_statistics" }}
+                </a>
+                <a href="{{ localeURL .Locale "/statistics/recent" }}"
+                    class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                    {{ index .I18n "recent_statistics" }}
                 </a>
                 <a href="{{ localeURL .Locale "/statistics/weekly" }}"
                     class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">

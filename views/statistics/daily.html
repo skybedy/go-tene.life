@@ -8,7 +8,13 @@
         <div
             class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6 mb-4 sm:mb-6">
             <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-1">{{ .PageTitle }}</h1>
-            <p class="text-gray-600 text-xs sm:text-sm">{{ index .I18n "daily_stats_subtitle" }}</p>
+            <div class="mt-3 sm:mt-4 max-w-xs">
+                <label for="selectedDate" class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">{{ index .I18n "click_to_change_date" }}</label>
+                <input type="date" id="selectedDate"
+                    name="date"
+                    class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    value="{{ if .DailyStats }}{{ dateOnly ((index .DailyStats 0).Date) }}{{ end }}" min="2025-11-01">
+            </div>
         </div>
 
         {{ template "stats_nav.html" . }}
@@ -49,52 +55,31 @@
             </div>
         </div>
 
-        <!-- Charts Section -->
-        <div class="space-y-4 mb-6">
-            <!-- Temperature Chart -->
-            <div
-                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
-                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "daily_temp_chart_title" }}</h2>
-                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
-                    <canvas id="temperatureChart"></canvas>
+        <div class="space-y-4 mb-6" id="hourlyDetailSection" data-default-date="{{ if .DailyStats }}{{ dateOnly ((index .DailyStats 0).Date) }}{{ end }}">
+            <h2 class="text-base sm:text-lg font-semibold text-gray-700 px-1">
+                {{ index .I18n "weather_data_title" }}
+                <span id="detailDateLabel" class="text-gray-600 font-normal"></span>
+            </h2>
+            <p id="detailChartsError" class="hidden px-1 text-xs sm:text-sm text-red-600"></p>
+
+            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h3 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "temperature_chart" }}</h3>
+                <div class="relative h-32 sm:h-40 md:h-48">
+                    <canvas id="detailTemperatureChart"></canvas>
                 </div>
             </div>
 
-            <!-- Pressure Chart -->
-            <div
-                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
-                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "daily_pressure_chart_title" }}</h2>
-                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
-                    <canvas id="pressureChart"></canvas>
+            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h3 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "pressure_chart" }}</h3>
+                <div class="relative h-32 sm:h-40 md:h-48">
+                    <canvas id="detailPressureChart"></canvas>
                 </div>
             </div>
 
-            <!-- Humidity Chart -->
-            <div
-                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
-                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "daily_humidity_chart_title" }}</h2>
-                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
-                    <canvas id="humidityChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Controls -->
-        <div
-            class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6 mb-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Date Picker for Hourly Stats (Redirects to homepage with date query) -->
-                <div>
-                    <label for="selectedDate" class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">{{ index .I18n "go_to_detail_charts" }}</label>
-                    <div class="flex gap-2">
-                        <input type="date" id="selectedDate"
-                            class="grow px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            value="{{ if .DailyStats }}{{ dateOnly ((index .DailyStats 0).Date) }}{{ end }}" min="2025-11-01">
-                        <button onclick="window.location.href='{{ localeURL .Locale "/" }}?date=' + document.getElementById('selectedDate').value"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm">
-                            {{ index .I18n "show" }}
-                        </button>
-                    </div>
+            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h3 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "humidity_chart" }}</h3>
+                <div class="relative h-32 sm:h-40 md:h-48">
+                    <canvas id="detailHumidityChart"></canvas>
                 </div>
             </div>
         </div>
@@ -103,7 +88,7 @@
         <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden mb-8">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs sm:text-sm">
-                    <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase">
+                    <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase text-[0.55rem] leading-tight sm:text-xs">
                         <tr>
                             <th class="px-3 py-3 font-semibold">{{ index .I18n "date" }}</th>
                             <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_temp" }}</th>
@@ -115,8 +100,8 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         {{ range .DailyStats }}
-                        <tr class="hover:bg-white/40 transition">
-                            <td class="px-3 py-3 font-medium text-gray-900">{{ shortDateYear .Date }}</td>
+                        <tr class="odd:bg-white/55 even:bg-blue-50/55 hover:bg-white/75 transition">
+                            <td class="px-3 py-3 font-medium text-gray-900">{{ shortDate .Date }}</td>
                             <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgTemperature }} °C</td>
                             <td class="px-3 py-3 text-right text-gray-500">
                                 <span class="text-blue-600">{{ f1 .MinTemperature }}</span> /
@@ -149,8 +134,133 @@
         humidity: {{ printf "%q" (index .I18n "humidity") }},
         min: {{ printf "%q" (index .I18n "min") }},
         average: {{ printf "%q" (index .I18n "average") }},
-        max: {{ printf "%q" (index .I18n "max") }}
+        max: {{ printf "%q" (index .I18n "max") }},
+        detailChartsLoadError: {{ printf "%q" (index .I18n "detail_charts_load_error") }}
     };
 </script>
 <script src="/js/statistics-charts.js"></script>
+<script>
+    (function () {
+        const detailSection = document.getElementById('hourlyDetailSection');
+        const dateInput = document.getElementById('selectedDate');
+        const dateLabel = document.getElementById('detailDateLabel');
+        const errorEl = document.getElementById('detailChartsError');
+        const i18n = window.statsI18n || {};
+
+        if (!detailSection || !window.Chart) return;
+
+        function createDetailChart(canvasId, label, color, unit) {
+            const el = document.getElementById(canvasId);
+            if (!el) return null;
+            return new Chart(el.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: label,
+                        data: [],
+                        borderColor: color,
+                        backgroundColor: color + '20',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: true, grid: { display: false } },
+                        y: {
+                            display: true,
+                            ticks: {
+                                callback: function (value) { return value + unit; }
+                            }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        const detailCharts = {
+            temperature: createDetailChart('detailTemperatureChart', i18n.temperature || 'Temperature', '#ef4444', '°C'),
+            pressure: createDetailChart('detailPressureChart', i18n.pressure || 'Pressure', '#3b82f6', ' hPa'),
+            humidity: createDetailChart('detailHumidityChart', i18n.humidity || 'Humidity', '#10b981', '%')
+        };
+
+        function averageFromSeries(series) {
+            if (!Array.isArray(series)) return null;
+            const values = series
+                .map(function (v) { return typeof v === 'number' ? v : null; })
+                .filter(function (v) { return v !== null && Number.isFinite(v); });
+            if (!values.length) return null;
+            const total = values.reduce(function (sum, v) { return sum + v; }, 0);
+            return total / values.length;
+        }
+
+        function setSummaryFromHourly(datasets) {
+            const tempAvg = averageFromSeries(datasets && datasets.temperature);
+            const pressAvg = averageFromSeries(datasets && datasets.pressure);
+            const humAvg = averageFromSeries(datasets && datasets.humidity);
+
+            const tempEl = document.getElementById('stat-temp-avg');
+            const pressEl = document.getElementById('stat-pressure-avg');
+            const humEl = document.getElementById('stat-humidity-avg');
+
+            if (tempEl) tempEl.textContent = tempAvg === null ? '--' : tempAvg.toFixed(1) + ' °C';
+            if (pressEl) pressEl.textContent = pressAvg === null ? '--' : pressAvg.toFixed(1) + ' hPa';
+            if (humEl) humEl.textContent = humAvg === null ? '--' : Math.round(humAvg) + ' %';
+        }
+
+        async function loadHourlyDetails(date) {
+            if (!date) return;
+            const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
+            if (m) {
+                dateLabel.textContent = m[3].replace(/^0/, '') + '.' + m[2].replace(/^0/, '') + '.' + m[1];
+            } else {
+                dateLabel.textContent = date;
+            }
+            errorEl.classList.add('hidden');
+            try {
+                const response = await fetch('/api/weather/hourly?date=' + encodeURIComponent(date));
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const data = await response.json();
+                if (!data.labels || !data.datasets) throw new Error('Invalid response');
+
+                if (detailCharts.temperature) {
+                    detailCharts.temperature.data.labels = data.labels;
+                    detailCharts.temperature.data.datasets[0].data = data.datasets.temperature || [];
+                    detailCharts.temperature.update();
+                }
+                if (detailCharts.pressure) {
+                    detailCharts.pressure.data.labels = data.labels;
+                    detailCharts.pressure.data.datasets[0].data = data.datasets.pressure || [];
+                    detailCharts.pressure.update();
+                }
+                if (detailCharts.humidity) {
+                    detailCharts.humidity.data.labels = data.labels;
+                    detailCharts.humidity.data.datasets[0].data = data.datasets.humidity || [];
+                    detailCharts.humidity.update();
+                }
+                setSummaryFromHourly(data.datasets);
+            } catch (err) {
+                errorEl.textContent = i18n.detailChartsLoadError || 'Failed to load hourly charts for the selected date.';
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        if (dateInput) {
+            dateInput.addEventListener('change', function () {
+                loadHourlyDetails(dateInput.value);
+            });
+        }
+
+        const initialDate = (dateInput && dateInput.value) ? dateInput.value : detailSection.dataset.defaultDate;
+        if (initialDate) {
+            loadHourlyDetails(initialDate);
+        }
+    })();
+</script>
 {{ template "footer.html" . }}

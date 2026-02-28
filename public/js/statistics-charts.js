@@ -100,7 +100,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!charts.temperature) return;
 
         try {
-            const response = await fetch('/api/weather/daily?days=7');
+            const days = Number(window.statsDays) || 7;
+            const response = await fetch(`/api/weather/daily?days=${encodeURIComponent(days)}`);
             const data = await response.json();
 
             if (data.labels && data.datasets) {
@@ -146,6 +147,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Route handling
     const path = window.location.pathname;
     if (path.includes('/statistics/daily')) {
+        loadDailyStats();
+    } else if (path.includes('/statistics/recent')) {
         loadDailyStats();
     } else if (path.includes('/statistics/weekly')) {
         // Implement weekly...

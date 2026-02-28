@@ -1,0 +1,89 @@
+{{ template "header.html" . }}
+{{ template "nav.html" . }}
+
+<main>
+    <div class="mx-auto w-full sm:w-3/4 p-3 sm:p-4 md:p-6 lg:p-8">
+
+        <div
+            class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6 mb-4 sm:mb-6">
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-1">{{ .PageTitle }}</h1>
+            <p class="text-gray-600 text-xs sm:text-sm">{{ index .I18n "recent_stats_subtitle" }}</p>
+        </div>
+
+        {{ template "stats_nav.html" . }}
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4">
+                <h3 class="text-xs sm:text-sm font-semibold text-gray-700 mb-2">{{ index .I18n "air_temperature" }}</h3>
+                <div class="space-y-1 text-[0.65rem] sm:text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{{ index .I18n "average" }}</span>
+                        <span class="font-medium" id="stat-temp-avg">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4">
+                <h3 class="text-xs sm:text-sm font-semibold text-gray-700 mb-2">{{ index .I18n "atmospheric_pressure" }}</h3>
+                <div class="space-y-1 text-[0.65rem] sm:text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{{ index .I18n "average" }}</span>
+                        <span class="font-medium" id="stat-pressure-avg">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4">
+                <h3 class="text-xs sm:text-sm font-semibold text-gray-700 mb-2">{{ index .I18n "relative_humidity" }}</h3>
+                <div class="space-y-1 text-[0.65rem] sm:text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{{ index .I18n "average" }}</span>
+                        <span class="font-medium" id="stat-humidity-avg">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-4 mb-6">
+            <div
+                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "recent_temp_chart_title" }}</h2>
+                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+
+            <div
+                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "recent_pressure_chart_title" }}</h2>
+                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
+                    <canvas id="pressureChart"></canvas>
+                </div>
+            </div>
+
+            <div
+                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "recent_humidity_chart_title" }}</h2>
+                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
+                    <canvas id="humidityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.statsDays = 10;
+    window.statsI18n = {
+        temperature: {{ printf "%q" (index .I18n "temperature") }},
+        pressure: {{ printf "%q" (index .I18n "pressure") }},
+        humidity: {{ printf "%q" (index .I18n "humidity") }},
+        min: {{ printf "%q" (index .I18n "min") }},
+        average: {{ printf "%q" (index .I18n "average") }},
+        max: {{ printf "%q" (index .I18n "max") }}
+    };
+</script>
+<script src="/js/statistics-charts.js"></script>
+
+{{ template "footer.html" . }}
