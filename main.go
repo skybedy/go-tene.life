@@ -107,6 +107,8 @@ func main() {
 
 	// Start internal waves collector loop (no cron required).
 	startWavesCollectorLoop()
+	// Start internal water collector loop (no cron required).
+	startWaterCollectorLoop()
 
 	// Middleware
 	e.Use(middleware.Recover())
@@ -272,6 +274,35 @@ func startWavesCollectorLoop() {
 				return
 			}
 			log.Println("waves collector updated: data/waves_latest.json")
+		}
+
+		collect()
+
+		ticker := time.NewTicker(interval)
+		defer ticker.Stop()
+		for range ticker.C {
+			collect()
+		}
+	}()
+}
+
+func startWaterCollectorLoop() {
+	interval := 24 * time.Hour
+	if raw := os.Getenv("WATER_COLLECT_INTERVAL_MINUTES"); raw != "" {
+		if mins, err := strconv.Atoi(raw); err == nil && mins > 0 {
+			interval = time.Duration(mins) * time.Minute
+		}
+	}
+
+	go func() {
+		collect := func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+			defer cancel()
+			if err := water.CollectLatestToDefaultPath(ctx); err != nil {
+				log.Printf("water collector failed: %v", err)
+				return
+			}
+			log.Println("water collector updated: data/water_quality_latest.json")
 		}
 
 		collect()

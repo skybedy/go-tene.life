@@ -101,3 +101,8 @@ Cron example (once per day):
 ```cron
 15 6 * * * cd /path/to/go-tene.life && ./tenelife collect:water >> /var/log/tenelife-water.log 2>&1
 ```
+
+In-app scheduler (recommended, no Linux cron/systemd needed):
+
+- `WATER_COLLECT_INTERVAL_MINUTES=1440` (default: once per 24h)
+- collector runs automatically on app start and then in this interval

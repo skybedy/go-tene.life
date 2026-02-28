@@ -218,7 +218,7 @@
             if (!date) return;
             const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
             if (m) {
-                dateLabel.textContent = m[3].replace(/^0/, '') + '.' + m[2].replace(/^0/, '') + '.' + m[1];
+                dateLabel.textContent = m[3].replace(/^0/, '') + '. ' + m[2].replace(/^0/, '') + '. ' + m[1];
             } else {
                 dateLabel.textContent = date;
             }

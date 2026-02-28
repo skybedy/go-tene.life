@@ -163,7 +163,9 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 	waterPath := utils.EnvPathOrDefault("WATER_JSON_PATH", "data/water_quality_latest.json")
 	waterData, err = water.LoadLatestFromFile(waterPath)
 	if err != nil {
-		if !os.IsNotExist(err) {
+		if os.IsNotExist(err) {
+			log.Printf("Water cache file not found at '%s' (set WATER_JSON_PATH to an absolute path on production)", waterPath)
+		} else {
 			log.Printf("Error reading water cache '%s': %v", waterPath, err)
 		}
 		waterData = nil
@@ -442,7 +444,9 @@ func (h *Handler) GetHomeDataHandler(c echo.Context) error {
 	waterPath := utils.EnvPathOrDefault("WATER_JSON_PATH", "data/water_quality_latest.json")
 	waterData, err = water.LoadLatestFromFile(waterPath)
 	if err != nil {
-		if !os.IsNotExist(err) {
+		if os.IsNotExist(err) {
+			log.Printf("Water cache file not found at '%s' (set WATER_JSON_PATH to an absolute path on production)", waterPath)
+		} else {
 			log.Printf("Error reading water cache '%s': %v", waterPath, err)
 		}
 		waterData = nil
