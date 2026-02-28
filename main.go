@@ -149,6 +149,16 @@ func main() {
 				}
 				return fmt.Sprintf("%d.%d", d, m)
 			},
+			"shortDateYear": func(v string) string {
+				if len(v) < 10 {
+					return v
+				}
+				var y, m, d int
+				if _, err := fmt.Sscanf(v[:10], "%d-%d-%d", &y, &m, &d); err != nil {
+					return v[:10]
+				}
+				return fmt.Sprintf("%d.%d.%02d", d, m, y%100)
+			},
 		}).ParseFS(viewsFS, "views/*.html", "views/statistics/*.html")),
 	}
 

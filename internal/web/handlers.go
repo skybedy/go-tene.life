@@ -203,8 +203,12 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) 
 			h.weatherCache = newWeather
 			weather = newWeather
 
-			// Update Sea Temp from DB
-			newSeaTemp, err := h.WeatherStore.GetLatestSeaTemperature()
+			// Update Sea Temp from DB based on weather timestamp date.
+			refDate := time.Now().Format("2006-01-02")
+			if newWeather.Timestamp > 0 {
+				refDate = time.Unix(newWeather.Timestamp, 0).Format("2006-01-02")
+			}
+			newSeaTemp, err := h.WeatherStore.GetLatestSeaTemperature(refDate)
 			if err != nil {
 				return weather, h.seaTempCache, utils.NewInternalServerError(
 					"Failed to get sea temperature", err)
