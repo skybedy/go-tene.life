@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -92,6 +93,9 @@ func main() {
 
 	// Initialize Echo
 	e := echo.New()
+
+	// Start internal waves collector loop (no cron required).
+	startWavesCollectorLoop()
 
 	// Middleware
 	e.Use(middleware.Recover())
@@ -234,4 +238,33 @@ func main() {
 		port = "8080"
 	}
 	e.Logger.Fatal(e.Start(":" + port))
+}
+
+func startWavesCollectorLoop() {
+	interval := 15 * time.Minute
+	if raw := os.Getenv("WAVES_COLLECT_INTERVAL_MINUTES"); raw != "" {
+		if mins, err := strconv.Atoi(raw); err == nil && mins > 0 {
+			interval = time.Duration(mins) * time.Minute
+		}
+	}
+
+	go func() {
+		collect := func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+			defer cancel()
+			if err := waves.CollectLatestToDefaultPath(ctx); err != nil {
+				log.Printf("waves collector failed: %v", err)
+				return
+			}
+			log.Println("waves collector updated: data/waves_latest.json")
+		}
+
+		collect()
+
+		ticker := time.NewTicker(interval)
+		defer ticker.Stop()
+		for range ticker.C {
+			collect()
+		}
+	}()
 }

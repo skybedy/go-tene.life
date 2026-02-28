@@ -51,7 +51,10 @@ This exports structure-only SQL for app tables (`weather*`) into `db/schema.sql`
 
 Measured wave data is collected from Puertos del Estado (PORTUS), station `2446` (Tenerife Sur), and cached to JSON.
 
-- Command: `tenelife collect:waves`
+- Collector runs automatically inside the app (immediately on startup, then periodically).
+- Default interval: every 15 minutes
+- Optional env override: `WAVES_COLLECT_INTERVAL_MINUTES=15`
+- Manual command: `tenelife collect:waves`
 - Output cache file: `data/waves_latest.json`
 - Source is fetched only by collector; request handlers read only the JSON cache.
 
@@ -67,7 +70,7 @@ or with built binary:
 ./tenelife collect:waves
 ```
 
-Cron example (every 15 minutes):
+Optional cron fallback (only if you do not want the in-app collector):
 
 ```cron
 */15 * * * * cd /path/to/go-tene.life && ./tenelife collect:waves >> /var/log/tenelife-waves.log 2>&1
