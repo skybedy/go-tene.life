@@ -7,7 +7,7 @@
                 </a>
             </div>
 
-            <div class="hidden md:flex items-center gap-2 lg:gap-4 ml-6 lg:ml-8">
+            <div class="hidden lg:flex items-center gap-2 lg:gap-4 ml-6 lg:ml-8">
                 <a href="{{ localeURL .Locale "/" }}"
                     class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "home" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                     {{ index .I18n "home" }}
@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="ml-auto flex items-center gap-1.5 md:hidden">
+            <div class="ml-auto flex items-center gap-1.5 lg:hidden">
                 <div class="relative">
                     <button id="mobileLangToggle" type="button"
                         class="flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-gray-700 hover:bg-white/50 rounded-lg transition whitespace-nowrap"
@@ -73,13 +73,9 @@
                 </button>
             </div>
 
-            <div class="relative group ml-auto hidden md:block xl:hidden">
+            <div class="relative group ml-auto hidden lg:block">
                 <button
                     class="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-sm font-medium text-gray-700 hover:bg-white/50 rounded-lg transition whitespace-nowrap">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                    </svg>
                     <span>{{ languageFlag .Locale }}</span>
                     <span class="uppercase">{{ .Locale }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
@@ -96,19 +92,9 @@
                     {{ end }}
                 </div>
             </div>
-
-            <div class="hidden xl:flex items-center gap-1.5 ml-auto">
-                {{ range .Languages }}
-                <a href="{{ localeURL .Code $.CurrentPath }}"
-                    class="inline-flex items-center justify-center w-9 h-9 rounded-lg border text-base leading-none transition {{ if eq .Code $.Locale }}border-blue-300 bg-blue-50 ring-1 ring-blue-200{{ else }}border-gray-200 bg-white/70 hover:bg-blue-50 hover:border-blue-200{{ end }}"
-                    title="{{ .Name }}">
-                    {{ languageFlag .Code }}
-                </a>
-                {{ end }}
-            </div>
         </div>
 
-        <div id="mobileMainMenu" class="md:hidden hidden pb-3">
+        <div id="mobileMainMenu" class="lg:hidden hidden pb-3">
             <div class="bg-white/85 backdrop-blur-md rounded-xl shadow-lg border border-gray-200 p-2 space-y-1">
                 <a href="{{ localeURL .Locale "/" }}"
                     class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "home" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
