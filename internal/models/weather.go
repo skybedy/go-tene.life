@@ -20,6 +20,7 @@ type PageData struct {
 	NextHighTide      string
 	NextLowTide       string
 	Waves             *WavesLatest
+	WaterQuality      *WaterQualityLatest
 	DayMaxTemperature *float64
 	DayMinTemperature *float64
 	DayMaxTempText    string
@@ -145,7 +146,8 @@ type StatsPageData struct {
 }
 
 type HomeAPIResponse struct {
-	Weather        *WeatherData `json:"weather,omitempty"`
-	SeaTemperature *float64     `json:"sea_temperature,omitempty"`
-	Waves          *WavesLatest `json:"waves,omitempty"`
+	Weather        *WeatherData        `json:"weather,omitempty"`
+	SeaTemperature *float64            `json:"sea_temperature,omitempty"`
+	Waves          *WavesLatest        `json:"waves,omitempty"`
+	WaterQuality   *WaterQualityLatest `json:"water_quality,omitempty"`
 }

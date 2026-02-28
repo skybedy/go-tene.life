@@ -21,6 +21,7 @@ import (
 	"github.com/skybedy/laravel-tene.life/internal/models"
 	"github.com/skybedy/laravel-tene.life/internal/store"
 	"github.com/skybedy/laravel-tene.life/internal/utils"
+	"github.com/skybedy/laravel-tene.life/internal/water"
 	"github.com/skybedy/laravel-tene.life/internal/waves"
 )
 
@@ -150,6 +151,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 
 	nextHighTide, nextLowTide := h.getCachedTideData(ts)
 	var waveData *models.WavesLatest
+	var waterData *models.WaterQualityLatest
 	wavePath := utils.EnvPathOrDefault("WAVES_JSON_PATH", "data/waves_latest.json")
 	waveData, err = waves.LoadLatestFromFile(wavePath)
 	if err != nil {
@@ -157,6 +159,14 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 			log.Printf("Error reading wave cache '%s': %v", wavePath, err)
 		}
 		waveData = nil
+	}
+	waterPath := utils.EnvPathOrDefault("WATER_JSON_PATH", "data/water_quality_latest.json")
+	waterData, err = water.LoadLatestFromFile(waterPath)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			log.Printf("Error reading water cache '%s': %v", waterPath, err)
+		}
+		waterData = nil
 	}
 
 	data := models.PageData{
@@ -167,6 +177,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		NextHighTide:      nextHighTide,
 		NextLowTide:       nextLowTide,
 		Waves:             waveData,
+		WaterQuality:      waterData,
 		DayMaxTemperature: dayMaxTemperature,
 		DayMinTemperature: dayMinTemperature,
 		DayMaxTempText:    dayMaxTempText,
@@ -419,6 +430,7 @@ func (h *Handler) GetHomeDataHandler(c echo.Context) error {
 	}
 
 	var waveData *models.WavesLatest
+	var waterData *models.WaterQualityLatest
 	wavePath := utils.EnvPathOrDefault("WAVES_JSON_PATH", "data/waves_latest.json")
 	waveData, err = waves.LoadLatestFromFile(wavePath)
 	if err != nil {
@@ -427,11 +439,20 @@ func (h *Handler) GetHomeDataHandler(c echo.Context) error {
 		}
 		waveData = nil
 	}
+	waterPath := utils.EnvPathOrDefault("WATER_JSON_PATH", "data/water_quality_latest.json")
+	waterData, err = water.LoadLatestFromFile(waterPath)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			log.Printf("Error reading water cache '%s': %v", waterPath, err)
+		}
+		waterData = nil
+	}
 
 	return c.JSON(http.StatusOK, models.HomeAPIResponse{
 		Weather:        weather,
 		SeaTemperature: seaTemp,
 		Waves:          waveData,
+		WaterQuality:   waterData,
 	})
 }
 

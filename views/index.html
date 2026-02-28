@@ -90,6 +90,23 @@
                             <td class="text-right pt-0.5 sm:pt-1">{{ printf "%.0f" .Waves.MeanDirDeg }}°</td>
                         </tr>
                         {{ end }}
+                        {{ if .WaterQuality }}
+                        <tr class="border-t border-white/30">
+                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1" title="{{ waterQualityTooltip .Locale }}">
+                                <span class="inline-flex items-center gap-1">
+                                    <span>{{ index .I18n "water_quality" }}</span>
+                                    <span class="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full border border-white/70 text-[0.7em] leading-none cursor-help" aria-label="{{ waterQualityTooltip .Locale }}">?</span>
+                                </span>
+                            </td>
+                            <td class="text-right pt-0.5 sm:pt-1" title="{{ waterQualityTooltip .Locale }}">{{ waterQualityStatus .Locale .WaterQuality.Status }}</td>
+                        </tr>
+                        {{ if .WaterQuality.SampleDate }}
+                        <tr>
+                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "water_sample_date" }}</td>
+                            <td class="text-right pt-0.5 sm:pt-1">{{ .WaterQuality.SampleDate }}</td>
+                        </tr>
+                        {{ end }}
+                        {{ end }}
                     </table>
                     {{ else }}
                     <p>{{ index .I18n "weather_unavailable" }}</p>

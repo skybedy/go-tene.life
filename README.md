@@ -75,3 +75,29 @@ Optional cron fallback (only if you do not want the in-app collector):
 ```cron
 */15 * * * * cd /path/to/go-tene.life && ./tenelife collect:waves >> /var/log/tenelife-waves.log 2>&1
 ```
+
+## Water Quality Collector
+
+Official bathing water quality is collected from IDECanarias / GRAFCAN WMS (`ZB_PM`, layer `PM`) and cached to JSON.
+
+- Manual command: `tenelife collect:water`
+- Output cache file: `data/water_quality_latest.json`
+- API uses cache only: `/api/home` reads this file and never calls external source during request handling.
+
+Run manually:
+
+```bash
+go run . collect:water
+```
+
+or with built binary:
+
+```bash
+./tenelife collect:water
+```
+
+Cron example (once per day):
+
+```cron
+15 6 * * * cd /path/to/go-tene.life && ./tenelife collect:water >> /var/log/tenelife-water.log 2>&1
+```

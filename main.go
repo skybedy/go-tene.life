@@ -20,6 +20,7 @@ import (
 	"github.com/skybedy/laravel-tene.life/internal/i18n"
 	"github.com/skybedy/laravel-tene.life/internal/store"
 	"github.com/skybedy/laravel-tene.life/internal/utils"
+	"github.com/skybedy/laravel-tene.life/internal/water"
 	"github.com/skybedy/laravel-tene.life/internal/waves"
 	"github.com/skybedy/laravel-tene.life/internal/web"
 )
@@ -50,6 +51,16 @@ func main() {
 			log.Fatal("collect:waves failed: ", err)
 		}
 		log.Println("collect:waves completed: data/waves_latest.json")
+		return
+	}
+	if len(os.Args) > 1 && os.Args[1] == "collect:water" {
+		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+		defer cancel()
+
+		if err := water.CollectLatestToDefaultPath(ctx); err != nil {
+			log.Fatal("collect:water failed: ", err)
+		}
+		log.Println("collect:water completed: data/water_quality_latest.json")
 		return
 	}
 
@@ -135,9 +146,11 @@ func main() {
 	// Template Renderer using Embed
 	renderer := &web.TemplateRenderer{
 		Templates: template.Must(template.New("").Funcs(template.FuncMap{
-			"localeURL":    i18n.LocaleURL,
-			"monthName":    i18n.MonthName,
-			"languageFlag": i18n.LanguageFlag,
+			"localeURL":           i18n.LocaleURL,
+			"monthName":           i18n.MonthName,
+			"languageFlag":        i18n.LanguageFlag,
+			"waterQualityStatus":  i18n.WaterQualityStatusLabel,
+			"waterQualityTooltip": i18n.WaterQualityTooltip,
 			"f1": func(v *float64) string {
 				if v == nil {
 					return "--"

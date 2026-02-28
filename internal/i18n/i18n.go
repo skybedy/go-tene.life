@@ -55,6 +55,8 @@ var dictionary = map[string]map[string]string{
 		"wave_height":                "Výška vln",
 		"wave_period":                "Perioda vln",
 		"wave_direction":             "Směr vln",
+		"water_quality":              "Kvalita vody",
+		"water_sample_date":          "Datum vzorku",
 		"pressure":                   "Tlak",
 		"atmospheric_pressure":       "Atmosférický tlak",
 		"humidity":                   "Vlhkost",
@@ -122,6 +124,8 @@ var dictionary = map[string]map[string]string{
 		"wave_height":                "Wave Height",
 		"wave_period":                "Wave Period",
 		"wave_direction":             "Wave Direction",
+		"water_quality":              "Water Quality",
+		"water_sample_date":          "Sample Date",
 		"pressure":                   "Pressure",
 		"atmospheric_pressure":       "Atmospheric Pressure",
 		"humidity":                   "Humidity",
@@ -199,6 +203,9 @@ func Messages(locale string) map[string]string {
 	for k, v := range extraLocaleMessages[loc] {
 		merged[k] = v
 	}
+	for k, v := range waterQualityLocaleMessages[loc] {
+		merged[k] = v
+	}
 
 	return merged
 }
@@ -209,6 +216,32 @@ func T(locale, key string) string {
 		return val
 	}
 	return key
+}
+
+func WaterQualityStatusLabel(locale, raw string) string {
+	switch strings.ToUpper(strings.TrimSpace(raw)) {
+	case "EXCELENTE":
+		return T(locale, "water_quality_status_excellent")
+	case "BUENA":
+		return T(locale, "water_quality_status_good")
+	case "SUFICIENTE":
+		return T(locale, "water_quality_status_sufficient")
+	case "INSUFICIENTE":
+		return T(locale, "water_quality_status_poor")
+	default:
+		return strings.TrimSpace(raw)
+	}
+}
+
+func WaterQualityTooltip(locale string) string {
+	return fmt.Sprintf(
+		"%s: %s, %s, %s, %s",
+		T(locale, "water_quality_scale"),
+		T(locale, "water_quality_status_excellent"),
+		T(locale, "water_quality_status_good"),
+		T(locale, "water_quality_status_sufficient"),
+		T(locale, "water_quality_status_poor"),
+	)
 }
 
 func LocalePrefix(locale string) string {
@@ -312,6 +345,81 @@ var extraLocaleMessages = map[string]map[string]string{
 	},
 	"hu": {
 		"home": "Webkamera", "statistics": "Bővített Statisztikák", "daily_statistics": "Napi Statisztikák", "weekly_statistics": "Heti Statisztikák", "monthly_statistics": "Havi Statisztikák", "annual_statistics": "Éves Statisztikák", "daily_short": "Napi", "weekly_short": "Heti", "monthly_short": "Havi", "annual_short": "Éves", "webcam_title": "Webkamera – Tenerife, Los Cristianos", "webcam_view_alt": "Webkamera nézet", "location_heading": "Helyszín és Nézeti Irány", "location_description": "Avenida Ámsterdam, északkelet – kilátás a Montaña el Mojón 250 m tszf és Roque de Ichasagua 1001, tovább, jobbra a fa mögött, a Morros del Viento 406 felé és tiszta időben a háttérben a Pico del Teide 3715, Pico Viejo 3135 és Alto de Guajara 2715.", "weather_source_heading": "Az Időjárási Adatok Forrásáról", "weather_source_description": "Az aktuális hőmérsékletről, légnyomásról és páratartalomról szóló adatok saját meteorológiai állomásunkról és hőmérséklet-érzékelőnkről származnak, amely állandóan árnyékolt helyen van, közvetlen napfény nélkül, ezért tiszta árnyékértékek.", "hobby_disclaimer": "Kérjük, vegye figyelembe azt is, hogy az itt megadott időjárási információk csak egy hobbi projekt, amely amatőr meteorológiai eszközökkel és módszerekkel gyűjtött adatokkal dolgozik, anélkül, hogy bármilyen ambíciója lenne a hagyományos meteorológiai forrásokkal való versenyzésre.", "temperature": "Hőmérséklet", "air_temperature": "Levegő Hőmérséklet", "sea_temperature": "Tenger Hőmérséklet", "tide_high": "Dagály", "tide_low": "Apály", "wave_height": "Hullámmagasság", "wave_period": "Hullámperiódus", "wave_direction": "Hullámirány", "pressure": "Nyomás", "atmospheric_pressure": "Légköri Nyomás", "humidity": "Páratartalom", "relative_humidity": "Relatív Páratartalom", "weather_unavailable": "Az időjárási adatok jelenleg nem érhetők el", "weather_data_title": "Meteorológiai Adatok", "weather_data_subtitle": "A diagramok a mai nap éjféltől számított óránkénti átlagokat mutatják", "temperature_chart": "Hőmérséklet (°C)", "pressure_chart": "Légköri Nyomás (hPa)", "humidity_chart": "Relatív Páratartalom (%)", "daily_stats_subtitle": "Meteorológiai adatok áttekintése az elmúlt 30 napról.", "weekly_stats_subtitle": "Heti átlagok és szélsőértékek a meteorológiai adatokban.", "monthly_stats_subtitle": "Havi áttekintés az elmúlt évről.", "annual_stats_subtitle": "A havi átlagok teljes története.", "daily_temp_chart_title": "Hőmérséklet az elmúlt 7 napban (°C)", "daily_pressure_chart_title": "Nyomás az elmúlt 7 napban (hPa)", "daily_humidity_chart_title": "Páratartalom az elmúlt 7 napban (%)", "weekly_temp_chart_title": "Hőmérséklet (heti átlagok) °C", "monthly_temp_chart_title": "Hőmérséklet (havi átlagok) °C", "go_to_detail_charts": "Ugrás a nap részletes grafikonjaihoz:", "show": "Mutat", "table_overview": "Táblázatos Áttekintés", "table_overview_30": "Táblázatos Áttekintés (utolsó 30 nap)", "date": "Dátum", "week_year": "Hét / Év", "month_year": "Hónap / Év", "period": "Időszak", "avg_temp": "Átl. Hőm.", "min_max": "Min / Max", "avg_pressure": "Átl. Nyomás", "avg_humidity": "Átl. Pára", "sea": "Tenger", "no_data": "Még nincsenek elérhető adatok.", "average": "Átlag:", "min": "Min", "max": "Max", "back": "Vissza", "webcam_big_title": "Webkamera – Nagy Nézet", "webcam_big_alt": "Webkamera - nagy nézet", "site_title_suffix": "Tenerife | Los Cristianos | Webcam",
+	},
+}
+
+var waterQualityLocaleMessages = map[string]map[string]string{
+	"cs": {
+		"water_quality":                   "Kvalita vody",
+		"water_sample_date":               "Datum vzorku",
+		"water_quality_scale":             "Stupnice kvality",
+		"water_quality_status_excellent":  "Výborná",
+		"water_quality_status_good":       "Dobrá",
+		"water_quality_status_sufficient": "Dostatečná",
+		"water_quality_status_poor":       "Nedostatečná",
+	},
+	"en": {
+		"water_quality":                   "Water Quality",
+		"water_sample_date":               "Sample Date",
+		"water_quality_scale":             "Quality scale",
+		"water_quality_status_excellent":  "Excellent",
+		"water_quality_status_good":       "Good",
+		"water_quality_status_sufficient": "Sufficient",
+		"water_quality_status_poor":       "Poor",
+	},
+	"es": {
+		"water_quality":                   "Calidad del agua",
+		"water_sample_date":               "Fecha de muestra",
+		"water_quality_scale":             "Escala de calidad",
+		"water_quality_status_excellent":  "Excelente",
+		"water_quality_status_good":       "Buena",
+		"water_quality_status_sufficient": "Suficiente",
+		"water_quality_status_poor":       "Insuficiente",
+	},
+	"pl": {
+		"water_quality":                   "Jakość wody",
+		"water_sample_date":               "Data próbki",
+		"water_quality_scale":             "Skala jakości",
+		"water_quality_status_excellent":  "Doskonała",
+		"water_quality_status_good":       "Dobra",
+		"water_quality_status_sufficient": "Dostateczna",
+		"water_quality_status_poor":       "Niedostateczna",
+	},
+	"de": {
+		"water_quality":                   "Wasserqualität",
+		"water_sample_date":               "Probenahme",
+		"water_quality_scale":             "Qualitätsskala",
+		"water_quality_status_excellent":  "Ausgezeichnet",
+		"water_quality_status_good":       "Gut",
+		"water_quality_status_sufficient": "Ausreichend",
+		"water_quality_status_poor":       "Mangelhaft",
+	},
+	"fr": {
+		"water_quality":                   "Qualité de l'eau",
+		"water_sample_date":               "Date d'échantillon",
+		"water_quality_scale":             "Échelle de qualité",
+		"water_quality_status_excellent":  "Excellente",
+		"water_quality_status_good":       "Bonne",
+		"water_quality_status_sufficient": "Suffisante",
+		"water_quality_status_poor":       "Insuffisante",
+	},
+	"it": {
+		"water_quality":                   "Qualità dell'acqua",
+		"water_sample_date":               "Data campione",
+		"water_quality_scale":             "Scala di qualità",
+		"water_quality_status_excellent":  "Eccellente",
+		"water_quality_status_good":       "Buona",
+		"water_quality_status_sufficient": "Sufficiente",
+		"water_quality_status_poor":       "Insufficiente",
+	},
+	"hu": {
+		"water_quality":                   "Vízminőség",
+		"water_sample_date":               "Minta dátuma",
+		"water_quality_scale":             "Minőségi skála",
+		"water_quality_status_excellent":  "Kiváló",
+		"water_quality_status_good":       "Jó",
+		"water_quality_status_sufficient": "Megfelelő",
+		"water_quality_status_poor":       "Elégtelen",
 	},
 }
 
