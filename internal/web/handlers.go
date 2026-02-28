@@ -21,6 +21,7 @@ import (
 	"github.com/skybedy/laravel-tene.life/internal/models"
 	"github.com/skybedy/laravel-tene.life/internal/store"
 	"github.com/skybedy/laravel-tene.life/internal/utils"
+	"github.com/skybedy/laravel-tene.life/internal/waves"
 )
 
 // TemplateRenderer implements Echo's Renderer interface
@@ -148,6 +149,15 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 	}
 
 	nextHighTide, nextLowTide := h.getCachedTideData(ts)
+	var waveData *models.WavesLatest
+	wavePath := utils.EnvPathOrDefault("WAVES_JSON_PATH", "data/waves_latest.json")
+	waveData, err = waves.LoadLatestFromFile(wavePath)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			log.Printf("Error reading wave cache '%s': %v", wavePath, err)
+		}
+		waveData = nil
+	}
 
 	data := models.PageData{
 		Weather:           weather,
@@ -156,6 +166,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		SeaTemperatureVal: seaTempVal,
 		NextHighTide:      nextHighTide,
 		NextLowTide:       nextLowTide,
+		Waves:             waveData,
 		DayMaxTemperature: dayMaxTemperature,
 		DayMinTemperature: dayMinTemperature,
 		DayMaxTempText:    dayMaxTempText,
@@ -399,6 +410,29 @@ func (h *Handler) GetHourlyDataHandler(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, response)
+}
+
+func (h *Handler) GetHomeDataHandler(c echo.Context) error {
+	weather, seaTemp, err := h.getCachedWeatherData()
+	if err != nil {
+		log.Printf("Error getting weather data for /api/home: %v", err)
+	}
+
+	var waveData *models.WavesLatest
+	wavePath := utils.EnvPathOrDefault("WAVES_JSON_PATH", "data/waves_latest.json")
+	waveData, err = waves.LoadLatestFromFile(wavePath)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			log.Printf("Error reading wave cache '%s': %v", wavePath, err)
+		}
+		waveData = nil
+	}
+
+	return c.JSON(http.StatusOK, models.HomeAPIResponse{
+		Weather:        weather,
+		SeaTemperature: seaTemp,
+		Waves:          waveData,
+	})
 }
 
 func (h *Handler) WebcamBigHandler(c echo.Context) error {

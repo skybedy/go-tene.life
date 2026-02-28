@@ -76,6 +76,20 @@
                             <td class="text-right pt-0.5 sm:pt-1">{{ if .NextLowTide }}{{ .NextLowTide }}{{ else }}-{{ end }}</td>
                         </tr>
                         {{ end }}
+                        {{ if .Waves }}
+                        <tr class="border-t border-white/30">
+                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "wave_height" }}</td>
+                            <td class="text-right pt-0.5 sm:pt-1">{{ printf "%.2f" .Waves.Hm0M }} m</td>
+                        </tr>
+                        <tr>
+                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "wave_period" }}</td>
+                            <td class="text-right pt-0.5 sm:pt-1">{{ printf "%.2f" .Waves.PeriodS }} s</td>
+                        </tr>
+                        <tr>
+                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "wave_direction" }}</td>
+                            <td class="text-right pt-0.5 sm:pt-1">{{ printf "%.0f" .Waves.MeanDirDeg }}°</td>
+                        </tr>
+                        {{ end }}
                     </table>
                     {{ else }}
                     <p>{{ index .I18n "weather_unavailable" }}</p>

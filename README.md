@@ -46,3 +46,29 @@ This exports structure-only SQL for app tables (`weather*`) into `db/schema.sql`
 2. Apply it locally using `make migrate-up`.
 3. Refresh snapshot using `make dump-schema`.
 4. Commit migration files and `db/schema.sql` together.
+
+## Waves Collector
+
+Measured wave data is collected from Puertos del Estado (PORTUS), station `2446` (Tenerife Sur), and cached to JSON.
+
+- Command: `tenelife collect:waves`
+- Output cache file: `data/waves_latest.json`
+- Source is fetched only by collector; request handlers read only the JSON cache.
+
+Run manually:
+
+```bash
+go run . collect:waves
+```
+
+or with built binary:
+
+```bash
+./tenelife collect:waves
+```
+
+Cron example (every 15 minutes):
+
+```cron
+*/15 * * * * cd /path/to/go-tene.life && ./tenelife collect:waves >> /var/log/tenelife-waves.log 2>&1
+```

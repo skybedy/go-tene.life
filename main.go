@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"embed"
 	"fmt"
@@ -18,6 +19,7 @@ import (
 	"github.com/skybedy/laravel-tene.life/internal/i18n"
 	"github.com/skybedy/laravel-tene.life/internal/store"
 	"github.com/skybedy/laravel-tene.life/internal/utils"
+	"github.com/skybedy/laravel-tene.life/internal/waves"
 	"github.com/skybedy/laravel-tene.life/internal/web"
 )
 
@@ -37,6 +39,17 @@ func main() {
 		if err := godotenv.Load("../../.env"); err != nil {
 			log.Println("No .env file found in parent either")
 		}
+	}
+
+	if len(os.Args) > 1 && os.Args[1] == "collect:waves" {
+		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+		defer cancel()
+
+		if err := waves.CollectLatestToDefaultPath(ctx); err != nil {
+			log.Fatal("collect:waves failed: ", err)
+		}
+		log.Println("collect:waves completed: data/waves_latest.json")
+		return
 	}
 
 	// Validate environment variables
@@ -199,6 +212,7 @@ func main() {
 	// API and service routes
 	e.GET("/webcam/image.jpg", handler.WebcamImageHandler) // New dynamic route
 	e.GET("/api/weather/hourly", handler.GetHourlyDataHandler)
+	e.GET("/api/home", handler.GetHomeDataHandler)
 
 	// Health check endpoint
 	e.GET("/health", handler.HealthCheckHandler)

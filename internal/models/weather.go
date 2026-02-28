@@ -19,6 +19,7 @@ type PageData struct {
 	SeaTemperatureVal float64
 	NextHighTide      string
 	NextLowTide       string
+	Waves             *WavesLatest
 	DayMaxTemperature *float64
 	DayMinTemperature *float64
 	DayMaxTempText    string
@@ -141,4 +142,10 @@ type StatsPageData struct {
 	CurrentSection  string
 	GAEnabled       bool
 	GAMeasurementID string
+}
+
+type HomeAPIResponse struct {
+	Weather        *WeatherData `json:"weather,omitempty"`
+	SeaTemperature *float64     `json:"sea_temperature,omitempty"`
+	Waves          *WavesLatest `json:"waves,omitempty"`
 }
