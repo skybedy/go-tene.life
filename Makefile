@@ -26,6 +26,6 @@ dump-schema:
 	MYSQL_PWD="$$DB_PASSWORD" mysqldump \
 		-h "$$DB_HOST" -P "$$DB_PORT" -u "$$DB_USERNAME" \
 		--no-data --skip-comments --skip-dump-date --single-transaction \
-		"$$DB_DATABASE" weather weather_daily weather_hourly weather_monthly weather_weekly \
+		"$$DB_DATABASE" weather weather_daily weather_hourly weather_monthly weather_weekly tide_events \
 		| sed -E 's/AUTO_INCREMENT=[0-9]+ //g' > db/schema.sql
 	@echo "Wrote db/schema.sql"

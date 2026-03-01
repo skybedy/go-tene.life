@@ -38,7 +38,7 @@ make migrate-status
 make dump-schema
 ```
 
-This exports structure-only SQL for app tables (`weather*`) into `db/schema.sql`.
+This exports structure-only SQL for app tables (`weather*`, `tide_events`) into `db/schema.sql`.
 
 ### Recommended workflow for DB changes
 
@@ -106,3 +106,12 @@ In-app scheduler (recommended, no Linux cron/systemd needed):
 
 - `WATER_COLLECT_INTERVAL_MINUTES=1440` (default: once per 24h)
 - collector runs automatically on app start and then in this interval
+
+## Tides API
+
+Daily tide extremes (high/low with time and height) are stored in DB table `tide_events`.
+
+- Endpoint: `/api/tides?date=YYYY-MM-DD&loc=los_cristianos`
+- Default serving source: `open_meteo` (`TIDES_SERVING_SOURCE=open_meteo`)
+- Optional hybrid mode: `TIDES_SERVING_SOURCE=hybrid` (Puertos first, fallback Open-Meteo)
+- If data is missing, endpoint triggers synchronous collect with short timeout and may return `503` (`try_later`).

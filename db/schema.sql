@@ -116,6 +116,25 @@ CREATE TABLE `weather_weekly` (
   KEY `weather_weekly_year_week_index` (`year`,`week`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `tide_events`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tide_events` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `date_local` date NOT NULL COMMENT 'Local date (Europe/Madrid)',
+  `location_key` varchar(64) NOT NULL,
+  `event_type` varchar(8) NOT NULL COMMENT 'HIGH|LOW',
+  `event_time_local` datetime NOT NULL COMMENT 'Local datetime (Europe/Madrid)',
+  `height_m` decimal(8,3) NOT NULL,
+  `source` varchar(32) NOT NULL COMMENT 'puertos|open_meteo',
+  `confidence` tinyint(3) unsigned NOT NULL,
+  `fetched_at` datetime NOT NULL COMMENT 'UTC fetch timestamp',
+  `raw_json` longtext DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `tide_events_unique` (`date_local`,`location_key`,`event_type`,`event_time_local`),
+  KEY `tide_events_lookup_idx` (`date_local`,`location_key`,`source`,`fetched_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -125,4 +144,3 @@ CREATE TABLE `weather_weekly` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-

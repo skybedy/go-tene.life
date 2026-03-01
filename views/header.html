@@ -17,6 +17,37 @@
         body {
             font-family: 'Instrument Sans', sans-serif;
         }
+
+        @media (max-width: 340px) {
+            .weather-info-box {
+                max-width: 37% !important;
+                padding: 0.18rem 0.33rem !important;
+                font-size: 0.38rem !important;
+                line-height: 1.15 !important;
+                max-height: calc(100% - 0.45rem);
+            }
+
+            .weather-info-box p,
+            .weather-info-box td {
+                line-height: 1.1 !important;
+            }
+
+            .weather-info-table {
+                table-layout: fixed;
+            }
+
+            .weather-info-table td:first-child {
+                width: 46%;
+            }
+
+            .weather-info-table td:last-child {
+                width: 54%;
+            }
+
+            .weather-info-box .water-quality-label {
+                gap: 0.1rem;
+            }
+        }
     </style>
     {{ if .GAEnabled }}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ .GAMeasurementID }}"></script>

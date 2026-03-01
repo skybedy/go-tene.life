@@ -1,6 +1,7 @@
 package store
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -245,4 +246,102 @@ func (s *WeatherStore) GetDailyTemperatureExtremes(date string) (*float64, strin
 
 func formatTimeHM(ts time.Time) string {
 	return ts.Format("15:04")
+}
+
+func (s *WeatherStore) GetTideEvents(ctx context.Context, dateLocal, locationKey string) ([]models.TideEvent, error) {
+	query := `
+		SELECT id, date_local, location_key, event_type, event_time_local, height_m, source, confidence, fetched_at, raw_json
+		FROM tide_events
+		WHERE date_local = ? AND location_key = ?
+		ORDER BY
+			CASE source WHEN 'puertos' THEN 0 ELSE 1 END,
+			event_time_local ASC
+	`
+
+	rows, err := s.DB.QueryContext(ctx, query, dateLocal, locationKey)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	out := make([]models.TideEvent, 0, 4)
+	for rows.Next() {
+		var ev models.TideEvent
+		if err := rows.Scan(
+			&ev.ID,
+			&ev.DateLocal,
+			&ev.LocationKey,
+			&ev.EventType,
+			&ev.EventTimeLocal,
+			&ev.HeightM,
+			&ev.Source,
+			&ev.Confidence,
+			&ev.FetchedAt,
+			&ev.RawJSON,
+		); err != nil {
+			return nil, err
+		}
+		out = append(out, ev)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return out, nil
+}
+
+func (s *WeatherStore) HasFreshPuertosData(ctx context.Context, dateLocal, locationKey string, sinceUTC time.Time) (bool, error) {
+	query := `
+		SELECT COUNT(*)
+		FROM tide_events
+		WHERE date_local = ?
+			AND location_key = ?
+			AND source = 'puertos'
+			AND fetched_at >= ?
+	`
+
+	var count int
+	if err := s.DB.QueryRowContext(ctx, query, dateLocal, locationKey, sinceUTC).Scan(&count); err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}
+
+func (s *WeatherStore) ReplaceTideEvents(ctx context.Context, dateLocal, locationKey string, events []models.TideEvent) error {
+	tx, err := s.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	if _, err = tx.ExecContext(ctx, "DELETE FROM tide_events WHERE date_local = ? AND location_key = ?", dateLocal, locationKey); err != nil {
+		return err
+	}
+
+	insertQuery := `
+		INSERT INTO tide_events (
+			date_local, location_key, event_type, event_time_local, height_m, source, confidence, fetched_at, raw_json
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+	`
+	for _, ev := range events {
+		if _, err = tx.ExecContext(ctx, insertQuery,
+			ev.DateLocal,
+			ev.LocationKey,
+			ev.EventType,
+			ev.EventTimeLocal,
+			ev.HeightM,
+			ev.Source,
+			ev.Confidence,
+			ev.FetchedAt.UTC(),
+			ev.RawJSON,
+		); err != nil {
+			return err
+		}
+	}
+
+	return tx.Commit()
 }
