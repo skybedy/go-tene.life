@@ -20,7 +20,7 @@ var locations = map[string]LocationConfig{
 		Key:              "los_cristianos",
 		Lat:              28.0436,
 		Lon:              -16.7215,
-		Timezone:         "Europe/Madrid",
+		Timezone:         "Atlantic/Canary",
 		PuertosStationID: 2446,
 		PuertosParam:     "Ha",
 	},

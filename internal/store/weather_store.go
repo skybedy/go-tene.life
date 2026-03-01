@@ -328,11 +328,14 @@ func (s *WeatherStore) ReplaceTideEvents(ctx context.Context, dateLocal, locatio
 		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 	`
 	for _, ev := range events {
+		// Store local wall-clock datetime as literal string (DATETIME has no timezone).
+		// This avoids driver timezone conversion shifting the local tide time.
+		eventTimeLocal := ev.EventTimeLocal.Format("2006-01-02 15:04:05")
 		if _, err = tx.ExecContext(ctx, insertQuery,
 			ev.DateLocal,
 			ev.LocationKey,
 			ev.EventType,
-			ev.EventTimeLocal,
+			eventTimeLocal,
 			ev.HeightM,
 			ev.Source,
 			ev.Confidence,
