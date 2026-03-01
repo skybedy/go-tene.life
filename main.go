@@ -18,6 +18,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/skybedy/laravel-tene.life/internal/i18n"
+	"github.com/skybedy/laravel-tene.life/internal/pws"
 	"github.com/skybedy/laravel-tene.life/internal/store"
 	"github.com/skybedy/laravel-tene.life/internal/utils"
 	"github.com/skybedy/laravel-tene.life/internal/water"
@@ -63,6 +64,7 @@ func main() {
 		log.Println("collect:water completed: data/water_quality_latest.json")
 		return
 	}
+	runPWSCollect := len(os.Args) > 1 && os.Args[1] == "collect:pws"
 
 	// Validate environment variables
 	utils.ValidateEnv()
@@ -99,6 +101,17 @@ func main() {
 	// Initialize Store
 	weatherStore := store.NewWeatherStore(db)
 
+	if runPWSCollect {
+		ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+		defer cancel()
+
+		if err := pws.CollectLatestToDB(ctx, weatherStore); err != nil {
+			log.Fatal("collect:pws failed: ", err)
+		}
+		log.Println("collect:pws completed: pws_latest table updated")
+		return
+	}
+
 	// Initialize Handlers
 	handler := web.NewHandler(weatherStore)
 
@@ -109,6 +122,8 @@ func main() {
 	startWavesCollectorLoop()
 	// Start internal water collector loop (no cron required).
 	startWaterCollectorLoop()
+	// Start internal PWS collector loop (no cron required).
+	startPWSCollectorLoop(weatherStore)
 
 	// Middleware
 	e.Use(middleware.Recover())
@@ -204,6 +219,7 @@ func main() {
 	})
 	e.GET("/statistics/daily", handler.DailyStatisticsHandler)
 	e.GET("/statistics/recent", handler.RecentStatisticsHandler)
+	e.GET("/tenerife/teploty", handler.PWSTemperaturesPageHandler)
 	e.GET("/statistics/weekly", handler.WeeklyStatisticsHandler)
 	e.GET("/statistics/monthly", handler.MonthlyStatisticsHandler)
 	e.GET("/statistics/annual", handler.AnnualStatisticsHandler)
@@ -226,6 +242,7 @@ func main() {
 	})
 	localized.GET("/statistics/daily", handler.DailyStatisticsHandler)
 	localized.GET("/statistics/recent", handler.RecentStatisticsHandler)
+	localized.GET("/tenerife/teploty", handler.PWSTemperaturesPageHandler)
 	localized.GET("/statistics/weekly", handler.WeeklyStatisticsHandler)
 	localized.GET("/statistics/monthly", handler.MonthlyStatisticsHandler)
 	localized.GET("/statistics/annual", handler.AnnualStatisticsHandler)
@@ -234,6 +251,7 @@ func main() {
 	e.GET("/webcam/image.jpg", handler.WebcamImageHandler) // New dynamic route
 	e.GET("/api/weather/hourly", handler.GetHourlyDataHandler)
 	e.GET("/api/home", handler.GetHomeDataHandler)
+	e.GET("/api/tenerife/pws-latest", handler.GetPWSLatestHandler)
 
 	// Health check endpoint
 	e.GET("/health", handler.HealthCheckHandler)
@@ -303,6 +321,35 @@ func startWaterCollectorLoop() {
 				return
 			}
 			log.Println("water collector updated: data/water_quality_latest.json")
+		}
+
+		collect()
+
+		ticker := time.NewTicker(interval)
+		defer ticker.Stop()
+		for range ticker.C {
+			collect()
+		}
+	}()
+}
+
+func startPWSCollectorLoop(weatherStore *store.WeatherStore) {
+	if !pws.APIKeyConfigured() {
+		log.Println("pws collector disabled: WEATHER_COM_API_KEY is not set")
+		return
+	}
+
+	interval := pws.CollectorInterval()
+
+	go func() {
+		collect := func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+			defer cancel()
+			if err := pws.CollectLatestToDB(ctx, weatherStore); err != nil {
+				log.Printf("pws collector failed: %v", err)
+				return
+			}
+			log.Println("pws collector updated: pws_latest table")
 		}
 
 		collect()

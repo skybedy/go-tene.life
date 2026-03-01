@@ -106,3 +106,32 @@ In-app scheduler (recommended, no Linux cron/systemd needed):
 
 - `WATER_COLLECT_INTERVAL_MINUTES=1440` (default: once per 24h)
 - collector runs automatically on app start and then in this interval
+
+## Tenerife PWS Temperature Map
+
+Current temperatures on Tenerife are loaded from The Weather Company PWS API and stored in DB cache tables.
+
+- API key env: `WEATHER_COM_API_KEY`
+- Collector interval env: `PWS_COLLECT_INTERVAL_MINUTES=10`
+- Manual command: `go run . collect:pws`
+- API endpoint: `/api/tenerife/pws-latest`
+- Page: `/tenerife/teploty` (also locale-prefixed variants)
+
+### DB tables
+
+- `pws_stations`: station configuration (`station_id`, `name`, optional `lat`/`lon`, `is_active`, `display_order`)
+- `pws_latest`: latest fetched values per station (`temp_c`, `humidity`, `obs_time_utc`, `fetched_at_utc`, `stale`, `invalid`)
+
+Example station inserts:
+
+```sql
+INSERT INTO pws_stations (station_id, name, lat, lon, is_active, display_order) VALUES
+('ICANARIA12', 'Los Cristianos', 28.0436, -16.7215, 1, 10),
+('ICANARIA45', 'Costa Adeje', 28.0900, -16.7350, 1, 20);
+```
+
+Cron example (every 10 minutes):
+
+```cron
+*/10 * * * * cd /path/to/go-tene.life && ./tenelife collect:pws >> /var/log/tenelife-pws.log 2>&1
+```
