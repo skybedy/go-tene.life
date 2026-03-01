@@ -252,6 +252,7 @@ func main() {
 	e.GET("/api/weather/hourly", handler.GetHourlyDataHandler)
 	e.GET("/api/home", handler.GetHomeDataHandler)
 	e.GET("/api/tenerife/pws-latest", handler.GetPWSLatestHandler)
+	e.GET("/api/tides", handler.GetTidesHandler)
 
 	// Health check endpoint
 	e.GET("/health", handler.HealthCheckHandler)

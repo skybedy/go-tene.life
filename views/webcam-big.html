@@ -18,7 +18,7 @@
     {{ end }}
 </head>
 
-<body class="bg-black min-h-screen flex flex-col items-center justify-center p-2 sm:p-4">
+<body class="min-h-screen flex flex-col items-center justify-center p-2 sm:p-4">
     <div class="w-full max-w-6xl relative">
         <img src="{{ if .WebcamImageURL }}{{ .WebcamImageURL }}{{ else }}/webcam/image.jpg{{ end }}" alt="{{ index .I18n "webcam_big_alt" }}" class="w-full h-auto rounded-lg shadow-2xl">
 

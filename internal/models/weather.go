@@ -19,6 +19,8 @@ type PageData struct {
 	SeaTemperatureVal float64
 	NextHighTide      string
 	NextLowTide       string
+	TideHighEvents    []string
+	TideLowEvents     []string
 	Waves             *WavesLatest
 	WaterQuality      *WaterQualityLatest
 	DayMaxTemperature *float64

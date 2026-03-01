@@ -13,23 +13,24 @@
                     class="w-full h-full object-cover rounded-t-lg sm:rounded-t-xl md:rounded-t-2xl">
 
                 <!-- Weather Info Box -->
-                <div class="absolute top-1 right-1 sm:top-2.5 sm:right-2.5 md:top-3.5 md:right-3.5 lg:top-4.5 lg:right-4.5 xl:top-5 xl:right-5 2xl:top-6 2xl:right-6
+                <div class="weather-info-box absolute top-1 right-1 sm:top-2.5 sm:right-2.5 md:top-3.5 md:right-3.5 lg:top-4.5 lg:right-4.5 xl:top-5 xl:right-5 2xl:top-6 2xl:right-6
                             max-w-[54%] sm:max-w-[66%] md:max-w-[60%] lg:max-w-[54%] xl:max-w-[48%] 2xl:max-w-[50%]
-                            px-1.5 py-0.5 sm:px-2.5 sm:py-1.5 md:px-2.5 md:py-1.5 lg:px-4 lg:py-2.5 xl:px-5 xl:py-3 2xl:px-6 2xl:py-4
+                            max-h-[calc(100%-0.5rem)] sm:max-h-[calc(100%-1rem)] md:max-h-[calc(100%-1rem)] lg:max-h-none
+                            px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-2.5 md:py-1.5 lg:px-4 lg:py-2.5 xl:px-5 xl:py-3 2xl:px-6 2xl:py-4
                             rounded-lg sm:rounded-xl md:rounded-2xl
                             bg-black/40
-                            text-[0.42rem] leading-tight sm:text-[0.72rem] md:text-[0.68rem] lg:text-[0.82rem] xl:text-[1.05rem] 2xl:text-[1.22rem] text-white font-semibold sm:font-bold
+                            text-[0.42rem] leading-tight sm:text-[0.66rem] md:text-[0.68rem] lg:text-[0.82rem] xl:text-[1.05rem] 2xl:text-[1.22rem] text-white font-semibold sm:font-bold
                             flex flex-col gap-y-0 sm:gap-y-1 md:gap-y-1 items-start justify-center
-                            md:overflow-y-auto lg:overflow-visible
+                            overflow-y-auto lg:overflow-visible
                             backdrop-blur-sm shadow-lg">
 
-                    <p class="w-full flex items-center justify-between underline pt-1.5">
+                    <p class="w-full flex items-center justify-between underline pt-1 sm:pt-1.5">
                         <span>{{ .FormattedDate }} - {{ .FormattedTime }}</span>
                         <span class="uppercase text-[0.72em] px-1 py-0.5 rounded-full bg-white/20 border border-white/35">Live</span>
                     </p>
 
                     {{ if .Weather }}
-                    <table class="w-full">
+                    <table class="weather-info-table w-full">
                         <tr>
                             <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-[2px]">{{ index .I18n "temperature" }}</td>
                             <td class="text-right pt-[2px]">{{ printf "%.1f" .Weather.Temperature }} °C</td>
@@ -70,15 +71,33 @@
                                 {{ end }}
                             </td>
                         </tr>
-                        {{ if or .NextHighTide .NextLowTide }}
+                        {{ if or .TideHighEvents .TideLowEvents }}
+                        {{ if .TideHighEvents }}
+                        {{ range $i, $event := .TideHighEvents }}
                         <tr>
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "tide_high" }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1">{{ if .NextHighTide }}{{ .NextHighTide }}{{ else }}-{{ end }}</td>
+                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1 {{ if eq $i 0 }}border-t border-white/30{{ end }}">{{ if eq $i 0 }}{{ index $.I18n "tide_high" }}{{ end }}</td>
+                            <td class="text-right pt-0.5 sm:pt-1 {{ if eq $i 0 }}border-t border-white/30{{ end }}" style="font-variant-numeric: tabular-nums; white-space: pre;">{{ $event }}</td>
                         </tr>
+                        {{ end }}
+                        {{ else }}
+                        <tr>
+                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1 border-t border-white/30">{{ index .I18n "tide_high" }}</td>
+                            <td class="text-right pt-0.5 sm:pt-1 border-t border-white/30" style="font-variant-numeric: tabular-nums; white-space: pre;">-</td>
+                        </tr>
+                        {{ end }}
+                        {{ if .TideLowEvents }}
+                        {{ range $i, $event := .TideLowEvents }}
+                        <tr>
+                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ if eq $i 0 }}{{ index $.I18n "tide_low" }}{{ end }}</td>
+                            <td class="text-right pt-0.5 sm:pt-1" style="font-variant-numeric: tabular-nums; white-space: pre;">{{ $event }}</td>
+                        </tr>
+                        {{ end }}
+                        {{ else }}
                         <tr>
                             <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "tide_low" }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1">{{ if .NextLowTide }}{{ .NextLowTide }}{{ else }}-{{ end }}</td>
+                            <td class="text-right pt-0.5 sm:pt-1" style="font-variant-numeric: tabular-nums; white-space: pre;">-</td>
                         </tr>
+                        {{ end }}
                         {{ end }}
                         {{ if .Waves }}
                         <tr class="border-t border-white/30">
@@ -96,13 +115,19 @@
                         {{ end }}
                         {{ if .WaterQuality }}
                         <tr class="border-t border-white/30">
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1" title="{{ waterQualityTooltip .Locale }}">
-                                <span class="inline-flex items-center gap-1">
+                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">
+                                <span class="water-quality-label inline-flex items-center gap-1">
                                     <span>{{ index .I18n "water_quality" }}</span>
-                                    <span class="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full border border-white/70 text-[0.7em] leading-none cursor-help" aria-label="{{ waterQualityTooltip .Locale }}">?</span>
+                                    
                                 </span>
                             </td>
-                            <td class="text-right pt-0.5 sm:pt-1" title="{{ waterQualityTooltip .Locale }}">{{ waterQualityStatus .Locale .WaterQuality.Status }}</td>
+                            <td class="text-right pt-0.5 sm:pt-1">
+                                {{ waterQualityStatus .Locale .WaterQuality.Status }}
+                                <details class="group relative inline-block align-middle ml-0.5">
+                                    <summary class="water-quality-help relative -top-0.5 inline-flex h-2 w-2 sm:h-3.5 sm:w-3.5 xl:h-5 xl:w-5 items-center justify-center rounded-full border border-white/70 text-[0.6em] leading-none cursor-pointer list-none">?</summary>
+                                    <span class="pointer-events-none absolute right-0 top-full z-30 mt-1 block w-56 sm:w-64 rounded-md border border-white/35 bg-white/20 backdrop-blur-sm shadow-lg px-2.5 py-1.5 text-[0.72rem] sm:text-[0.82rem] font-medium leading-snug text-left text-white opacity-0 transition-opacity duration-150 group-open:opacity-100">{{ waterQualityTooltip .Locale }}</span>
+                                </details>
+                            </td>
                         </tr>
                         {{ if .WaterQuality.SampleDate }}
                         <tr>
