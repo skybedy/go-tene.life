@@ -6,7 +6,15 @@ document.addEventListener('DOMContentLoaded', function () {
         humidity: null
     };
 
-    function initChart(id, label, color, unit) {
+    function formatNumber(value, maxFractionDigits) {
+        const numeric = Number(value);
+        if (!Number.isFinite(numeric)) return value;
+        return numeric.toLocaleString(undefined, {
+            maximumFractionDigits: maxFractionDigits
+        });
+    }
+
+    function initChart(id, label, color, unit, maxFractionDigits) {
         const ctx = document.getElementById(id).getContext('2d');
         return new Chart(ctx, {
             type: 'line',
@@ -35,21 +43,28 @@ document.addEventListener('DOMContentLoaded', function () {
                         display: true,
                         ticks: {
                             callback: function(value) {
-                                return value + unit;
+                                return formatNumber(value, maxFractionDigits) + unit;
                             }
                         }
                     }
                 },
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${label}: ${formatNumber(context.parsed.y, maxFractionDigits)}${unit}`;
+                            }
+                        }
+                    }
                 }
             }
         });
     }
 
-    charts.temperature = initChart('temperatureChart', i18n.temperature || 'Temperature', '#ef4444', '°C');
-    charts.pressure = initChart('pressureChart', i18n.pressure || 'Pressure', '#3b82f6', ' hPa');
-    charts.humidity = initChart('humidityChart', i18n.humidity || 'Humidity', '#10b981', '%');
+    charts.temperature = initChart('temperatureChart', i18n.temperature || 'Temperature', '#ef4444', '°C', 1);
+    charts.pressure = initChart('pressureChart', i18n.pressure || 'Pressure', '#3b82f6', ' hPa', 1);
+    charts.humidity = initChart('humidityChart', i18n.humidity || 'Humidity', '#10b981', '%', 1);
 
     async function updateCharts() {
         try {
