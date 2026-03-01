@@ -123,10 +123,10 @@
                             </td>
                             <td class="text-right pt-0.5 sm:pt-1">
                                 {{ waterQualityStatus .Locale .WaterQuality.Status }}
-                                <span class="relative inline-flex align-middle">
-                                    <span class="water-quality-help relative -top-0.5 inline-flex h-2 w-2 sm:h-3.5 sm:w-3.5 xl:h-5 xl:w-5 items-center justify-center rounded-full border border-white/70 text-[0.6em] leading-none cursor-help peer" aria-label="{{ waterQualityTooltip .Locale }}">?</span>
-                                    <span class="pointer-events-none absolute right-0 top-full z-30 mt-1 block w-56 sm:w-64 rounded-md border border-white/35 bg-white/20 backdrop-blur-sm shadow-lg px-2.5 py-1.5 text-[0.72rem] sm:text-[0.82rem] font-medium leading-snug text-left text-white opacity-0 transition-opacity duration-150 peer-hover:opacity-100 peer-focus:opacity-100">{{ waterQualityTooltip .Locale }}</span>
-                                </span>
+                                <details class="group relative inline-block align-middle ml-0.5">
+                                    <summary class="water-quality-help relative -top-0.5 inline-flex h-2 w-2 sm:h-3.5 sm:w-3.5 xl:h-5 xl:w-5 items-center justify-center rounded-full border border-white/70 text-[0.6em] leading-none cursor-pointer list-none">?</summary>
+                                    <span class="pointer-events-none absolute right-0 top-full z-30 mt-1 block w-56 sm:w-64 rounded-md border border-white/35 bg-white/20 backdrop-blur-sm shadow-lg px-2.5 py-1.5 text-[0.72rem] sm:text-[0.82rem] font-medium leading-snug text-left text-white opacity-0 transition-opacity duration-150 group-open:opacity-100">{{ waterQualityTooltip .Locale }}</span>
+                                </details>
                             </td>
                         </tr>
                         {{ if .WaterQuality.SampleDate }}
