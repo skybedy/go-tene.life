@@ -38,7 +38,7 @@ make migrate-status
 make dump-schema
 ```
 
-This exports structure-only SQL for app tables (`weather*`, `tide_events`) into `db/schema.sql`.
+This exports structure-only SQL for app tables (`weather*`, `tide_events`, `pws_*`) into `db/schema.sql`.
 
 ### Recommended workflow for DB changes
 
