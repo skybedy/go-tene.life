@@ -263,50 +263,8 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) 
 
 func (h *Handler) getCachedTideData(reference time.Time) (string, string) {
 	_ = reference
-	apiKey := strings.TrimSpace(os.Getenv("TIDE_API_KEY"))
-	if apiKey == "" {
-		return "", ""
-	}
-
-	loc := time.Local
-	if tz := strings.TrimSpace(os.Getenv("TIDE_TIMEZONE")); tz != "" {
-		if loaded, err := time.LoadLocation(tz); err == nil {
-			loc = loaded
-		}
-	}
-	now := time.Now().In(loc)
-	dateKey := now.Format("2006-01-02")
-
-	h.cacheMu.RLock()
-	cachedHigh := h.tideHighCache
-	cachedLow := h.tideLowCache
-	cachedDate := h.tideDateCache
-	cacheAge := time.Since(h.lastTideCache)
-	h.cacheMu.RUnlock()
-
-	if cachedDate == dateKey && cacheAge <= h.tideTimeout {
-		return cachedHigh, cachedLow
-	}
-
-	h.cacheMu.Lock()
-	defer h.cacheMu.Unlock()
-
-	if h.tideDateCache == dateKey && time.Since(h.lastTideCache) <= h.tideTimeout {
-		return h.tideHighCache, h.tideLowCache
-	}
-
-	nextHigh, nextLow, err := fetchWorldTidesTodayExtremes(now, apiKey, loc)
-	if err != nil {
-		log.Printf("Error fetching tide data: %v", err)
-		return h.tideHighCache, h.tideLowCache
-	}
-
-	h.tideHighCache = nextHigh
-	h.tideLowCache = nextLow
-	h.tideDateCache = dateKey
-	h.lastTideCache = time.Now()
-
-	return nextHigh, nextLow
+	// Stubbed intentionally: temporarily disable external tide API calls.
+	return "", ""
 }
 
 type worldTidesResponse struct {
