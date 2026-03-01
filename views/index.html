@@ -15,15 +15,16 @@
                 <!-- Weather Info Box -->
                 <div class="weather-info-box absolute top-1 right-1 sm:top-2.5 sm:right-2.5 md:top-3.5 md:right-3.5 lg:top-4.5 lg:right-4.5 xl:top-5 xl:right-5 2xl:top-6 2xl:right-6
                             max-w-[54%] sm:max-w-[66%] md:max-w-[60%] lg:max-w-[54%] xl:max-w-[48%] 2xl:max-w-[50%]
-                            px-1.5 py-0.5 sm:px-2.5 sm:py-1.5 md:px-2.5 md:py-1.5 lg:px-4 lg:py-2.5 xl:px-5 xl:py-3 2xl:px-6 2xl:py-4
+                            max-h-[calc(100%-0.5rem)] sm:max-h-[calc(100%-1rem)] md:max-h-[calc(100%-1rem)] lg:max-h-none
+                            px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-2.5 md:py-1.5 lg:px-4 lg:py-2.5 xl:px-5 xl:py-3 2xl:px-6 2xl:py-4
                             rounded-lg sm:rounded-xl md:rounded-2xl
                             bg-black/40
-                            text-[0.42rem] leading-tight sm:text-[0.72rem] md:text-[0.68rem] lg:text-[0.82rem] xl:text-[1.05rem] 2xl:text-[1.22rem] text-white font-semibold sm:font-bold
+                            text-[0.42rem] leading-tight sm:text-[0.66rem] md:text-[0.68rem] lg:text-[0.82rem] xl:text-[1.05rem] 2xl:text-[1.22rem] text-white font-semibold sm:font-bold
                             flex flex-col gap-y-0 sm:gap-y-1 md:gap-y-1 items-start justify-center
                             overflow-y-auto lg:overflow-visible
                             backdrop-blur-sm shadow-lg">
 
-                    <p class="w-full flex items-center justify-between underline pt-1.5">
+                    <p class="w-full flex items-center justify-between underline pt-1 sm:pt-1.5">
                         <span>{{ .FormattedDate }} - {{ .FormattedTime }}</span>
                         <span class="uppercase text-[0.72em] px-1 py-0.5 rounded-full bg-white/20 border border-white/35">Live</span>
                     </p>

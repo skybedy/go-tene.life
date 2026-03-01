@@ -18,6 +18,22 @@
             font-family: 'Instrument Sans', sans-serif;
         }
 
+        @media (min-width: 640px) and (max-width: 767px) {
+            .weather-info-box {
+                max-width: 62% !important;
+                max-height: calc(100% - 0.9rem) !important;
+                padding: 0.22rem 0.38rem !important;
+                font-size: 0.6rem !important;
+                line-height: 1.08 !important;
+                gap: 0 !important;
+            }
+
+            .weather-info-box p,
+            .weather-info-box td {
+                line-height: 1.05 !important;
+            }
+        }
+
         @media (max-width: 340px) {
             .weather-info-box {
                 max-width: 37% !important;
