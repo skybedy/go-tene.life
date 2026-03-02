@@ -185,6 +185,23 @@
             </div>
         </div>
 
+        <div class="mt-4 sm:mt-6 md:mt-8">
+            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-4 sm:p-5 md:p-6 lg:p-7">
+                <h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
+                    {{ index .I18n "tenerife_temperatures" }}
+                </h1>
+                <p class="text-gray-600 text-xs sm:text-sm md:text-base mb-3 sm:mb-4">
+                    {{ index .I18n "pws_map_subtitle" }}
+                </p>
+                <p id="pwsLastUpdate" class="text-gray-700 text-xs sm:text-sm mb-3 sm:mb-4">
+                    {{ index .I18n "pws_last_update" }}: -
+                </p>
+
+                <div id="pwsMap" class="w-full h-[420px] sm:h-[500px] rounded-xl border border-gray-300"></div>
+                <p id="pwsMapMessage" class="hidden mt-3 text-sm text-gray-700"></p>
+            </div>
+        </div>
+
         <!-- Weather Charts Section -->
         <div class="mt-4 sm:mt-6 md:mt-8 space-y-3 sm:space-y-4">
             <div class="px-1 sm:px-2">
@@ -226,13 +243,26 @@
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
     window.chartI18n = {
         temperature: {{ printf "%q" (index .I18n "temperature") }},
         pressure: {{ printf "%q" (index .I18n "pressure") }},
         humidity: {{ printf "%q" (index .I18n "humidity") }}
     };
+    window.pwsMapI18n = {
+        lastUpdateLabel: {{ printf "%q" (index .I18n "pws_last_update") }},
+        noData: {{ printf "%q" (index .I18n "pws_no_data") }},
+        observedAt: {{ printf "%q" (index .I18n "pws_observed_at") }},
+        fetchedAt: {{ printf "%q" (index .I18n "pws_fetched_at") }},
+        stale: {{ printf "%q" (index .I18n "pws_stale") }},
+        invalid: {{ printf "%q" (index .I18n "pws_invalid") }}
+    };
 </script>
+<script src="/js/pws-map.js"></script>
 <script src="/js/weather-charts.js"></script>
 
 {{ template "footer.html" . }}

@@ -686,22 +686,6 @@ func (h *Handler) RecentStatisticsHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "recent.html", data)
 }
 
-func (h *Handler) PWSTemperaturesPageHandler(c echo.Context) error {
-	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
-	data := models.PWSMapPageData{
-		PageTitle:       i18n.T(locale, "tenerife_temperatures"),
-		Locale:          locale,
-		LocalePrefix:    i18n.LocalePrefix(locale),
-		CurrentPath:     currentPath,
-		CurrentSection:  "pws_map",
-		Languages:       languages,
-		I18n:            messages,
-		GAEnabled:       gaEnabled,
-		GAMeasurementID: gaMeasurementID,
-	}
-	return c.Render(http.StatusOK, "tenerife-temperatures.html", data)
-}
-
 func (h *Handler) GetPWSLatestHandler(c echo.Context) error {
 	points, err := h.WeatherStore.GetPWSLatestPoints()
 	if err != nil {

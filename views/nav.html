@@ -12,10 +12,6 @@
                     class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "home" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                     {{ index .I18n "home" }}
                 </a>
-                <a href="{{ localeURL .Locale "/tenerife/teploty" }}"
-                    class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "pws_map" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
-                    {{ index .I18n "tenerife_temperatures" }}
-                </a>
 
                 <div class="relative group">
                     <button
@@ -107,10 +103,6 @@
                 <a href="{{ localeURL .Locale "/statistics/daily" }}"
                     class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                     {{ index .I18n "daily_statistics" }}
-                </a>
-                <a href="{{ localeURL .Locale "/tenerife/teploty" }}"
-                    class="block px-3 py-2 text-sm rounded-lg {{ if eq .CurrentSection "pws_map" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
-                    {{ index .I18n "tenerife_temperatures" }}
                 </a>
                 <a href="{{ localeURL .Locale "/statistics/recent" }}"
                     class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">

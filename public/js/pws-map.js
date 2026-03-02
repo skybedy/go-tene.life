@@ -8,11 +8,63 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    const map = L.map('pwsMap').setView([28.2916, -16.6291], 10);
+    const map = L.map('pwsMap', {
+        dragging: true,
+        scrollWheelZoom: true,
+        doubleClickZoom: true,
+        boxZoom: false,
+        keyboard: false,
+        touchZoom: true,
+        zoomControl: true
+    }).setView([28.2916, -16.6291], 10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
+    const maxObservationAgeMs = 60 * 60 * 1000; // 1 hour
+    function ensureLabelStyles() {
+        if (document.getElementById('pwsTempLabelStyle')) return;
+        const style = document.createElement('style');
+        style.id = 'pwsTempLabelStyle';
+        style.textContent = `
+            .pws-temp-dot {
+                width: 34px;
+                height: 34px;
+                border-radius: 9999px;
+                border: 2px solid #1f2937;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 700;
+                line-height: 1;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+                text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+                user-select: none;
+                white-space: nowrap;
+            }
+            .pws-temp-dot.is-na {
+                color: #fff;
+                font-size: 11px;
+            }
+            .pws-info-tooltip {
+                background: rgba(17, 24, 39, 0.9);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.25);
+                border-radius: 8px;
+                padding: 6px 8px;
+                font-size: 12px;
+                line-height: 1.3;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            }
+            .pws-info-tooltip:before {
+                border-top-color: rgba(17, 24, 39, 0.9);
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    ensureLabelStyles();
 
     function colorForTemp(temp) {
         if (temp == null || Number.isNaN(temp)) return '#6b7280';
@@ -30,9 +82,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return new Intl.DateTimeFormat(document.documentElement.lang || undefined, {
             year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
             minute: '2-digit'
         }).format(ts);
     }
@@ -66,6 +118,44 @@ document.addEventListener('DOMContentLoaded', function () {
         return lines.join('<br>');
     }
 
+    function markerInfoText(point) {
+        const name = point.name || point.stationId || '-';
+        const lastUpdateLabel = i18n.lastUpdateLabel || 'Last update';
+        return `<strong>${name}</strong><br>${lastUpdateLabel}: ${formatLocalDate(point.fetched_at_utc)}`;
+    }
+
+    function tempLabel(point) {
+        if (point.temp_c == null || Number.isNaN(Number(point.temp_c))) {
+            return '--';
+        }
+        return `${Math.round(Number(point.temp_c))}°`;
+    }
+
+    function markerIcon(point) {
+        const label = tempLabel(point);
+        const naClass = label === '--' ? ' is-na' : '';
+        const bg = colorForTemp(point.temp_c);
+        return L.divIcon({
+            className: 'pws-temp-marker-wrap',
+            html: `<div class="pws-temp-dot${naClass}" style="background:${bg}">${label}</div>`,
+            iconSize: [34, 34],
+            iconAnchor: [17, 17],
+            popupAnchor: [0, -18]
+        });
+    }
+
+    function parseISO(isoTime) {
+        if (!isoTime) return null;
+        const ts = new Date(isoTime);
+        return Number.isNaN(ts.getTime()) ? null : ts;
+    }
+
+    function isRecentObservation(point) {
+        const obs = parseISO(point.obs_time_utc);
+        if (!obs) return false;
+        return (Date.now() - obs.getTime()) <= maxObservationAgeMs;
+    }
+
     async function loadPoints() {
         try {
             const response = await fetch('/api/tenerife/pws-latest');
@@ -84,9 +174,13 @@ document.addEventListener('DOMContentLoaded', function () {
             let visiblePoints = 0;
 
             for (const point of points) {
+                if (!isRecentObservation(point)) {
+                    continue;
+                }
+
                 if (point.fetched_at_utc) {
-                    const currentFetched = new Date(point.fetched_at_utc);
-                    if (!Number.isNaN(currentFetched.getTime()) && (!latestFetched || currentFetched > latestFetched)) {
+                    const currentFetched = parseISO(point.fetched_at_utc);
+                    if (currentFetched && (!latestFetched || currentFetched > latestFetched)) {
                         latestFetched = currentFetched;
                     }
                 }
@@ -95,15 +189,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     continue;
                 }
 
-                const marker = L.circleMarker([point.lat, point.lon], {
-                    radius: 8,
-                    weight: 2,
-                    color: '#1f2937',
-                    fillColor: colorForTemp(point.temp_c),
-                    fillOpacity: 0.85
+                const marker = L.marker([point.lat, point.lon], {
+                    icon: markerIcon(point)
                 }).addTo(map);
 
                 marker.bindPopup(popupText(point));
+                marker.bindTooltip(markerInfoText(point), {
+                    direction: 'top',
+                    offset: [0, -24],
+                    className: 'pws-info-tooltip'
+                });
                 visiblePoints++;
             }
 
