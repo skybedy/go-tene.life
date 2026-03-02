@@ -113,8 +113,11 @@ Current temperatures on Tenerife are loaded from The Weather Company PWS API and
 
 - API key env: `WEATHER_COM_API_KEY`
 - Collector interval env: `PWS_COLLECT_INTERVAL_MINUTES=10`
+- WU cache env: `WU_CACHE_TTL_SECONDS=60`
+- WU rate-limit env: `WU_RATELIMIT_PER_MIN=25`, `WU_RATELIMIT_BURST=5`
 - Manual command: `go run . collect:pws`
 - API endpoint: `/api/tenerife/pws-latest`
+- Debug usage endpoint: `/debug/wu-usage`
 - Page: `/tenerife/teploty` (also locale-prefixed variants)
 
 ### DB tables

@@ -11,12 +11,14 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/skybedy/laravel-tene.life/internal/alerts"
 	"github.com/skybedy/laravel-tene.life/internal/i18n"
 	"github.com/skybedy/laravel-tene.life/internal/pws"
 	"github.com/skybedy/laravel-tene.life/internal/store"
@@ -100,12 +102,14 @@ func main() {
 
 	// Initialize Store
 	weatherStore := store.NewWeatherStore(db)
+	emailNotifier := alerts.NewEmailNotifierFromEnv()
 
 	if runPWSCollect {
 		ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 		defer cancel()
 
 		if err := pws.CollectLatestToDB(ctx, weatherStore); err != nil {
+			sendPWSFailureAlert(emailNotifier, err, "manual")
 			log.Fatal("collect:pws failed: ", err)
 		}
 		log.Println("collect:pws completed: pws_latest table updated")
@@ -123,7 +127,7 @@ func main() {
 	// Start internal water collector loop (no cron required).
 	startWaterCollectorLoop()
 	// Start internal PWS collector loop (no cron required).
-	startPWSCollectorLoop(weatherStore)
+	startPWSCollectorLoop(weatherStore, emailNotifier)
 
 	// Middleware
 	e.Use(middleware.Recover())
@@ -251,6 +255,9 @@ func main() {
 	e.GET("/api/home", handler.GetHomeDataHandler)
 	e.GET("/api/tenerife/pws-latest", handler.GetPWSLatestHandler)
 	e.GET("/api/tides", handler.GetTidesHandler)
+	e.GET("/debug/wu-usage", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, pws.GetWUUsageReport())
+	})
 
 	// Health check endpoint
 	e.GET("/health", handler.HealthCheckHandler)
@@ -332,7 +339,7 @@ func startWaterCollectorLoop() {
 	}()
 }
 
-func startPWSCollectorLoop(weatherStore *store.WeatherStore) {
+func startPWSCollectorLoop(weatherStore *store.WeatherStore, emailNotifier *alerts.EmailNotifier) {
 	if !pws.APIKeyConfigured() {
 		log.Println("pws collector disabled: WEATHER_COM_API_KEY is not set")
 		return
@@ -345,6 +352,7 @@ func startPWSCollectorLoop(weatherStore *store.WeatherStore) {
 			ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 			defer cancel()
 			if err := pws.CollectLatestToDB(ctx, weatherStore); err != nil {
+				sendPWSFailureAlert(emailNotifier, err, "scheduler")
 				log.Printf("pws collector failed: %v", err)
 				return
 			}
@@ -359,4 +367,25 @@ func startPWSCollectorLoop(weatherStore *store.WeatherStore) {
 			collect()
 		}
 	}()
+}
+
+func sendPWSFailureAlert(emailNotifier *alerts.EmailNotifier, err error, source string) {
+	if emailNotifier == nil || err == nil {
+		return
+	}
+	key := "pws_collect_failed"
+	subject := "PWS collector failed"
+	lower := strings.ToLower(err.Error())
+	if strings.Contains(lower, "access denied") || strings.Contains(lower, "status 401") || strings.Contains(lower, "status 403") {
+		key = "pws_access_denied"
+		subject = "PWS API access denied"
+	}
+	body := fmt.Sprintf(
+		"Time (UTC): %s\nSource: %s\nError: %v\nEnvironment: %s\n",
+		time.Now().UTC().Format(time.RFC3339),
+		source,
+		err,
+		os.Getenv("APP_ENV"),
+	)
+	emailNotifier.Notify(key, subject, body)
 }

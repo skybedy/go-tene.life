@@ -5,9 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"log"
-	"net/http"
 	"net/url"
 	"os"
 	"strconv"
@@ -55,13 +53,13 @@ func CollectLatestToDB(ctx context.Context, weatherStore *store.WeatherStore) er
 		return nil
 	}
 
-	client := &http.Client{Timeout: defaultTimeout}
+	wu := getWUClient()
 	fetchedAt := time.Now().UTC()
 
 	okCount := 0
 	failCount := 0
 	for _, station := range stations {
-		rec, fetchErr := fetchStationCurrent(ctx, client, station, apiKey, fetchedAt)
+		rec, fetchErr := fetchStationCurrent(ctx, wu, station, fetchedAt)
 		if fetchErr != nil {
 			if isWeatherAPIAccessDenied(fetchErr) {
 				return fmt.Errorf("weather.com API access denied for key/host: %w", fetchErr)
@@ -87,41 +85,30 @@ func CollectLatestToDB(ctx context.Context, weatherStore *store.WeatherStore) er
 	return nil
 }
 
-func fetchStationCurrent(ctx context.Context, client *http.Client, station models.PWSStation, apiKey string, fetchedAt time.Time) (models.PWSLatestRecord, error) {
+func fetchStationCurrent(ctx context.Context, wu *wuClient, station models.PWSStation, fetchedAt time.Time) (models.PWSLatestRecord, error) {
 	rec := models.PWSLatestRecord{
 		StationID:    station.StationID,
 		FetchedAtUTC: fetchedAt,
 	}
 
-	u, err := url.Parse(defaultBaseURL)
+	body, meta, err := wu.fetchCurrent(ctx, station.StationID, "m", "json")
 	if err != nil {
+		if errors.Is(err, errWURateLimited) {
+			return rec, fmt.Errorf("status 429: %w", err)
+		}
 		return rec, err
 	}
-	q := u.Query()
-	q.Set("stationId", station.StationID)
-	q.Set("format", "json")
-	q.Set("units", "m")
-	q.Set("apiKey", apiKey)
-	u.RawQuery = q.Encode()
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
-	if err != nil {
-		return rec, err
-	}
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return rec, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(io.LimitReader(resp.Body, 768))
-		return rec, fmt.Errorf("status %d: %s", resp.StatusCode, strings.TrimSpace(string(body)))
+	if meta.Expired {
+		rec.Lat = firstNonNil(nil, station.Lat)
+		rec.Lon = firstNonNil(nil, station.Lon)
+		rec.Stale = true
+		rec.Invalid = true
+		rec.ErrorMessage = "data expired (station not reporting in last 60 minutes)"
+		return rec, nil
 	}
 
 	var payload weatherPWSResponse
-	if err := json.NewDecoder(resp.Body).Decode(&payload); err != nil {
+	if err := json.Unmarshal(body, &payload); err != nil {
 		return rec, err
 	}
 	if len(payload.Observations) == 0 {
@@ -139,6 +126,10 @@ func fetchStationCurrent(ctx context.Context, client *http.Client, station model
 		utc := obsTime.UTC()
 		rec.ObsTimeUTC = &utc
 		rec.Stale = fetchedAt.Sub(utc) > staleAfter
+		if fetchedAt.Sub(utc) > 60*time.Minute {
+			rec.Stale = true
+			rec.ErrorMessage = "data expired (station not reporting in last 60 minutes)"
+		}
 	} else {
 		rec.Stale = true
 	}
