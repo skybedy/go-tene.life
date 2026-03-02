@@ -87,7 +87,7 @@ func CollectLatestToDB(ctx context.Context, weatherStore *store.WeatherStore) er
 
 func fetchStationCurrent(ctx context.Context, wu *wuClient, station models.PWSStation, fetchedAt time.Time) (models.PWSLatestRecord, error) {
 	rec := models.PWSLatestRecord{
-		StationID:    station.StationID,
+		StationRefID: station.ID,
 		FetchedAtUTC: fetchedAt,
 	}
 
@@ -99,8 +99,6 @@ func fetchStationCurrent(ctx context.Context, wu *wuClient, station models.PWSSt
 		return rec, err
 	}
 	if meta.Expired {
-		rec.Lat = firstNonNil(nil, station.Lat)
-		rec.Lon = firstNonNil(nil, station.Lon)
 		rec.Stale = true
 		rec.Invalid = true
 		rec.ErrorMessage = "data expired (station not reporting in last 60 minutes)"
@@ -118,8 +116,6 @@ func fetchStationCurrent(ctx context.Context, wu *wuClient, station models.PWSSt
 	obs := payload.Observations[0]
 	rec.TempC = obs.Metric.Temp
 	rec.Humidity = obs.Humidity
-	rec.Lat = firstNonNil(obs.Lat, station.Lat)
-	rec.Lon = firstNonNil(obs.Lon, station.Lon)
 
 	obsTime := parseObsTime(obs.ObsTimeUTC, obs.Epoch)
 	if obsTime != nil {
@@ -135,7 +131,7 @@ func fetchStationCurrent(ctx context.Context, wu *wuClient, station models.PWSSt
 	}
 
 	rec.Invalid = isInvalidTemperature(rec.TempC)
-	if rec.Lat == nil || rec.Lon == nil {
+	if station.Lat == nil || station.Lon == nil {
 		rec.ErrorMessage = "missing station coordinates"
 	}
 	if rec.Invalid {
@@ -173,18 +169,6 @@ func isInvalidTemperature(temp *float64) bool {
 		return true
 	}
 	return *temp < minValidTempC || *temp > maxValidTempC
-}
-
-func firstNonNil(primary, fallback *float64) *float64 {
-	if primary != nil {
-		v := *primary
-		return &v
-	}
-	if fallback != nil {
-		v := *fallback
-		return &v
-	}
-	return nil
 }
 
 func CollectorInterval() time.Duration {

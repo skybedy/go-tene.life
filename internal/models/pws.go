@@ -3,6 +3,7 @@ package models
 import "time"
 
 type PWSStation struct {
+	ID        uint64
 	StationID string
 	Name      string
 	Lat       *float64
@@ -10,11 +11,9 @@ type PWSStation struct {
 }
 
 type PWSLatestRecord struct {
-	StationID    string
+	StationRefID uint64
 	TempC        *float64
 	Humidity     *float64
-	Lat          *float64
-	Lon          *float64
 	ObsTimeUTC   *time.Time
 	FetchedAtUTC time.Time
 	Stale        bool

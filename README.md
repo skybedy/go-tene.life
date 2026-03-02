@@ -123,7 +123,7 @@ Current temperatures on Tenerife are loaded from The Weather Company PWS API and
 ### DB tables
 
 - `pws_stations`: station configuration (`station_id`, `name`, optional `lat`/`lon`, `is_active`, `display_order`)
-- `pws_latest`: latest fetched values per station (`temp_c`, `humidity`, `obs_time_utc`, `fetched_at_utc`, `stale`, `invalid`)
+- `pws_latest`: latest fetched values per station (FK `station_ref_id -> pws_stations.id`, values: `temp_c`, `humidity`, `obs_time_utc`, `fetched_at_utc`, `stale`, `invalid`)
 
 Example station inserts:
 

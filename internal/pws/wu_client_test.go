@@ -56,7 +56,7 @@ func TestWUClientCacheHitAvoidsSecondOutboundCall(t *testing.T) {
 	}
 }
 
-func TestWUClientRateLimitReturns429WithoutCacheAndUsesCacheFallback(t *testing.T) {
+func TestWUClientRateLimitWaitsAndUsesCacheFallback(t *testing.T) {
 	t.Setenv("WEATHER_COM_API_KEY", "test-key")
 
 	rt := &countingRoundTripper{
@@ -72,9 +72,11 @@ func TestWUClientRateLimitReturns429WithoutCacheAndUsesCacheFallback(t *testing.
 		t.Fatalf("first fetch failed: %v", err)
 	}
 
-	// Different station has no cache and should be rate-limited.
-	if _, _, err := client.fetchCurrent(context.Background(), "ISTATION_B", "m", "json"); err == nil {
-		t.Fatalf("expected rate-limited error for station without cache")
+	// Different station has no cache; with short context it should return rate-limited error.
+	shortCtx, cancel := context.WithTimeout(context.Background(), 10*time.Millisecond)
+	defer cancel()
+	if _, _, err := client.fetchCurrent(shortCtx, "ISTATION_B", "m", "json"); err == nil {
+		t.Fatalf("expected rate-limited error for station without cache and short context")
 	}
 
 	time.Sleep(2 * time.Millisecond) // expire fresh-cache window for station A

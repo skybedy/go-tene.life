@@ -8,7 +8,7 @@ import (
 )
 
 func (s *WeatherStore) GetActivePWSStations() ([]models.PWSStation, error) {
-	query := `SELECT station_id, name, lat, lon
+	query := `SELECT id, station_id, name, lat, lon
 		FROM pws_stations
 		WHERE is_active = 1
 		ORDER BY display_order ASC, name ASC`
@@ -21,13 +21,15 @@ func (s *WeatherStore) GetActivePWSStations() ([]models.PWSStation, error) {
 
 	stations := make([]models.PWSStation, 0)
 	for rows.Next() {
+		var id uint64
 		var stationID, name string
 		var lat, lon sql.NullFloat64
-		if err := rows.Scan(&stationID, &name, &lat, &lon); err != nil {
+		if err := rows.Scan(&id, &stationID, &name, &lat, &lon); err != nil {
 			return nil, err
 		}
 
 		station := models.PWSStation{
+			ID:        id,
 			StationID: stationID,
 			Name:      name,
 		}
@@ -50,13 +52,11 @@ func (s *WeatherStore) GetActivePWSStations() ([]models.PWSStation, error) {
 
 func (s *WeatherStore) UpsertPWSLatest(rec models.PWSLatestRecord) error {
 	query := `INSERT INTO pws_latest
-		(station_id, temp_c, humidity, lat, lon, obs_time_utc, fetched_at_utc, stale, invalid, error_message)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		(station_ref_id, temp_c, humidity, obs_time_utc, fetched_at_utc, stale, invalid, error_message)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 		ON DUPLICATE KEY UPDATE
 		temp_c = VALUES(temp_c),
 		humidity = VALUES(humidity),
-		lat = VALUES(lat),
-		lon = VALUES(lon),
 		obs_time_utc = VALUES(obs_time_utc),
 		fetched_at_utc = VALUES(fetched_at_utc),
 		stale = VALUES(stale),
@@ -65,11 +65,9 @@ func (s *WeatherStore) UpsertPWSLatest(rec models.PWSLatestRecord) error {
 
 	_, err := s.DB.Exec(
 		query,
-		rec.StationID,
+		rec.StationRefID,
 		nullableFloat(rec.TempC),
 		nullableFloat(rec.Humidity),
-		nullableFloat(rec.Lat),
-		nullableFloat(rec.Lon),
 		nullableTime(rec.ObsTimeUTC),
 		rec.FetchedAtUTC.UTC(),
 		rec.Stale,
@@ -83,8 +81,8 @@ func (s *WeatherStore) GetPWSLatestPoints() ([]models.PWSMapPoint, error) {
 	query := `SELECT
 		s.station_id,
 		s.name,
-		COALESCE(l.lat, s.lat) AS lat,
-		COALESCE(l.lon, s.lon) AS lon,
+		s.lat,
+		s.lon,
 		l.temp_c,
 		l.humidity,
 		l.obs_time_utc,
@@ -93,7 +91,7 @@ func (s *WeatherStore) GetPWSLatestPoints() ([]models.PWSMapPoint, error) {
 		l.invalid,
 		l.error_message
 	FROM pws_stations s
-	LEFT JOIN pws_latest l ON l.station_id = s.station_id
+	LEFT JOIN pws_latest l ON l.station_ref_id = s.id
 	WHERE s.is_active = 1
 	ORDER BY s.display_order ASC, s.name ASC`
 

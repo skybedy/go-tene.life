@@ -16,20 +16,18 @@ CREATE TABLE IF NOT EXISTS pws_stations (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS pws_latest (
-  station_id VARCHAR(64) NOT NULL,
+  station_ref_id BIGINT UNSIGNED NOT NULL,
   temp_c DECIMAL(5,1) DEFAULT NULL,
   humidity DECIMAL(5,1) DEFAULT NULL,
-  lat DECIMAL(9,6) DEFAULT NULL,
-  lon DECIMAL(9,6) DEFAULT NULL,
   obs_time_utc DATETIME DEFAULT NULL,
   fetched_at_utc DATETIME NOT NULL,
   stale TINYINT(1) NOT NULL DEFAULT 0,
   invalid TINYINT(1) NOT NULL DEFAULT 0,
   error_message VARCHAR(255) DEFAULT NULL,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (station_id),
+  PRIMARY KEY (station_ref_id),
   KEY pws_latest_fetched_at_index (fetched_at_utc),
-  CONSTRAINT pws_latest_station_id_fk
-    FOREIGN KEY (station_id) REFERENCES pws_stations(station_id)
+  CONSTRAINT pws_latest_station_ref_id_fk
+    FOREIGN KEY (station_ref_id) REFERENCES pws_stations(id)
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

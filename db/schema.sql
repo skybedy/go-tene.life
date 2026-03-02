@@ -14,18 +14,16 @@ DROP TABLE IF EXISTS `pws_latest`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pws_latest` (
-  `station_id` varchar(64) NOT NULL,
+  `station_ref_id` bigint(20) unsigned NOT NULL,
   `temp_c` decimal(5,1) DEFAULT NULL,
   `humidity` decimal(5,1) DEFAULT NULL,
-  `lat` decimal(9,6) DEFAULT NULL,
-  `lon` decimal(9,6) DEFAULT NULL,
   `obs_time_utc` datetime DEFAULT NULL,
   `fetched_at_utc` datetime NOT NULL,
   `stale` tinyint(1) NOT NULL DEFAULT 0,
   `invalid` tinyint(1) NOT NULL DEFAULT 0,
   `error_message` varchar(255) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`station_id`),
+  PRIMARY KEY (`station_ref_id`),
   KEY `pws_latest_fetched_at_index` (`fetched_at_utc`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -154,7 +152,7 @@ CREATE TABLE `weather_weekly` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50001 ALTER TABLE `pws_latest`
-  ADD CONSTRAINT `pws_latest_station_id_fk` FOREIGN KEY (`station_id`) REFERENCES `pws_stations` (`station_id`) ON DELETE CASCADE */;
+  ADD CONSTRAINT `pws_latest_station_ref_id_fk` FOREIGN KEY (`station_ref_id`) REFERENCES `pws_stations` (`id`) ON DELETE CASCADE */;
 DROP TABLE IF EXISTS `tide_events`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;

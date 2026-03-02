@@ -165,16 +165,18 @@ func (c *wuClient) fetchCurrent(ctx context.Context, stationID, units, format st
 			c.usage.record(wuUsageEvent{At: now, StationID: stationID, Status: 200, CacheHit: true, Expired: expired})
 			return body, meta, nil
 		}
-		logWURequest(wuRequestLog{
-			Service:    "wu",
-			Path:       "/v2/pws/observations/current",
-			StationID:  stationID,
-			Status:     429,
-			DurationMS: 0,
-			CacheHit:   false,
-			Error:      errWURateLimited.Error(),
-		})
-		return nil, meta, errWURateLimited
+		if err := c.limiter.Wait(ctx); err != nil {
+			logWURequest(wuRequestLog{
+				Service:    "wu",
+				Path:       "/v2/pws/observations/current",
+				StationID:  stationID,
+				Status:     429,
+				DurationMS: 0,
+				CacheHit:   false,
+				Error:      errWURateLimited.Error(),
+			})
+			return nil, meta, errWURateLimited
+		}
 	}
 
 	u, err := url.Parse(c.baseURL)
