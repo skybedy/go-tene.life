@@ -156,6 +156,12 @@ document.addEventListener('DOMContentLoaded', function () {
         return (Date.now() - obs.getTime()) <= maxObservationAgeMs;
     }
 
+    function hasValidTemperature(point) {
+        if (point.temp_c == null) return false;
+        const temp = Number(point.temp_c);
+        return Number.isFinite(temp);
+    }
+
     async function loadPoints() {
         try {
             const response = await fetch('/api/tenerife/pws-latest');
@@ -175,6 +181,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             for (const point of points) {
                 if (!isRecentObservation(point)) {
+                    continue;
+                }
+                if (!hasValidTemperature(point)) {
                     continue;
                 }
 
