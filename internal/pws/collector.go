@@ -3,6 +3,7 @@ package pws
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -62,6 +63,9 @@ func CollectLatestToDB(ctx context.Context, weatherStore *store.WeatherStore) er
 	for _, station := range stations {
 		rec, fetchErr := fetchStationCurrent(ctx, client, station, apiKey, fetchedAt)
 		if fetchErr != nil {
+			if isWeatherAPIAccessDenied(fetchErr) {
+				return fmt.Errorf("weather.com API access denied for key/host: %w", fetchErr)
+			}
 			failCount++
 			log.Printf("pws collector: station %s (%s) failed: %v", station.StationID, station.Name, fetchErr)
 			continue
@@ -207,4 +211,20 @@ func CollectorInterval() time.Duration {
 
 func APIKeyConfigured() bool {
 	return strings.TrimSpace(os.Getenv("WEATHER_COM_API_KEY")) != ""
+}
+
+func isWeatherAPIAccessDenied(err error) bool {
+	if err == nil {
+		return false
+	}
+	msg := strings.ToLower(err.Error())
+	if strings.Contains(msg, "status 401") || strings.Contains(msg, "status 403") {
+		return true
+	}
+	var urlErr *url.Error
+	if errors.As(err, &urlErr) {
+		nested := strings.ToLower(urlErr.Error())
+		return strings.Contains(nested, "status 401") || strings.Contains(nested, "status 403")
+	}
+	return strings.Contains(msg, "access denied")
 }
