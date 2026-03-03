@@ -199,6 +199,7 @@ func (c *wuClient) fetchCurrent(ctx context.Context, stationID, units, format st
 	q.Set("apiKey", c.apiKey)
 	u.RawQuery = q.Encode()
 
+	// Important: we use u.String() for the request but NEVER log it directly if it contains the apiKey.
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
 	if err != nil {
 		return nil, meta, err
@@ -216,7 +217,7 @@ func (c *wuClient) fetchCurrent(ctx context.Context, stationID, units, format st
 			Status:     0,
 			DurationMS: duration.Milliseconds(),
 			CacheHit:   false,
-			Error:      err.Error(),
+			Error:      sanitizeLogText(err.Error()),
 		})
 		c.usage.record(wuUsageEvent{
 			At:         now,
@@ -225,7 +226,7 @@ func (c *wuClient) fetchCurrent(ctx context.Context, stationID, units, format st
 			DurationMS: duration.Milliseconds(),
 			Error:      true,
 		})
-		return nil, meta, err
+		return nil, meta, RedactError(err)
 	}
 	defer resp.Body.Close()
 
@@ -260,7 +261,7 @@ func (c *wuClient) fetchCurrent(ctx context.Context, stationID, units, format st
 		}
 		return nil, meta, &wuStatusError{
 			Status: status,
-			Body:   strings.TrimSpace(string(body)),
+			Body:   sanitizeResponse(body),
 		}
 	}
 
@@ -423,18 +424,26 @@ func topStations(m map[string]int64, limit int) []wuStationCount {
 	return out
 }
 
+func sanitizeResponse(body []byte) string {
+	if len(body) == 0 {
+		return ""
+	}
+	s := string(body)
+	if len(s) > 180 {
+		s = s[:180] + "..."
+	}
+	return sanitizeLogText(strings.TrimSpace(s))
+}
+
 func statusError(status int, body []byte) string {
 	if status < http.StatusBadRequest {
 		return ""
 	}
-	b := strings.TrimSpace(string(body))
-	if len(b) > 180 {
-		b = b[:180]
-	}
-	return b
+	return sanitizeResponse(body)
 }
 
 func logWURequest(entry wuRequestLog) {
+	entry.Error = sanitizeLogText(entry.Error)
 	line, err := json.Marshal(entry)
 	if err != nil {
 		log.Printf("wu request: service=%s path=%s stationId=%s status=%d duration_ms=%d cache_hit=%t error=%s",

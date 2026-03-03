@@ -124,6 +124,17 @@ Current temperatures on Tenerife are loaded from The Weather Company PWS API and
 - Debug usage endpoint: `/debug/wu-usage`
 - Page: `/tenerife/teploty` (also locale-prefixed variants)
 
+### Security notes
+
+- `WEATHER_COM_API_KEY` must be kept server-side only.
+- Application logs never contain full URLs with the API key; query strings are redacted before logging.
+- Error responses are sanitized to prevent leaking the key in debug bodies.
+- Observability:
+  - `401 / 403`: Invalid or restricted API key.
+  - `429`: Rate limit exceeded (Weather Company limit).
+  - `5xx`: Upstream provider issue or network error.
+  - Structured logs provide `status` and `error` (sanitized) for each request.
+
 ### DB tables
 
 - `pws_stations`: station configuration (`station_id`, `name`, optional `lat`/`lon`, `is_active`, `display_order`)
