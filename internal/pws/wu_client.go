@@ -47,6 +47,7 @@ type wuClient struct {
 	baseURL     string
 	cacheTTL    time.Duration
 	fallbackTTL time.Duration
+	userAgent   string
 	limiter     *rate.Limiter
 	usage       *wuUsageTracker
 
@@ -147,6 +148,7 @@ func newWUClient(cfg wuClientConfig, httpClient *http.Client) *wuClient {
 		baseURL:     defaultBaseURL,
 		cacheTTL:    cfg.cacheTTL,
 		fallbackTTL: cfg.staleFallbackMax,
+		userAgent:   defaultWUUserAgent(),
 		limiter:     rate.NewLimiter(rate.Limit(perSecond), burst),
 		usage:       &wuUsageTracker{},
 		cache:       make(map[string]wuCacheEntry),
@@ -201,6 +203,7 @@ func (c *wuClient) fetchCurrent(ctx context.Context, stationID, units, format st
 	if err != nil {
 		return nil, meta, err
 	}
+	req.Header.Set("User-Agent", c.userAgent)
 
 	start := time.Now()
 	resp, err := c.httpClient.Do(req)
@@ -255,7 +258,10 @@ func (c *wuClient) fetchCurrent(ctx context.Context, stationID, units, format st
 			c.storeCache(cacheKey, body, status, true, now)
 			return body, meta, nil
 		}
-		return nil, meta, fmt.Errorf("status %d: %s", status, strings.TrimSpace(string(body)))
+		return nil, meta, &wuStatusError{
+			Status: status,
+			Body:   strings.TrimSpace(string(body)),
+		}
 	}
 
 	if isExpiredObservation(body) {
@@ -469,4 +475,34 @@ func envInt(name string, fallback int) int {
 		return fallback
 	}
 	return v
+}
+
+type wuStatusError struct {
+	Status int
+	Body   string
+}
+
+func (e *wuStatusError) Error() string {
+	if e == nil {
+		return "unknown status error"
+	}
+	if e.Body == "" {
+		return fmt.Sprintf("status %d", e.Status)
+	}
+	return fmt.Sprintf("status %d: %s", e.Status, e.Body)
+}
+
+func statusCodeFromError(err error) (int, bool) {
+	var se *wuStatusError
+	if !errors.As(err, &se) || se == nil {
+		return 0, false
+	}
+	return se.Status, true
+}
+
+func defaultWUUserAgent() string {
+	if ua := strings.TrimSpace(os.Getenv("WU_USER_AGENT")); ua != "" {
+		return ua
+	}
+	return "go-tene.life/1.0 (+https://tene.life)"
 }

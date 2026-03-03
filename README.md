@@ -112,7 +112,10 @@ In-app scheduler (recommended, no Linux cron/systemd needed):
 Current temperatures on Tenerife are loaded from The Weather Company PWS API and stored in DB cache tables.
 
 - API key env: `WEATHER_COM_API_KEY`
-- Collector interval env: `PWS_COLLECT_INTERVAL_MINUTES=10`
+- Paced window env: `PWS_PACED_WINDOW_MINUTES=10` (10 minutes divided by active station count)
+- Retry envs: `PWS_RETRY_MAX=2`, `PWS_RETRY_MIN_SECONDS=20`, `PWS_RETRY_MAX_SECONDS=45`
+- Cursor env: `PWS_CURSOR_PATH=data/pws_cursor.json`
+- User-Agent env: `WU_USER_AGENT=go-tene.life/1.0 (+https://tene.life)`
 - WU cache env: `WU_CACHE_TTL_SECONDS=60`
 - WU rate-limit env: `WU_RATELIMIT_PER_MIN=25`, `WU_RATELIMIT_BURST=5`
 - WU stale-fallback max age: `WU_STALE_FALLBACK_MAX_AGE_SECONDS=120`

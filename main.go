@@ -346,26 +346,10 @@ func startPWSCollectorLoop(weatherStore *store.WeatherStore, emailNotifier *aler
 		return
 	}
 
-	interval := pws.CollectorInterval()
-
 	go func() {
-		collect := func() {
-			ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
-			defer cancel()
-			if err := pws.CollectLatestToDB(ctx, weatherStore); err != nil {
-				sendPWSFailureAlert(emailNotifier, err, "scheduler")
-				log.Printf("pws collector failed: %v", err)
-				return
-			}
-			log.Println("pws collector updated: pws_latest table")
-		}
-
-		collect()
-
-		ticker := time.NewTicker(interval)
-		defer ticker.Stop()
-		for range ticker.C {
-			collect()
+		if err := pws.RunPacedCollector(context.Background(), weatherStore); err != nil {
+			sendPWSFailureAlert(emailNotifier, err, "scheduler")
+			log.Printf("pws paced collector stopped: %v", err)
 		}
 	}()
 }
@@ -377,9 +361,9 @@ func sendPWSFailureAlert(emailNotifier *alerts.EmailNotifier, err error, source 
 	key := "pws_collect_failed"
 	subject := "PWS collector failed"
 	lower := strings.ToLower(err.Error())
-	if strings.Contains(lower, "access denied") || strings.Contains(lower, "status 401") || strings.Contains(lower, "status 403") {
+	if strings.Contains(lower, "access denied") || strings.Contains(lower, "status 401") || strings.Contains(lower, "status 403") || strings.Contains(lower, "status 429") {
 		key = "pws_access_denied"
-		subject = "PWS API access denied"
+		subject = "PWS API access denied/rate-limited"
 	}
 	body := fmt.Sprintf(
 		"Time (UTC): %s\nSource: %s\nError: %v\nEnvironment: %s\n",
