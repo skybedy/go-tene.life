@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -113,6 +114,17 @@ func main() {
 		}
 		log.Println("collect:pws completed: pws_latest table updated")
 		return
+	}
+
+	// In-app background collectors (interval-based only, no immediate run at startup).
+	if envBool("WAVES_COLLECTOR_ENABLED", true) {
+		startWavesCollectorLoop(context.Background())
+	}
+	if envBool("WATER_COLLECTOR_ENABLED", true) {
+		startWaterCollectorLoop(context.Background())
+	}
+	if envBool("PWS_COLLECTOR_ENABLED", true) {
+		startPWSCollectorLoop(context.Background(), weatherStore, emailNotifier)
 	}
 
 	// Initialize Handlers
@@ -293,4 +305,102 @@ func sendPWSFailureAlert(emailNotifier *alerts.EmailNotifier, err error, source 
 		os.Getenv("APP_ENV"),
 	)
 	emailNotifier.Notify(key, subject, body)
+}
+
+func startWavesCollectorLoop(ctx context.Context) {
+	interval := time.Duration(envInt("WAVES_COLLECT_INTERVAL_MINUTES", 15)) * time.Minute
+	if interval <= 0 {
+		interval = 15 * time.Minute
+	}
+	log.Printf("waves collector loop enabled: interval=%s (first run on next tick)", interval)
+
+	ticker := time.NewTicker(interval)
+	go func() {
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ctx.Done():
+				log.Println("waves collector loop stopped")
+				return
+			case <-ticker.C:
+				runCtx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+				if err := waves.CollectLatestToDefaultPath(runCtx); err != nil {
+					log.Printf("waves collector failed: %v", err)
+				} else {
+					log.Println("waves collector updated: data/waves_latest.json")
+				}
+				cancel()
+			}
+		}
+	}()
+}
+
+func startWaterCollectorLoop(ctx context.Context) {
+	interval := time.Duration(envInt("WATER_COLLECT_INTERVAL_HOURS", 24)) * time.Hour
+	if interval <= 0 {
+		interval = 24 * time.Hour
+	}
+	log.Printf("water collector loop enabled: interval=%s (first run on next tick)", interval)
+
+	ticker := time.NewTicker(interval)
+	go func() {
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ctx.Done():
+				log.Println("water collector loop stopped")
+				return
+			case <-ticker.C:
+				runCtx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+				if err := water.CollectLatestToDefaultPath(runCtx); err != nil {
+					log.Printf("water collector failed: %v", err)
+				} else {
+					log.Println("water collector updated: data/water_quality_latest.json")
+				}
+				cancel()
+			}
+		}
+	}()
+}
+
+func startPWSCollectorLoop(ctx context.Context, weatherStore *store.WeatherStore, emailNotifier *alerts.EmailNotifier) {
+	if !pws.APIKeyConfigured() {
+		log.Println("pws collector loop disabled: WEATHER_COM_API_KEY is empty")
+		return
+	}
+
+	log.Println("pws paced collector loop enabled")
+	go func() {
+		if err := pws.RunPacedCollector(ctx, weatherStore); err != nil && err != context.Canceled {
+			log.Printf("pws paced collector stopped: %v", err)
+			sendPWSFailureAlert(emailNotifier, err, "scheduler")
+		}
+	}()
+}
+
+func envBool(key string, fallback bool) bool {
+	raw := strings.TrimSpace(strings.ToLower(os.Getenv(key)))
+	if raw == "" {
+		return fallback
+	}
+	switch raw {
+	case "1", "true", "yes", "on":
+		return true
+	case "0", "false", "no", "off":
+		return false
+	default:
+		return fallback
+	}
+}
+
+func envInt(key string, fallback int) int {
+	raw := strings.TrimSpace(os.Getenv(key))
+	if raw == "" {
+		return fallback
+	}
+	v, err := strconv.Atoi(raw)
+	if err != nil {
+		return fallback
+	}
+	return v
 }
