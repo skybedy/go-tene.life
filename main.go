@@ -10,7 +10,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 
@@ -121,13 +120,6 @@ func main() {
 
 	// Initialize Echo
 	e := echo.New()
-
-	// Start internal waves collector loop (no cron required).
-	startWavesCollectorLoop()
-	// Start internal water collector loop (no cron required).
-	startWaterCollectorLoop()
-	// Start internal PWS collector loop (no cron required).
-	startPWSCollectorLoop(weatherStore, emailNotifier)
 
 	// Middleware
 	e.Use(middleware.Recover())
@@ -280,78 +272,6 @@ func main() {
 		port = "8080"
 	}
 	e.Logger.Fatal(e.Start(":" + port))
-}
-
-func startWavesCollectorLoop() {
-	interval := 15 * time.Minute
-	if raw := os.Getenv("WAVES_COLLECT_INTERVAL_MINUTES"); raw != "" {
-		if mins, err := strconv.Atoi(raw); err == nil && mins > 0 {
-			interval = time.Duration(mins) * time.Minute
-		}
-	}
-
-	go func() {
-		collect := func() {
-			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
-			defer cancel()
-			if err := waves.CollectLatestToDefaultPath(ctx); err != nil {
-				log.Printf("waves collector failed: %v", err)
-				return
-			}
-			log.Println("waves collector updated: data/waves_latest.json")
-		}
-
-		collect()
-
-		ticker := time.NewTicker(interval)
-		defer ticker.Stop()
-		for range ticker.C {
-			collect()
-		}
-	}()
-}
-
-func startWaterCollectorLoop() {
-	interval := 24 * time.Hour
-	if raw := os.Getenv("WATER_COLLECT_INTERVAL_MINUTES"); raw != "" {
-		if mins, err := strconv.Atoi(raw); err == nil && mins > 0 {
-			interval = time.Duration(mins) * time.Minute
-		}
-	}
-
-	go func() {
-		collect := func() {
-			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
-			defer cancel()
-			if err := water.CollectLatestToDefaultPath(ctx); err != nil {
-				log.Printf("water collector failed: %v", err)
-				return
-			}
-			log.Println("water collector updated: data/water_quality_latest.json")
-		}
-
-		collect()
-
-		ticker := time.NewTicker(interval)
-		defer ticker.Stop()
-		for range ticker.C {
-			collect()
-		}
-	}()
-}
-
-func startPWSCollectorLoop(weatherStore *store.WeatherStore, emailNotifier *alerts.EmailNotifier) {
-	if !pws.APIKeyConfigured() {
-		log.Println("pws collector disabled: WEATHER_COM_API_KEY is not set")
-		return
-	}
-
-	go func() {
-		if err := pws.RunPacedCollector(context.Background(), weatherStore); err != nil {
-			sendPWSFailureAlert(emailNotifier, err, "scheduler")
-			log.Printf("pws paced collector stopped: %v", err)
-		}
-	}()
 }
 
 func sendPWSFailureAlert(emailNotifier *alerts.EmailNotifier, err error, source string) {

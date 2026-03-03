@@ -51,9 +51,6 @@ This exports structure-only SQL for app tables (`weather*`, `tide_events`, `pws_
 
 Measured wave data is collected from Puertos del Estado (PORTUS), station `2446` (Tenerife Sur), and cached to JSON.
 
-- Collector runs automatically inside the app (immediately on startup, then periodically).
-- Default interval: every 15 minutes
-- Optional env override: `WAVES_COLLECT_INTERVAL_MINUTES=15`
 - Manual command: `tenelife collect:waves`
 - Output cache file: `data/waves_latest.json`
 - Source is fetched only by collector; request handlers read only the JSON cache.
@@ -70,7 +67,7 @@ or with built binary:
 ./tenelife collect:waves
 ```
 
-Optional cron fallback (only if you do not want the in-app collector):
+Cron/systemd timer example:
 
 ```cron
 */15 * * * * cd /path/to/go-tene.life && ./tenelife collect:waves >> /var/log/tenelife-waves.log 2>&1
@@ -102,19 +99,11 @@ Cron example (once per day):
 15 6 * * * cd /path/to/go-tene.life && ./tenelife collect:water >> /var/log/tenelife-water.log 2>&1
 ```
 
-In-app scheduler (recommended, no Linux cron/systemd needed):
-
-- `WATER_COLLECT_INTERVAL_MINUTES=1440` (default: once per 24h)
-- collector runs automatically on app start and then in this interval
-
 ## Tenerife PWS Temperature Map
 
 Current temperatures on Tenerife are loaded from The Weather Company PWS API and stored in DB cache tables.
 
 - API key env: `WEATHER_COM_API_KEY`
-- Paced window env: `PWS_PACED_WINDOW_MINUTES=10` (10 minutes divided by active station count)
-- Retry envs: `PWS_RETRY_MAX=2`, `PWS_RETRY_MIN_SECONDS=20`, `PWS_RETRY_MAX_SECONDS=45`
-- Cursor env: `PWS_CURSOR_PATH=data/pws_cursor.json`
 - User-Agent env: `WU_USER_AGENT=go-tene.life/1.0 (+https://tene.life)`
 - WU cache env: `WU_CACHE_TTL_SECONDS=60`
 - WU rate-limit env: `WU_RATELIMIT_PER_MIN=25`, `WU_RATELIMIT_BURST=5`
