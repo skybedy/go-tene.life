@@ -244,6 +244,9 @@ func Messages(locale string) map[string]string {
 	for k, v := range recentLocaleMessages[loc] {
 		merged[k] = v
 	}
+	for k, v := range waveSourceLocaleMessages[loc] {
+		merged[k] = v
+	}
 
 	return merged
 }
@@ -546,6 +549,33 @@ var recentLocaleMessages = map[string]map[string]string{
 		"recent_humidity_chart_title": "Páratartalom az elmúlt 10 napban (%)",
 		"detail_charts_load_error":    "Nem sikerült betölteni az órás grafikonokat a kiválasztott dátumhoz.",
 		"click_to_change_date":        "Kattintson a dátum módosításához",
+	},
+}
+
+var waveSourceLocaleMessages = map[string]map[string]string{
+	"cs": {
+		"wave_source_note": "Údaj o výšce vln vychází z offshore stanice PORTUS v oblasti Golf del Sur (Hm0) a nemusí přesně odpovídat podmínkám na konkrétní pláži.",
+	},
+	"en": {
+		"wave_source_note": "Wave height is taken from an offshore PORTUS station in the Golf del Sur area (Hm0) and may not exactly match conditions on a specific beach.",
+	},
+	"es": {
+		"wave_source_note": "La altura de ola se toma de una estación PORTUS mar adentro en la zona de Golf del Sur (Hm0) y puede no coincidir exactamente con las condiciones en una playa concreta.",
+	},
+	"pl": {
+		"wave_source_note": "Wysokość fal pochodzi z morskiej stacji PORTUS w rejonie Golf del Sur (Hm0) i może nie odpowiadać dokładnie warunkom na konkretnej plaży.",
+	},
+	"de": {
+		"wave_source_note": "Die Wellenhöhe stammt von einer offshore PORTUS-Station im Bereich Golf del Sur (Hm0) und kann von den Bedingungen an einem konkreten Strand abweichen.",
+	},
+	"fr": {
+		"wave_source_note": "La hauteur des vagues provient d'une station PORTUS au large dans la zone de Golf del Sur (Hm0) et peut ne pas correspondre exactement aux conditions sur une plage donnée.",
+	},
+	"it": {
+		"wave_source_note": "L'altezza delle onde proviene da una stazione PORTUS offshore nell'area di Golf del Sur (Hm0) e potrebbe non corrispondere esattamente alle condizioni su una spiaggia specifica.",
+	},
+	"hu": {
+		"wave_source_note": "A hullámmagasság egy parttól távoli, Golf del Sur térségében lévő PORTUS állomás (Hm0) adata, ezért nem mindig egyezik pontosan egy adott strand viszonyaival.",
 	},
 }
 
