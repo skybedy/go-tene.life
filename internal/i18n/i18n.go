@@ -2,6 +2,7 @@ package i18n
 
 import (
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/skybedy/laravel-tene.life/internal/models"
@@ -279,6 +280,31 @@ func WaterQualityTooltip(locale string) string {
 		T(locale, "water_quality_status_sufficient"),
 		T(locale, "water_quality_status_poor"),
 	)
+}
+
+func WaveDirectionLabel(locale string, deg float64) string {
+	loc := NormalizeLocale(locale)
+	dirsByLocale := map[string][]string{
+		"cs": {"sever", "severovýchod", "východ", "jihovýchod", "jih", "jihozápad", "západ", "severozápad"},
+		"en": {"north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"},
+		"es": {"norte", "noreste", "este", "sureste", "sur", "suroeste", "oeste", "noroeste"},
+		"pl": {"północ", "północny wschód", "wschód", "południowy wschód", "południe", "południowy zachód", "zachód", "północny zachód"},
+		"de": {"Norden", "Nordosten", "Osten", "Südosten", "Süden", "Südwesten", "Westen", "Nordwesten"},
+		"fr": {"nord", "nord-est", "est", "sud-est", "sud", "sud-ouest", "ouest", "nord-ouest"},
+		"it": {"nord", "nord-est", "est", "sud-est", "sud", "sud-ovest", "ovest", "nord-ovest"},
+		"hu": {"észak", "északkelet", "kelet", "délkelet", "dél", "délnyugat", "nyugat", "északnyugat"},
+	}
+	dirs, ok := dirsByLocale[loc]
+	if !ok || len(dirs) != 8 {
+		dirs = dirsByLocale["en"]
+	}
+
+	normalized := math.Mod(deg, 360.0)
+	if normalized < 0 {
+		normalized += 360.0
+	}
+	idx := int(math.Floor((normalized+22.5)/45.0)) % 8
+	return dirs[idx]
 }
 
 func LocalePrefix(locale string) string {

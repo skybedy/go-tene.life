@@ -110,7 +110,7 @@
                         </tr>
                         <tr>
                             <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "wave_direction" }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1">{{ printf "%.0f" .Waves.MeanDirDeg }}°</td>
+                            <td class="text-right pt-0.5 sm:pt-1">{{ printf "%.0f" .Waves.MeanDirDeg }}° ({{ waveDirectionLabel .Locale .Waves.MeanDirDeg }})</td>
                         </tr>
                         {{ end }}
                         {{ if .WaterQuality }}

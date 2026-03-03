@@ -172,6 +172,7 @@ func main() {
 			"languageFlag":        i18n.LanguageFlag,
 			"waterQualityStatus":  i18n.WaterQualityStatusLabel,
 			"waterQualityTooltip": i18n.WaterQualityTooltip,
+			"waveDirectionLabel":  i18n.WaveDirectionLabel,
 			"f1": func(v *float64) string {
 				if v == nil {
 					return "--"

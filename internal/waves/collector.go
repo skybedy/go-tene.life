@@ -23,7 +23,7 @@ const (
 )
 
 func CollectLatestToDefaultPath(ctx context.Context) error {
-	return CollectLatestMeasured(ctx, defaultStationID, defaultLocation, defaultOutPath)
+	return CollectLatestMeasured(ctx, defaultStationID, defaultLocation, outputPath())
 }
 
 func CollectLatestMeasured(ctx context.Context, stationID int, location, outPath string) error {
@@ -233,4 +233,11 @@ func writeAtomicJSON(path string, payload *models.WavesLatest) error {
 	}
 
 	return nil
+}
+
+func outputPath() string {
+	if raw := strings.TrimSpace(os.Getenv("WAVES_JSON_PATH")); raw != "" {
+		return raw
+	}
+	return defaultOutPath
 }
