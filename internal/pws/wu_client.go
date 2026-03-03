@@ -35,18 +35,20 @@ type wuCacheEntry struct {
 
 type wuClientConfig struct {
 	cacheTTL         time.Duration
+	staleFallbackMax time.Duration
 	rateLimitPerMin  int
 	rateLimitBurst   int
 	usageLogInterval time.Duration
 }
 
 type wuClient struct {
-	httpClient *http.Client
-	apiKey     string
-	baseURL    string
-	cacheTTL   time.Duration
-	limiter    *rate.Limiter
-	usage      *wuUsageTracker
+	httpClient  *http.Client
+	apiKey      string
+	baseURL     string
+	cacheTTL    time.Duration
+	fallbackTTL time.Duration
+	limiter     *rate.Limiter
+	usage       *wuUsageTracker
 
 	mu    sync.RWMutex
 	cache map[string]wuCacheEntry
@@ -107,6 +109,7 @@ func getWUClient() *wuClient {
 	wuClientOnce.Do(func() {
 		cfg := wuClientConfig{
 			cacheTTL:         time.Duration(envInt("WU_CACHE_TTL_SECONDS", 60)) * time.Second,
+			staleFallbackMax: time.Duration(envInt("WU_STALE_FALLBACK_MAX_AGE_SECONDS", 120)) * time.Second,
 			rateLimitPerMin:  envInt("WU_RATELIMIT_PER_MIN", 25),
 			rateLimitBurst:   envInt("WU_RATELIMIT_BURST", 5),
 			usageLogInterval: time.Minute,
@@ -135,14 +138,18 @@ func newWUClient(cfg wuClientConfig, httpClient *http.Client) *wuClient {
 	if cfg.cacheTTL <= 0 {
 		cfg.cacheTTL = 60 * time.Second
 	}
+	if cfg.staleFallbackMax <= 0 {
+		cfg.staleFallbackMax = 120 * time.Second
+	}
 	return &wuClient{
-		httpClient: httpClient,
-		apiKey:     strings.TrimSpace(os.Getenv("WEATHER_COM_API_KEY")),
-		baseURL:    defaultBaseURL,
-		cacheTTL:   cfg.cacheTTL,
-		limiter:    rate.NewLimiter(rate.Limit(perSecond), burst),
-		usage:      &wuUsageTracker{},
-		cache:      make(map[string]wuCacheEntry),
+		httpClient:  httpClient,
+		apiKey:      strings.TrimSpace(os.Getenv("WEATHER_COM_API_KEY")),
+		baseURL:     defaultBaseURL,
+		cacheTTL:    cfg.cacheTTL,
+		fallbackTTL: cfg.staleFallbackMax,
+		limiter:     rate.NewLimiter(rate.Limit(perSecond), burst),
+		usage:       &wuUsageTracker{},
+		cache:       make(map[string]wuCacheEntry),
 	}
 }
 
@@ -159,7 +166,7 @@ func (c *wuClient) fetchCurrent(ctx context.Context, stationID, units, format st
 	}
 
 	if !c.limiter.Allow() {
-		if body, found, expired := c.getAnyCached(cacheKey); found {
+		if body, found, expired, age := c.getAnyCached(cacheKey, now); found && age <= c.fallbackTTL {
 			meta.CacheHit = true
 			meta.Expired = expired
 			c.usage.record(wuUsageEvent{At: now, StationID: stationID, Status: 200, CacheHit: true, Expired: expired})
@@ -274,15 +281,15 @@ func (c *wuClient) getFreshCached(cacheKey string, now time.Time) ([]byte, bool,
 	return body, true, entry.expired
 }
 
-func (c *wuClient) getAnyCached(cacheKey string) ([]byte, bool, bool) {
+func (c *wuClient) getAnyCached(cacheKey string, now time.Time) ([]byte, bool, bool, time.Duration) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	entry, ok := c.cache[cacheKey]
 	if !ok {
-		return nil, false, false
+		return nil, false, false, 0
 	}
 	body := append([]byte(nil), entry.body...)
-	return body, true, entry.expired
+	return body, true, entry.expired, now.Sub(entry.stored)
 }
 
 func (c *wuClient) storeCache(cacheKey string, body []byte, status int, expired bool, now time.Time) {
