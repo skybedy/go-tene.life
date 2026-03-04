@@ -223,6 +223,7 @@ func main() {
 	// Routes (default locale: cs)
 	e.GET("/", handler.IndexHandler)
 	e.GET("/webcam/big", handler.WebcamBigHandler)
+	e.GET("/temperatures", handler.PWSMapHandler)
 	e.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/statistics/daily")
 	})
@@ -245,6 +246,7 @@ func main() {
 	localized.GET("", handler.IndexHandler)
 	localized.GET("/", handler.IndexHandler)
 	localized.GET("/webcam/big", handler.WebcamBigHandler)
+	localized.GET("/temperatures", handler.PWSMapHandler)
 	localized.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/statistics/daily"))
 	})

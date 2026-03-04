@@ -8,6 +8,19 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    if (typeof window.L === 'undefined') {
+        if (lastUpdateEl) {
+            const label = i18n.lastUpdateLabel || 'Last update';
+            lastUpdateEl.textContent = `${label}: -`;
+        }
+        if (messageEl) {
+            messageEl.textContent = i18n.noData || 'No station data available.';
+            messageEl.classList.remove('hidden');
+        }
+        console.error('Leaflet library is not available');
+        return;
+    }
+
     const map = L.map('pwsMap', {
         dragging: true,
         scrollWheelZoom: true,
