@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
         keyboard: false,
         touchZoom: true,
         zoomControl: true
-    }).setView([28.2916, -16.6291], 10);
+    }).setView([28.3, -15.8], 8);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; OpenStreetMap contributors'
