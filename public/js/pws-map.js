@@ -28,15 +28,15 @@ document.addEventListener('DOMContentLoaded', function () {
         style.id = 'pwsTempLabelStyle';
         style.textContent = `
             .pws-temp-dot {
-                width: 34px;
-                height: 34px;
+                width: 28px;
+                height: 28px;
                 border-radius: 9999px;
                 border: 2px solid #1f2937;
                 color: #fff;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 12px;
+                font-size: 11px;
                 font-weight: 700;
                 line-height: 1;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             .pws-temp-dot.is-na {
                 color: #fff;
-                font-size: 11px;
+                font-size: 10px;
             }
             .pws-info-tooltip {
                 background: rgba(17, 24, 39, 0.9);
@@ -60,6 +60,16 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             .pws-info-tooltip:before {
                 border-top-color: rgba(17, 24, 39, 0.9);
+            }
+            @media (max-width: 640px) {
+                .pws-temp-dot {
+                    width: 24px;
+                    height: 24px;
+                    font-size: 10px;
+                }
+                .pws-temp-dot.is-na {
+                    font-size: 9px;
+                }
             }
         `;
         document.head.appendChild(style);
@@ -138,9 +148,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return L.divIcon({
             className: 'pws-temp-marker-wrap',
             html: `<div class="pws-temp-dot${naClass}" style="background:${bg}">${label}</div>`,
-            iconSize: [34, 34],
-            iconAnchor: [17, 17],
-            popupAnchor: [0, -18]
+            iconSize: [28, 28],
+            iconAnchor: [14, 14],
+            popupAnchor: [0, -16]
         });
     }
 

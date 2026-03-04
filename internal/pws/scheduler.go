@@ -22,12 +22,13 @@ import (
 var errCircuitBreakerTripped = errors.New("pws circuit breaker tripped")
 
 type pacedSchedulerConfig struct {
-	window         time.Duration
-	retryMax       int
-	retryMin       time.Duration
-	retryMaxDelay  time.Duration
-	requestTimeout time.Duration
-	cursorPath     string
+	window                 time.Duration
+	retryMax               int
+	retryMin               time.Duration
+	retryMaxDelay          time.Duration
+	requestTimeout         time.Duration
+	cursorPath             string
+	circuitBreakerCooldown time.Duration
 }
 
 type cursorState struct {
@@ -84,9 +85,13 @@ func RunPacedCollector(ctx context.Context, weatherStore *store.WeatherStore) er
 		for {
 			station := stations[nextIdx]
 			if err := collectStationWithRetry(ctx, cfg, wu, weatherStore, station, rng); err != nil {
-				ticker.Stop()
 				if errors.Is(err, errCircuitBreakerTripped) {
-					return err
+					ticker.Stop()
+					log.Printf("pws paced collector: circuit breaker tripped, cooling down for %s: %v", cfg.circuitBreakerCooldown, err)
+					if err := sleepWithContext(ctx, cfg.circuitBreakerCooldown); err != nil {
+						return err
+					}
+					break
 				}
 				log.Printf("pws paced collector: station %s failed permanently: %v", station.StationID, err)
 			}
@@ -195,12 +200,13 @@ func loadPacedSchedulerConfig() pacedSchedulerConfig {
 	}
 
 	return pacedSchedulerConfig{
-		window:         time.Duration(windowMins) * time.Minute,
-		retryMax:       envInt("PWS_RETRY_MAX", 2),
-		retryMin:       time.Duration(retryMinSec) * time.Second,
-		retryMaxDelay:  time.Duration(retryMaxSec) * time.Second,
-		requestTimeout: 20 * time.Second,
-		cursorPath:     cursorPath,
+		window:                 time.Duration(windowMins) * time.Minute,
+		retryMax:               envInt("PWS_RETRY_MAX", 2),
+		retryMin:               time.Duration(retryMinSec) * time.Second,
+		retryMaxDelay:          time.Duration(retryMaxSec) * time.Second,
+		requestTimeout:         20 * time.Second,
+		cursorPath:             cursorPath,
+		circuitBreakerCooldown: time.Duration(envInt("PWS_CIRCUIT_BREAKER_COOLDOWN_MINUTES", 30)) * time.Minute,
 	}
 }
 
@@ -210,6 +216,20 @@ func retryBackoffWithJitter(minDelay, maxDelay time.Duration, rng *rand.Rand) ti
 	}
 	delta := maxDelay - minDelay
 	return minDelay + time.Duration(rng.Int63n(int64(delta)+1))
+}
+
+func sleepWithContext(ctx context.Context, d time.Duration) error {
+	if d <= 0 {
+		return nil
+	}
+	timer := time.NewTimer(d)
+	defer timer.Stop()
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-timer.C:
+		return nil
+	}
 }
 
 func isCircuitBreakerError(err error) bool {
