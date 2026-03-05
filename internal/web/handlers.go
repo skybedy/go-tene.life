@@ -63,14 +63,7 @@ func (h *Handler) getGAConfig() (bool, string) {
 	if measurementID == "" {
 		return false, ""
 	}
-
-	env := strings.ToLower(strings.TrimSpace(os.Getenv("APP_ENV")))
-	switch env {
-	case "", "local", "development", "dev", "testing", "test":
-		return false, ""
-	default:
-		return true, measurementID
-	}
+	return true, measurementID
 }
 
 func (h *Handler) getCommonViewData(c echo.Context) (string, string, []models.LanguageOption, map[string]string, bool, string) {
