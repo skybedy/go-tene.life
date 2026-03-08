@@ -18,9 +18,9 @@
     {{ end }}
 </head>
 
-<body class="min-h-screen flex flex-col items-center justify-center p-2 sm:p-4">
-    <div class="w-full max-w-6xl relative">
-        <img src="{{ if .WebcamImageURL }}{{ .WebcamImageURL }}{{ else }}/webcam/image.jpg{{ end }}" alt="{{ index .I18n "webcam_big_alt" }}" class="w-full h-auto rounded-lg shadow-2xl">
+<body class="min-h-screen bg-black overflow-hidden">
+    <div class="relative w-screen h-screen">
+        <img src="{{ if .WebcamImageURL }}{{ .WebcamImageURL }}{{ else }}/webcam/image.jpg{{ end }}" alt="{{ index .I18n "webcam_big_alt" }}" class="w-full h-full object-cover">
 
         <a href="{{ localeURL .Locale "/" }}"
             class="absolute top-4 left-4 bg-black/60 hover:bg-white/20 text-white p-2 rounded-full backdrop-blur-md transition">
