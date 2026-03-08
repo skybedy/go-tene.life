@@ -542,22 +542,6 @@ func (h *Handler) WebcamBigHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "webcam-big.html", data)
 }
 
-func (h *Handler) PWSMapHandler(c echo.Context) error {
-	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
-	data := models.PWSMapPageData{
-		PageTitle:       i18n.T(locale, "tenerife_temperatures"),
-		Locale:          locale,
-		LocalePrefix:    i18n.LocalePrefix(locale),
-		CurrentPath:     currentPath,
-		CurrentSection:  "temperatures",
-		Languages:       languages,
-		I18n:            messages,
-		GAEnabled:       gaEnabled,
-		GAMeasurementID: gaMeasurementID,
-	}
-	return c.Render(http.StatusOK, "pws-map.html", data)
-}
-
 func (h *Handler) WebcamImageHandler(c echo.Context) error {
 	webcamPath := utils.EnvPathOrDefault("WEBCAM_IMAGE_PATH", "public/images/tenelife.jpg")
 

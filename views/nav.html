@@ -40,10 +40,6 @@
                     </div>
                 </div>
 
-                <a href="{{ localeURL .Locale "/canary-islands-temperatures" }}"
-                    class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "temperatures" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
-                    {{ index .I18n "tenerife_temperatures" }}
-                </a>
             </div>
 
             <div class="ml-auto flex items-center gap-1.5 lg:hidden">
@@ -126,10 +122,6 @@
                 <a href="{{ localeURL .Locale "/statistics/annual" }}"
                     class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                     {{ index .I18n "annual_statistics" }}
-                </a>
-                <a href="{{ localeURL .Locale "/canary-islands-temperatures" }}"
-                    class="block px-3 py-2 text-sm rounded-lg {{ if eq .CurrentSection "temperatures" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
-                    {{ index .I18n "tenerife_temperatures" }}
                 </a>
             </div>
         </div>
