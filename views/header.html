@@ -68,6 +68,96 @@
         .water-quality-help::-webkit-details-marker {
             display: none;
         }
+
+        .webcam-title-overlay {
+            max-width: calc(100% - 0.9rem);
+        }
+
+        .webcam-title-box {
+            max-width: calc(100% - 4.4rem);
+        }
+
+        .webcam-title-box h2 {
+            font-size: clamp(0.82rem, 2.25vw, 1.95rem);
+            line-height: 1.08;
+        }
+
+        .webcam-zoom-box svg {
+            width: 32px !important;
+            height: 32px !important;
+        }
+
+        .map-title-overlay {
+            max-width: calc(100% - 0.9rem);
+            z-index: 1200;
+        }
+
+        .map-title-box h1 {
+            font-size: clamp(0.84rem, 2.35vw, 1.95rem);
+            line-height: 1.1;
+        }
+
+        .webcam-big-back-btn svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        @media (max-width: 767px) {
+            .webcam-title-box {
+                max-width: calc(100% - 3.7rem);
+            }
+
+            .webcam-title-box h2,
+            .map-title-box h1 {
+                font-size: clamp(0.76rem, 3.7vw, 1.2rem);
+            }
+        }
+
+        @media (max-width: 380px) {
+            .webcam-title-overlay {
+                gap: 0.3rem !important;
+                max-width: calc(100% - 0.55rem);
+            }
+
+            .webcam-title-box {
+                max-width: calc(100% - 3.1rem);
+                padding: 0.36rem 0.5rem !important;
+            }
+
+            .webcam-zoom-box {
+                padding-left: 0.45rem !important;
+                padding-right: 0.45rem !important;
+            }
+
+            .webcam-zoom-box svg {
+                width: 24px !important;
+                height: 24px !important;
+            }
+
+            .home-map-frame {
+                height: 540px !important;
+                min-height: 540px !important;
+            }
+
+            .home-map-canvas {
+                height: 620px !important;
+                min-height: 620px !important;
+                margin-top: -40px !important;
+            }
+
+            .map-title-overlay {
+                max-width: calc(100% - 0.55rem);
+            }
+
+            .map-title-box {
+                padding: 0.36rem 0.5rem !important;
+            }
+
+            .map-title-box h1 {
+                font-size: 0.75rem !important;
+                line-height: 1.14 !important;
+            }
+        }
     </style>
     {{ if .GAEnabled }}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ .GAMeasurementID }}"></script>

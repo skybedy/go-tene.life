@@ -7,6 +7,38 @@
     <meta name="google" content="notranslate">
     <title>{{ index .I18n "webcam_big_title" }}</title>
     <link rel="stylesheet" href="/css/app.css">
+    <style>
+        .webcam-big-back-btn svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        @media (max-width: 640px) {
+            .webcam-big-back-btn {
+                top: 0.65rem !important;
+                left: 0.65rem !important;
+                padding: 0.6rem 0.8rem !important;
+            }
+
+            .webcam-big-back-btn svg {
+                width: 26px;
+                height: 26px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .webcam-big-back-btn {
+                top: 0.45rem !important;
+                left: 0.45rem !important;
+                padding: 0.48rem 0.62rem !important;
+            }
+
+            .webcam-big-back-btn svg {
+                width: 22px;
+                height: 22px;
+            }
+        }
+    </style>
     {{ if .GAEnabled }}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ .GAMeasurementID }}"></script>
     <script>
@@ -18,13 +50,13 @@
     {{ end }}
 </head>
 
-<body class="min-h-screen flex flex-col items-center justify-center p-2 sm:p-4">
-    <div class="w-full max-w-6xl relative">
-        <img src="{{ if .WebcamImageURL }}{{ .WebcamImageURL }}{{ else }}/webcam/image.jpg{{ end }}" alt="{{ index .I18n "webcam_big_alt" }}" class="w-full h-auto rounded-lg shadow-2xl">
+<body class="min-h-screen bg-black">
+    <div class="w-full relative">
+        <img src="{{ if .WebcamImageURL }}{{ .WebcamImageURL }}{{ else }}/webcam/image.jpg{{ end }}" alt="{{ index .I18n "webcam_big_alt" }}" class="w-full h-auto">
 
         <a href="{{ localeURL .Locale "/" }}"
-            class="absolute top-4 left-4 bg-black/60 hover:bg-white/20 text-white p-2 rounded-full backdrop-blur-md transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+            class="webcam-big-back-btn absolute top-4 left-4 bg-black/60 hover:bg-white/20 text-white px-4 py-3 rounded-lg backdrop-blur-md transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>

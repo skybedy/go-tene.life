@@ -46,7 +46,7 @@ var dictionary = map[string]map[string]string{
 		"annual_short":                "Roční",
 		"webcam_title":                "Webkamera – Tenerife, Los Cristianos",
 		"webcam_view_alt":             "Webkamera výhled",
-		"location_heading":            "Umístění a směr pohledu",
+		"location_heading":            "Umístění a směr pohledu kamery",
 		"location_description":        "Avenida Ámsterdam, severovýchod – výhled na Montaña el Mojón 250 m/nm a Roque de Ichasagua 1001, dále, úplně vpravo za stromem, na Morros del Viento 406 a při jasné obloze pak v pozadí i na Pico del Teide 3715, Pico Viejo 3135 a Alto de Guajara 2715.",
 		"weather_source_heading":      "O zdroji meteorologických dat",
 		"weather_source_description":  "Data o aktuální teplotě, tlaku a vlhkosti jsou odebírána z vlastní meteostanice a teplotního čidla v celodenně zastíněném místě, bez dosahu přímého slunce, takže se jedná čistě o hodnoty ve stínu.",

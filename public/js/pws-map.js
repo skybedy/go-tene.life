@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const i18n = window.pwsMapI18n || {};
     const mapEl = document.getElementById('pwsMap');
-    const messageEl = document.getElementById('pwsMapMessage');
     const lastUpdateEl = document.getElementById('pwsLastUpdate');
 
     if (!mapEl) {
@@ -9,31 +8,48 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (typeof window.L === 'undefined') {
-        if (lastUpdateEl) {
-            const label = i18n.lastUpdateLabel || 'Last update';
-            lastUpdateEl.textContent = `${label}: -`;
-        }
-        if (messageEl) {
-            messageEl.textContent = i18n.noData || 'No station data available.';
-            messageEl.classList.remove('hidden');
-        }
         console.error('Leaflet library is not available');
         return;
     }
 
+    const mapMode = (mapEl.dataset.mapMode || 'interactive').toLowerCase();
+    const staticMode = mapMode === 'static';
+    const mapFocus = (mapEl.dataset.mapFocus || '').toLowerCase();
+    const tenerifeBounds = L.latLngBounds(
+        [27.98, -16.93],
+        [28.62, -16.08]
+    );
+    const defaultView = mapFocus === 'tenerife'
+        ? { center: [28.29, -16.63], zoom: 10 }
+        : { center: [28.3, -15.8], zoom: 8 };
+
     const map = L.map('pwsMap', {
-        dragging: true,
-        scrollWheelZoom: true,
-        doubleClickZoom: true,
+        dragging: !staticMode,
+        scrollWheelZoom: !staticMode,
+        doubleClickZoom: !staticMode,
         boxZoom: false,
-        keyboard: false,
-        touchZoom: true,
-        zoomControl: true
-    }).setView([28.3, -15.8], 8);
+        keyboard: !staticMode,
+        touchZoom: !staticMode,
+        zoomControl: !staticMode
+    }).setView(defaultView.center, defaultView.zoom);
+    if (staticMode && mapFocus === 'tenerife') {
+        map.setMaxBounds(tenerifeBounds);
+        map.fitBounds(tenerifeBounds, { animate: false, padding: [8, 8] });
+        map.options.minZoom = map.getZoom();
+        map.options.maxZoom = map.getZoom();
+    }
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
+    function refreshMapSize() {
+        requestAnimationFrame(() => map.invalidateSize(false));
+    }
+    refreshMapSize();
+    window.addEventListener('resize', refreshMapSize);
+    window.addEventListener('orientationchange', refreshMapSize);
+
     const maxObservationAgeMs = 60 * 60 * 1000; // 1 hour
     function ensureLabelStyles() {
         if (document.getElementById('pwsTempLabelStyle')) return;
@@ -99,9 +115,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function formatLocalDate(isoTime) {
-        if (!isoTime) return '-';
+        if (!isoTime) return '';
         const ts = new Date(isoTime);
-        if (Number.isNaN(ts.getTime())) return '-';
+        if (Number.isNaN(ts.getTime())) return '';
 
         return new Intl.DateTimeFormat(document.documentElement.lang || undefined, {
             year: 'numeric',
@@ -113,14 +129,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function setLastUpdate(latestISO) {
+        if (!lastUpdateEl) return;
+        if (!latestISO) {
+            lastUpdateEl.textContent = '';
+            lastUpdateEl.classList.add('hidden');
+            return;
+        }
         const label = i18n.lastUpdateLabel || 'Last update';
         lastUpdateEl.textContent = `${label}: ${formatLocalDate(latestISO)}`;
-    }
-
-    function showMessage(text) {
-        if (!messageEl) return;
-        messageEl.textContent = text;
-        messageEl.classList.remove('hidden');
+        lastUpdateEl.classList.remove('hidden');
     }
 
     function popupText(point) {
@@ -195,7 +212,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const points = await response.json();
             if (!Array.isArray(points) || points.length === 0) {
                 setLastUpdate(null);
-                showMessage(i18n.noData || 'No station data available.');
                 return;
             }
 
@@ -220,6 +236,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (point.lat == null || point.lon == null) {
                     continue;
                 }
+                if (mapFocus === 'tenerife' && !tenerifeBounds.contains([point.lat, point.lon])) {
+                    continue;
+                }
 
                 const marker = L.marker([point.lat, point.lon], {
                     icon: markerIcon(point)
@@ -235,14 +254,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (visiblePoints === 0) {
-                showMessage(i18n.noData || 'No station data available.');
+                setLastUpdate(null);
             }
 
             setLastUpdate(latestFetched ? latestFetched.toISOString() : null);
         } catch (error) {
             console.error('Failed to load PWS map points:', error);
             setLastUpdate(null);
-            showMessage(i18n.noData || 'No station data available.');
         }
     }
 
