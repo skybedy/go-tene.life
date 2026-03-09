@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const mapEl = document.getElementById('pwsMap');
     const messageEl = document.getElementById('pwsMapMessage');
     const lastUpdateEl = document.getElementById('pwsLastUpdate');
+    const maxObservationAgeMs = 60 * 60 * 1000; // 1 hour
 
     if (!mapEl) {
         return;
@@ -16,14 +17,21 @@ document.addEventListener('DOMContentLoaded', function () {
         keyboard: false,
         touchZoom: true,
         zoomControl: true
-    }).setView([28.2916, -16.6291], 10);
+    }).setView(
+        [28.2916, -16.6291],
+        11
+    );
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
-    const maxObservationAgeMs = 60 * 60 * 1000; // 1 hour
+
     function ensureLabelStyles() {
-        if (document.getElementById('pwsTempLabelStyle')) return;
+        if (document.getElementById('pwsTempLabelStyle')) {
+            return;
+        }
+
         const style = document.createElement('style');
         style.id = 'pwsTempLabelStyle';
         style.textContent = `
@@ -64,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
         document.head.appendChild(style);
     }
+
     ensureLabelStyles();
 
     function colorForTemp(temp) {
@@ -72,21 +81,30 @@ document.addEventListener('DOMContentLoaded', function () {
         if (temp < 18) return '#0ea5e9';
         if (temp < 24) return '#10b981';
         if (temp < 30) return '#f59e0b';
+
         return '#ef4444';
     }
 
     function formatLocalDate(isoTime) {
-        if (!isoTime) return '-';
-        const ts = new Date(isoTime);
-        if (Number.isNaN(ts.getTime())) return '-';
+        if (!isoTime) {
+            return '-';
+        }
 
-        return new Intl.DateTimeFormat(document.documentElement.lang || undefined, {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit'
-        }).format(ts);
+        const ts = new Date(isoTime);
+        if (Number.isNaN(ts.getTime())) {
+            return '-';
+        }
+
+        return new Intl.DateTimeFormat(
+            document.documentElement.lang || undefined,
+            {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            }
+        ).format(ts);
     }
 
     function setLastUpdate(latestISO) {
@@ -95,13 +113,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function showMessage(text) {
-        if (!messageEl) return;
+        if (!messageEl) {
+            return;
+        }
+
         messageEl.textContent = text;
         messageEl.classList.remove('hidden');
     }
 
     function popupText(point) {
-        const tempText = point.temp_c == null ? '--' : `${Number(point.temp_c).toFixed(1)} °C`;
+        const tempText = point.temp_c == null
+            ? '--'
+            : `${Number(point.temp_c).toFixed(1)} °C`;
         const lines = [
             `<strong>${point.name || point.stationId}</strong>`,
             `${tempText}`,
@@ -121,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function markerInfoText(point) {
         const name = point.name || point.stationId || '-';
         const lastUpdateLabel = i18n.lastUpdateLabel || 'Last update';
+
         return `<strong>${name}</strong><br>${lastUpdateLabel}: ${formatLocalDate(point.fetched_at_utc)}`;
     }
 
@@ -135,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const label = tempLabel(point);
         const naClass = label === '--' ? ' is-na' : '';
         const bg = colorForTemp(point.temp_c);
+
         return L.divIcon({
             className: 'pws-temp-marker-wrap',
             html: `<div class="pws-temp-dot${naClass}" style="background:${bg}">${label}</div>`,
@@ -145,20 +170,31 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function parseISO(isoTime) {
-        if (!isoTime) return null;
+        if (!isoTime) {
+            return null;
+        }
+
         const ts = new Date(isoTime);
+
         return Number.isNaN(ts.getTime()) ? null : ts;
     }
 
     function isRecentObservation(point) {
         const obs = parseISO(point.obs_time_utc);
-        if (!obs) return false;
+        if (!obs) {
+            return false;
+        }
+
         return (Date.now() - obs.getTime()) <= maxObservationAgeMs;
     }
 
     function hasValidTemperature(point) {
-        if (point.temp_c == null) return false;
+        if (point.temp_c == null) {
+            return false;
+        }
+
         const temp = Number(point.temp_c);
+
         return Number.isFinite(temp);
     }
 
