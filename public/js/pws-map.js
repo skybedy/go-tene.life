@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const messageEl = document.getElementById('pwsMapMessage');
     const lastUpdateEl = document.getElementById('pwsLastUpdate');
     const maxObservationAgeMs = 60 * 60 * 1000; // 1 hour
+    const tenerifeBounds = L.latLngBounds(
+        [27.98, -16.93],
+        [28.62, -16.08]
+    );
 
     if (!mapEl) {
         return;
@@ -17,63 +21,17 @@ document.addEventListener('DOMContentLoaded', function () {
         keyboard: false,
         touchZoom: true,
         zoomControl: true
-    }).setView(
-        [28.2916, -16.6291],
-        11
-    );
+    });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    function ensureLabelStyles() {
-        if (document.getElementById('pwsTempLabelStyle')) {
-            return;
-        }
-
-        const style = document.createElement('style');
-        style.id = 'pwsTempLabelStyle';
-        style.textContent = `
-            .pws-temp-dot {
-                width: 34px;
-                height: 34px;
-                border-radius: 9999px;
-                border: 2px solid #1f2937;
-                color: #fff;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 12px;
-                font-weight: 700;
-                line-height: 1;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
-                text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-                user-select: none;
-                white-space: nowrap;
-            }
-            .pws-temp-dot.is-na {
-                color: #fff;
-                font-size: 11px;
-            }
-            .pws-info-tooltip {
-                background: rgba(17, 24, 39, 0.9);
-                color: #fff;
-                border: 1px solid rgba(255, 255, 255, 0.25);
-                border-radius: 8px;
-                padding: 6px 8px;
-                font-size: 12px;
-                line-height: 1.3;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-            }
-            .pws-info-tooltip:before {
-                border-top-color: rgba(17, 24, 39, 0.9);
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
-    ensureLabelStyles();
+    map.fitBounds(tenerifeBounds, {
+        padding: [24, 24],
+        maxZoom: 11
+    });
 
     function colorForTemp(temp) {
         if (temp == null || Number.isNaN(temp)) return '#6b7280';
