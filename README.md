@@ -38,7 +38,7 @@ make migrate-status
 make dump-schema
 ```
 
-This exports structure-only SQL for app tables (`weather*`) into `db/schema.sql`.
+This exports structure-only SQL for app tables (`weather*`, `tide_events`, `pws_*`) into `db/schema.sql`.
 
 ### Recommended workflow for DB changes
 
@@ -106,3 +106,45 @@ In-app scheduler (recommended, no Linux cron/systemd needed):
 
 - `WATER_COLLECT_INTERVAL_MINUTES=1440` (default: once per 24h)
 - collector runs automatically on app start and then in this interval
+
+## Tenerife PWS Temperature Map
+
+Current temperatures on Tenerife are loaded from The Weather Company PWS API and stored in DB cache tables.
+
+- API key env: `WEATHER_COM_API_KEY`
+- Collector interval env: `PWS_COLLECT_INTERVAL_MINUTES=10`
+- WU cache env: `WU_CACHE_TTL_SECONDS=60`
+- WU rate-limit env: `WU_RATELIMIT_PER_MIN=25`, `WU_RATELIMIT_BURST=5`
+- WU stale-fallback max age: `WU_STALE_FALLBACK_MAX_AGE_SECONDS=120`
+- Manual command: `go run . collect:pws`
+- API endpoint: `/api/tenerife/pws-latest`
+- Debug usage endpoint: `/debug/wu-usage`
+- Page: `/tenerife/teploty` (also locale-prefixed variants)
+
+### DB tables
+
+- `pws_stations`: station configuration (`station_id`, `name`, optional `lat`/`lon`, `is_active`, `display_order`)
+- `pws_latest`: latest fetched values per station (FK `station_ref_id -> pws_stations.id`, values: `temp_c`, `humidity`, `obs_time_utc`, `fetched_at_utc`, `stale`, `invalid`)
+
+Example station inserts:
+
+```sql
+INSERT INTO pws_stations (station_id, name, lat, lon, is_active, display_order) VALUES
+('ICANARIA12', 'Los Cristianos', 28.0436, -16.7215, 1, 10),
+('ICANARIA45', 'Costa Adeje', 28.0900, -16.7350, 1, 20);
+```
+
+Cron example (every 10 minutes):
+
+```cron
+*/10 * * * * cd /path/to/go-tene.life && ./tenelife collect:pws >> /var/log/tenelife-pws.log 2>&1
+```
+
+## Tides API
+
+Daily tide extremes (high/low with time and height) are stored in DB table `tide_events`.
+
+- Endpoint: `/api/tides?date=YYYY-MM-DD&loc=los_cristianos`
+- Default serving source: `open_meteo` (`TIDES_SERVING_SOURCE=open_meteo`)
+- Optional hybrid mode: `TIDES_SERVING_SOURCE=hybrid` (Puertos first, fallback Open-Meteo)
+- If data is missing, endpoint triggers synchronous collect with short timeout and may return `503` (`try_later`).

@@ -44,6 +44,46 @@
             </div>
         </div>
 
+        <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">{{ index .I18n "table_overview" }}</h2>
+        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden mb-8">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs sm:text-sm">
+                    <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase text-[0.55rem] leading-tight sm:text-xs">
+                        <tr>
+                            <th class="px-3 py-3 font-semibold">{{ index .I18n "date" }}</th>
+                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_temp" }}</th>
+                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "min_max" }}</th>
+                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "pressure" }}</th>
+                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "humidity" }}</th>
+                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "sea" }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {{ range .DailyStats }}
+                        <tr class="odd:bg-white/55 even:bg-blue-50/55 hover:bg-white/75 transition">
+                            <td class="px-3 py-3 font-medium text-gray-900">{{ shortDate .Date }}</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgTemperature }} °C</td>
+                            <td class="px-3 py-3 text-right text-gray-500">
+                                <span class="text-blue-600">{{ f1 .MinTemperature }}</span> /
+                                <span class="text-red-600">{{ f1 .MaxTemperature }}</span>
+                            </td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgPressure }} hPa</td>
+                            <td class="px-3 py-3 text-right text-gray-700">{{ f0 .AvgHumidity }} %</td>
+                            <td class="px-3 py-3 text-right text-gray-700">
+                                {{ if .SeaTemperature }}{{ f1 .SeaTemperature }} °C{{ else }}-{{ end }}
+                            </td>
+                        </tr>
+                        {{ else }}
+                        <tr>
+                            <td colspan="6" class="px-3 py-8 text-center text-gray-500 italic">{{ index .I18n "no_data" }}</td>
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">Grafy</h2>
         <div class="space-y-4 mb-6">
             <div
                 class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
