@@ -33,8 +33,6 @@
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "weekly_statistics" }}</a>
                         <a href="{{ localeURL .Locale "/statistics/monthly" }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "monthly_statistics" }}</a>
-                        <a href="{{ localeURL .Locale "/statistics/annual" }}"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "annual_statistics" }}</a>
                     </div>
                 </div>
             </div>
@@ -115,10 +113,6 @@
                 <a href="{{ localeURL .Locale "/statistics/monthly" }}"
                     class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                     {{ index .I18n "monthly_statistics" }}
-                </a>
-                <a href="{{ localeURL .Locale "/statistics/annual" }}"
-                    class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                    {{ index .I18n "annual_statistics" }}
                 </a>
             </div>
         </div>

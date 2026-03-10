@@ -40,7 +40,7 @@ var dictionary = map[string]map[string]string{
 		"monthly_statistics":          "Měsíční statistiky",
 		"annual_statistics":           "Roční statistiky",
 		"daily_short":                 "Denní",
-		"recent_short":                "10 dní",
+		"recent_short":                "Poslednich 10 dni",
 		"weekly_short":                "Týdenní",
 		"monthly_short":               "Měsíční",
 		"annual_short":                "Roční",
@@ -90,7 +90,9 @@ var dictionary = map[string]map[string]string{
 		"show":                        "Zobrazit",
 		"table_overview":              "Tabulkový přehled",
 		"table_overview_30":           "Tabulkový přehled (posledních 30 dní)",
+		"hourly_table_title":          "Tabulka podle hodin",
 		"date":                        "Datum",
+		"hour":                        "Hodina",
 		"click_to_change_date":        "Kliknutím můžete změnit datum",
 		"week_year":                   "Týden / Rok",
 		"month_year":                  "Měsíc / Rok",
@@ -176,7 +178,9 @@ var dictionary = map[string]map[string]string{
 		"show":                        "Show",
 		"table_overview":              "Table Overview",
 		"table_overview_30":           "Table Overview (last 30 days)",
+		"hourly_table_title":          "Hourly Table",
 		"date":                        "Date",
+		"hour":                        "Hour",
 		"click_to_change_date":        "Click to change the date",
 		"week_year":                   "Week / Year",
 		"month_year":                  "Month / Year",
@@ -242,6 +246,9 @@ func Messages(locale string) map[string]string {
 		merged[k] = v
 	}
 	for k, v := range recentLocaleMessages[loc] {
+		merged[k] = v
+	}
+	for k, v := range hourlyTableLocaleMessages[loc] {
 		merged[k] = v
 	}
 
@@ -546,6 +553,33 @@ var recentLocaleMessages = map[string]map[string]string{
 		"recent_humidity_chart_title": "Páratartalom az elmúlt 10 napban (%)",
 		"detail_charts_load_error":    "Nem sikerült betölteni az órás grafikonokat a kiválasztott dátumhoz.",
 		"click_to_change_date":        "Kattintson a dátum módosításához",
+	},
+}
+
+var hourlyTableLocaleMessages = map[string]map[string]string{
+	"es": {
+		"hourly_table_title": "Tabla por horas",
+		"hour":               "Hora",
+	},
+	"pl": {
+		"hourly_table_title": "Tabela godzinowa",
+		"hour":               "Godzina",
+	},
+	"de": {
+		"hourly_table_title": "Stundentabelle",
+		"hour":               "Stunde",
+	},
+	"fr": {
+		"hourly_table_title": "Tableau horaire",
+		"hour":               "Heure",
+	},
+	"it": {
+		"hourly_table_title": "Tabella oraria",
+		"hour":               "Ora",
+	},
+	"hu": {
+		"hourly_table_title": "Óránkénti táblázat",
+		"hour":               "Óra",
 	},
 }
 

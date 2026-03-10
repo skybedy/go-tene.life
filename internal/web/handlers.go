@@ -89,6 +89,24 @@ func (h *Handler) webcamImageURL() string {
 	return fmt.Sprintf("/webcam/image.jpg?v=%d", info.ModTime().Unix())
 }
 
+func hasDailyValues(day models.WeatherDaily) bool {
+	return day.AvgTemperature != nil ||
+		day.MinTemperature != nil ||
+		day.MaxTemperature != nil ||
+		day.AvgPressure != nil ||
+		day.AvgHumidity != nil
+}
+
+func filterDailyStatsWithValues(stats []models.WeatherDaily) []models.WeatherDaily {
+	filtered := make([]models.WeatherDaily, 0, len(stats))
+	for _, day := range stats {
+		if hasDailyValues(day) {
+			filtered = append(filtered, day)
+		}
+	}
+	return filtered
+}
+
 func (h *Handler) IndexHandler(c echo.Context) error {
 	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	webcamImageURL := h.webcamImageURL()
@@ -671,7 +689,13 @@ func (h *Handler) WeeklyStatisticsHandler(c echo.Context) error {
 
 func (h *Handler) RecentStatisticsHandler(c echo.Context) error {
 	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
+	stats, err := h.WeatherStore.GetDailyStats(10)
+	if err != nil {
+		log.Println("Error fetching recent stats:", err)
+	}
+	stats = filterDailyStatsWithValues(stats)
 	data := models.StatsPageData{
+		DailyStats:      stats,
 		PageTitle:       i18n.T(locale, "recent_statistics"),
 		StatsSection:    "recent",
 		Locale:          locale,

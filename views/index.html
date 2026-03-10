@@ -162,7 +162,7 @@
             </div>
 
             <div class="py-3 sm:py-4 md:py-5 lg:py-6">
-                <h1 class="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 text-gray-800">
+                <h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 text-gray-800">
                     {{ index .I18n "webcam_title" }}</h1>
                 <div class="space-y-2 sm:space-y-2.5 md:space-y-3">
                     <div>
@@ -187,9 +187,9 @@
 
         <div class="mt-4 sm:mt-6 md:mt-8">
             <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-4 sm:p-5 md:p-6 lg:p-7">
-                <h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
+                <h2 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
                     {{ index .I18n "tenerife_temperatures" }}
-                </h1>
+                </h2>
                 <p class="text-gray-600 text-xs sm:text-sm md:text-base mb-3 sm:mb-4">
                     {{ index .I18n "pws_map_subtitle" }}
                 </p>
@@ -197,19 +197,38 @@
                     {{ index .I18n "pws_last_update" }}: -
                 </p>
 
-                <div id="pwsMap" class="w-full h-[320px] sm:h-[500px] rounded-xl border border-gray-300"></div>
+                <div id="pwsMap" class="w-full h-80 sm:h-125 2xl:h-277 rounded-xl border border-gray-300"></div>
                 <p id="pwsMapMessage" class="hidden mt-3 text-sm text-gray-700"></p>
             </div>
         </div>
 
-        <!-- Weather Charts Section -->
-        <div class="mt-4 sm:mt-6 md:mt-8 space-y-3 sm:space-y-4">
-            <div class="px-1 sm:px-2">
-                <h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">
-                    {{ index .I18n "weather_data_title" }}</h1>
-                <p class="text-gray-600 text-[0.65rem] sm:text-xs md:text-sm lg:text-base">{{ index .I18n "weather_data_subtitle" }}</p>
+        <div class="mt-4 sm:mt-6 md:mt-8 mb-8">
+            <p class="px-1 sm:px-2 text-gray-800 text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-3">Hodinové průměry pro dnešní den</p>
+            <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">{{ index .I18n "table_overview" }}</h2>
+            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                        <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase text-[0.55rem] leading-tight sm:text-xs">
+                            <tr>
+                                <th class="px-3 py-3 font-semibold">{{ index .I18n "hour" }}</th>
+                                <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_temp" }}</th>
+                                <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_pressure" }}</th>
+                                <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_humidity" }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="hourlyHomeTableBody">
+                            <tr>
+                                <td colspan="4" class="px-3 py-8 text-center text-gray-500 italic">{{ index .I18n "no_data" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </div>
 
+        <!-- Weather Charts Section -->
+        <div class="space-y-3 sm:space-y-4">
+            <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">Grafy</h2>
             <!-- Temperature Chart -->
             <div
                 class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
@@ -251,7 +270,8 @@
     window.chartI18n = {
         temperature: {{ printf "%q" (index .I18n "temperature") }},
         pressure: {{ printf "%q" (index .I18n "pressure") }},
-        humidity: {{ printf "%q" (index .I18n "humidity") }}
+        humidity: {{ printf "%q" (index .I18n "humidity") }},
+        noData: {{ printf "%q" (index .I18n "no_data") }}
     };
     window.pwsMapI18n = {
         lastUpdateLabel: {{ printf "%q" (index .I18n "pws_last_update") }},
