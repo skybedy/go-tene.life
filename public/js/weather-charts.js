@@ -79,10 +79,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 : '--';
         }
 
-        hourlyTableBody.innerHTML = labels.map(function(label, index) {
-            const temperature = datasets && Array.isArray(datasets.temperature) ? datasets.temperature[index] : null;
-            const pressure = datasets && Array.isArray(datasets.pressure) ? datasets.pressure[index] : null;
-            const humidity = datasets && Array.isArray(datasets.humidity) ? datasets.humidity[index] : null;
+        hourlyTableBody.innerHTML = labels.map(function(_, index) {
+            const reverseIndex = labels.length - 1 - index;
+            const label = labels[reverseIndex];
+            const temperature = datasets && Array.isArray(datasets.temperature) ? datasets.temperature[reverseIndex] : null;
+            const pressure = datasets && Array.isArray(datasets.pressure) ? datasets.pressure[reverseIndex] : null;
+            const humidity = datasets && Array.isArray(datasets.humidity) ? datasets.humidity[reverseIndex] : null;
 
             return '<tr class="odd:bg-white/55 even:bg-blue-50/55 hover:bg-white/75 transition">'
                 + '<td class="px-3 py-3 font-medium text-gray-900">' + label + '</td>'

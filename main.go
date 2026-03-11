@@ -211,6 +211,9 @@ func main() {
 				}
 				return fmt.Sprintf("%d.%d.%02d", d, m, y%100)
 			},
+			"todayDate": func() string {
+				return time.Now().Format("2. 1. 06")
+			},
 		}).ParseFS(viewsFS, "views/*.html", "views/statistics/*.html")),
 	}
 
