@@ -208,22 +208,29 @@
             return total / values.length;
         }
 
+        function updateSeaTemperatureSummary(date) {
+            const seaTempEl = document.getElementById('stat-sea-temp');
+            if (!seaTempEl) return;
+
+            const normalizedDate = typeof date === 'string' ? date.slice(0, 10) : '';
+            const seaTempRaw = seaTemperatureByDate[normalizedDate];
+            const seaTemp = typeof seaTempRaw === 'string' ? Number.parseFloat(seaTempRaw) : seaTempRaw;
+
+            seaTempEl.textContent = typeof seaTemp === 'number' && Number.isFinite(seaTemp)
+                ? seaTemp.toFixed(1) + ' °C'
+                : '--';
+        }
+
         function setSummaryFromHourly(datasets) {
             const tempAvg = averageFromSeries(datasets && datasets.temperature);
             const pressAvg = averageFromSeries(datasets && datasets.pressure);
             const humAvg = averageFromSeries(datasets && datasets.humidity);
 
             const tempEl = document.getElementById('stat-temp-avg');
-            const seaTempEl = document.getElementById('stat-sea-temp');
             const pressEl = document.getElementById('stat-pressure-avg');
             const humEl = document.getElementById('stat-humidity-avg');
 
             if (tempEl) tempEl.textContent = tempAvg === null ? '--' : tempAvg.toFixed(1) + ' °C';
-            if (seaTempEl) {
-                const seaTempRaw = seaTemperatureByDate[dateInput && dateInput.value ? dateInput.value : ''];
-                const seaTemp = typeof seaTempRaw === 'string' ? Number.parseFloat(seaTempRaw) : seaTempRaw;
-                seaTempEl.textContent = typeof seaTemp === 'number' && Number.isFinite(seaTemp) ? seaTemp.toFixed(1) + ' °C' : '--';
-            }
             if (pressEl) pressEl.textContent = pressAvg === null ? '--' : pressAvg.toFixed(1) + ' hPa';
             if (humEl) humEl.textContent = humAvg === null ? '--' : Math.round(humAvg) + ' %';
         }
@@ -264,6 +271,7 @@
 
         async function loadHourlyDetails(date) {
             if (!date) return;
+            updateSeaTemperatureSummary(date);
             const formattedDate = formatDateLabel(date);
             dateLabel.textContent = formattedDate;
             if (tableDateLabel) tableDateLabel.textContent = formattedDate ? '(' + formattedDate + ')' : '';
