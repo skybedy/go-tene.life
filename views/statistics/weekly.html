@@ -25,6 +25,7 @@
                             <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-right leading-tight">{{ index .I18n "avg_temp" }}</th>
                             <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-right leading-tight">{{ index .I18n "pressure" }}</th>
                             <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-right leading-tight"><span class="sm:hidden">Vlhk.</span><span class="hidden sm:inline">{{ index .I18n "humidity" }}</span></th>
+                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-right leading-tight">{{ index .I18n "sea" }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
@@ -35,10 +36,11 @@
                             <td class="px-1 sm:px-3 py-2 sm:py-3 text-right text-gray-700 whitespace-nowrap">{{ f1 .AvgTemperature }} °C</td>
                             <td class="px-1 sm:px-3 py-2 sm:py-3 text-right text-gray-700 whitespace-nowrap">{{ f1 .AvgPressure }} hPa</td>
                             <td class="px-1 sm:px-3 py-2 sm:py-3 text-right text-gray-700 whitespace-nowrap">{{ f0 .AvgHumidity }} %</td>
+                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-right text-gray-700 whitespace-nowrap">{{ f1 .AvgSeaTemperature }} °C</td>
                         </tr>
                         {{ else }}
                         <tr>
-                            <td colspan="5" class="px-3 py-8 text-center text-gray-500 italic">{{ index .I18n "no_data" }}</td>
+                            <td colspan="6" class="px-3 py-8 text-center text-gray-500 italic">{{ index .I18n "no_data" }}</td>
                         </tr>
                         {{ end }}
                     </tbody>
@@ -55,6 +57,13 @@
                     <canvas id="temperatureChart"></canvas>
                 </div>
             </div>
+            <div
+                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "sea_temperature" }} (°C)</h2>
+                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
+                    <canvas id="seaTemperatureChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 </main>
@@ -64,6 +73,7 @@
 <script>
     window.statsI18n = {
         temperature: {{ printf "%q" (index .I18n "temperature") }},
+        seaTemperature: {{ printf "%q" (index .I18n "sea_temperature") }},
         pressure: {{ printf "%q" (index .I18n "pressure") }},
         humidity: {{ printf "%q" (index .I18n "humidity") }},
         min: {{ printf "%q" (index .I18n "min") }},

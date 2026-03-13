@@ -112,7 +112,7 @@ func (s *WeatherStore) GetDailyStatsByRange(startDate, endDate string) ([]models
 
 func (s *WeatherStore) GetWeeklyStats() ([]models.WeatherWeekly, error) {
 	var results []models.WeatherWeekly
-	query := `SELECT year, week, week_start, week_end, avg_temperature, min_temperature, max_temperature, 
+	query := `SELECT year, week, week_start, week_end, avg_sea_temperature, avg_temperature, min_temperature, max_temperature, 
 	                 avg_pressure, min_pressure, max_pressure, avg_humidity, min_humidity, max_humidity, samples_count 
 	          FROM weather_weekly ORDER BY year DESC, week DESC`
 	rows, err := s.DB.Query(query)
@@ -123,7 +123,7 @@ func (s *WeatherStore) GetWeeklyStats() ([]models.WeatherWeekly, error) {
 
 	for rows.Next() {
 		var w models.WeatherWeekly
-		err := rows.Scan(&w.Year, &w.Week, &w.WeekStart, &w.WeekEnd, &w.AvgTemperature, &w.MinTemperature, &w.MaxTemperature,
+		err := rows.Scan(&w.Year, &w.Week, &w.WeekStart, &w.WeekEnd, &w.AvgSeaTemperature, &w.AvgTemperature, &w.MinTemperature, &w.MaxTemperature,
 			&w.AvgPressure, &w.MinPressure, &w.MaxPressure, &w.AvgHumidity, &w.MinHumidity, &w.MaxHumidity, &w.SamplesCount)
 		if err != nil {
 			return nil, err
@@ -135,7 +135,7 @@ func (s *WeatherStore) GetWeeklyStats() ([]models.WeatherWeekly, error) {
 
 func (s *WeatherStore) GetMonthlyStats(limit int) ([]models.WeatherMonthly, error) {
 	var results []models.WeatherMonthly
-	query := `SELECT year, month, avg_temperature, min_temperature, max_temperature, 
+	query := `SELECT year, month, avg_sea_temperature, avg_temperature, min_temperature, max_temperature, 
 	                 avg_pressure, min_pressure, max_pressure, avg_humidity, min_humidity, max_humidity, samples_count 
 	          FROM weather_monthly ORDER BY year DESC, month DESC LIMIT ?`
 	rows, err := s.DB.Query(query, limit)
@@ -146,7 +146,7 @@ func (s *WeatherStore) GetMonthlyStats(limit int) ([]models.WeatherMonthly, erro
 
 	for rows.Next() {
 		var m models.WeatherMonthly
-		err := rows.Scan(&m.Year, &m.Month, &m.AvgTemperature, &m.MinTemperature, &m.MaxTemperature,
+		err := rows.Scan(&m.Year, &m.Month, &m.AvgSeaTemperature, &m.AvgTemperature, &m.MinTemperature, &m.MaxTemperature,
 			&m.AvgPressure, &m.MinPressure, &m.MaxPressure, &m.AvgHumidity, &m.MinHumidity, &m.MaxHumidity, &m.SamplesCount)
 		if err != nil {
 			return nil, err
@@ -158,7 +158,7 @@ func (s *WeatherStore) GetMonthlyStats(limit int) ([]models.WeatherMonthly, erro
 
 func (s *WeatherStore) GetAnnualStats() ([]models.WeatherMonthly, error) {
 	var results []models.WeatherMonthly
-	query := `SELECT year, month, avg_temperature, min_temperature, max_temperature, 
+	query := `SELECT year, month, avg_sea_temperature, avg_temperature, min_temperature, max_temperature, 
 	                 avg_pressure, min_pressure, max_pressure, avg_humidity, min_humidity, max_humidity, samples_count 
 	          FROM weather_monthly ORDER BY year DESC, month DESC`
 	rows, err := s.DB.Query(query)
@@ -169,7 +169,7 @@ func (s *WeatherStore) GetAnnualStats() ([]models.WeatherMonthly, error) {
 
 	for rows.Next() {
 		var m models.WeatherMonthly
-		err := rows.Scan(&m.Year, &m.Month, &m.AvgTemperature, &m.MinTemperature, &m.MaxTemperature,
+		err := rows.Scan(&m.Year, &m.Month, &m.AvgSeaTemperature, &m.AvgTemperature, &m.MinTemperature, &m.MaxTemperature,
 			&m.AvgPressure, &m.MinPressure, &m.MaxPressure, &m.AvgHumidity, &m.MinHumidity, &m.MaxHumidity, &m.SamplesCount)
 		if err != nil {
 			return nil, err

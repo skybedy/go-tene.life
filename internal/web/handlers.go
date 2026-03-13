@@ -881,6 +881,7 @@ func (h *Handler) GetMonthlyDataHandler(c echo.Context) error {
 	for i := len(stats) - 1; i >= 0; i-- {  // Reverse to show chronological
 		s := stats[i]
 		response.Labels = append(response.Labels, fmt.Sprintf("%d/%d", s.Month, s.Year))
+		response.Datasets.SeaTemperature = append(response.Datasets.SeaTemperature, s.AvgSeaTemperature)
 		response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, s.AvgTemperature)
 		response.Datasets.AvgPressure = append(response.Datasets.AvgPressure, s.AvgPressure)
 		response.Datasets.AvgHumidity = append(response.Datasets.AvgHumidity, s.AvgHumidity)
@@ -912,6 +913,7 @@ func (h *Handler) GetWeeklyDataHandler(c echo.Context) error {
 			label = fmt.Sprintf("%d/%d (%s-%s)", s.Week, s.Year, formatDayMonthLabel(s.WeekStart), formatDayMonthLabel(s.WeekEnd))
 		}
 		response.Labels = append(response.Labels, label)
+		response.Datasets.SeaTemperature = append(response.Datasets.SeaTemperature, s.AvgSeaTemperature)
 		response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, s.AvgTemperature)
 		response.Datasets.AvgPressure = append(response.Datasets.AvgPressure, s.AvgPressure)
 		response.Datasets.AvgHumidity = append(response.Datasets.AvgHumidity, s.AvgHumidity)
@@ -934,6 +936,7 @@ func (h *Handler) GetAnnualDataHandler(c echo.Context) error {
 	for i := len(stats) - 1; i >= 0; i-- {
 		s := stats[i]
 		response.Labels = append(response.Labels, fmt.Sprintf("%d/%d", s.Month, s.Year))
+		response.Datasets.SeaTemperature = append(response.Datasets.SeaTemperature, s.AvgSeaTemperature)
 		response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, s.AvgTemperature)
 		response.Datasets.AvgPressure = append(response.Datasets.AvgPressure, s.AvgPressure)
 		response.Datasets.AvgHumidity = append(response.Datasets.AvgHumidity, s.AvgHumidity)

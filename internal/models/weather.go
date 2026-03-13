@@ -99,35 +99,37 @@ type WeatherDaily struct {
 }
 
 type WeatherWeekly struct {
-	Year           int      `db:"year"`
-	Week           int      `db:"week"`
-	WeekStart      string   `db:"week_start"`
-	WeekEnd        string   `db:"week_end"`
-	AvgTemperature *float64 `db:"avg_temperature"`
-	MinTemperature *float64 `db:"min_temperature"`
-	MaxTemperature *float64 `db:"max_temperature"`
-	AvgPressure    *float64 `db:"avg_pressure"`
-	MinPressure    *float64 `db:"min_pressure"`
-	MaxPressure    *float64 `db:"max_pressure"`
-	AvgHumidity    *float64 `db:"avg_humidity"`
-	MinHumidity    *float64 `db:"min_humidity"`
-	MaxHumidity    *float64 `db:"max_humidity"`
-	SamplesCount   *int     `db:"samples_count"`
+	Year              int      `db:"year"`
+	Week              int      `db:"week"`
+	WeekStart         string   `db:"week_start"`
+	WeekEnd           string   `db:"week_end"`
+	AvgSeaTemperature *float64 `db:"avg_sea_temperature"`
+	AvgTemperature    *float64 `db:"avg_temperature"`
+	MinTemperature    *float64 `db:"min_temperature"`
+	MaxTemperature    *float64 `db:"max_temperature"`
+	AvgPressure       *float64 `db:"avg_pressure"`
+	MinPressure       *float64 `db:"min_pressure"`
+	MaxPressure       *float64 `db:"max_pressure"`
+	AvgHumidity       *float64 `db:"avg_humidity"`
+	MinHumidity       *float64 `db:"min_humidity"`
+	MaxHumidity       *float64 `db:"max_humidity"`
+	SamplesCount      *int     `db:"samples_count"`
 }
 
 type WeatherMonthly struct {
-	Year           int      `db:"year"`
-	Month          int      `db:"month"`
-	AvgTemperature *float64 `db:"avg_temperature"`
-	MinTemperature *float64 `db:"min_temperature"`
-	MaxTemperature *float64 `db:"max_temperature"`
-	AvgPressure    *float64 `db:"avg_pressure"`
-	MinPressure    *float64 `db:"min_pressure"`
-	MaxPressure    *float64 `db:"max_pressure"`
-	AvgHumidity    *float64 `db:"avg_humidity"`
-	MinHumidity    *float64 `db:"min_humidity"`
-	MaxHumidity    *float64 `db:"max_humidity"`
-	SamplesCount   *int     `db:"samples_count"`
+	Year              int      `db:"year"`
+	Month             int      `db:"month"`
+	AvgSeaTemperature *float64 `db:"avg_sea_temperature"`
+	AvgTemperature    *float64 `db:"avg_temperature"`
+	MinTemperature    *float64 `db:"min_temperature"`
+	MaxTemperature    *float64 `db:"max_temperature"`
+	AvgPressure       *float64 `db:"avg_pressure"`
+	MinPressure       *float64 `db:"min_pressure"`
+	MaxPressure       *float64 `db:"max_pressure"`
+	AvgHumidity       *float64 `db:"avg_humidity"`
+	MinHumidity       *float64 `db:"min_humidity"`
+	MaxHumidity       *float64 `db:"max_humidity"`
+	SamplesCount      *int     `db:"samples_count"`
 }
 
 type StatsPageData struct {

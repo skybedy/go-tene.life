@@ -108,6 +108,14 @@
                     <canvas id="humidityChart"></canvas>
                 </div>
             </div>
+
+            <div
+                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "sea_temperature" }} (°C)</h2>
+                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
+                    <canvas id="seaTemperatureChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 </main>
@@ -117,6 +125,7 @@
     window.statsDays = 10;
     window.statsI18n = {
         temperature: {{ printf "%q" (index .I18n "temperature") }},
+        seaTemperature: {{ printf "%q" (index .I18n "sea_temperature") }},
         pressure: {{ printf "%q" (index .I18n "pressure") }},
         humidity: {{ printf "%q" (index .I18n "humidity") }},
         min: {{ printf "%q" (index .I18n "min") }},
