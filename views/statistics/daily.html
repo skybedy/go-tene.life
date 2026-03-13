@@ -150,7 +150,7 @@
         const seaTemperatureByDate = {
             {{- range $index, $stat := .DailyStats }}
             {{- if $index }},{{ end }}
-            {{ printf "%q" $stat.Date }}: {{ if $stat.SeaTemperature }}{{ printf "%q" (f1 $stat.SeaTemperature) }}{{ else }}null{{ end }}
+            "{{ dateOnly $stat.Date }}": {{ if $stat.SeaTemperature }}"{{ f1 $stat.SeaTemperature }}"{{ else }}null{{ end }}
             {{- end }}
         };
 
