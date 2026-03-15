@@ -4,12 +4,14 @@ import (
 	"context"
 	"database/sql"
 	"embed"
+	"errors"
 	"fmt"
 	"html/template"
 	"io/fs"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -36,15 +38,41 @@ var staticFS embed.FS
 
 var db *sql.DB
 
-func main() {
-	// Load .env file
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found, checking parent directory...")
-		// Try loading from parent for dev convenience in flat/nested structures
-		if err := godotenv.Load("../../.env"); err != nil {
-			log.Println("No .env file found in parent either")
+func loadEnv() {
+	candidates := []string{
+		".env",
+		"../../.env",
+	}
+
+	if exePath, err := os.Executable(); err == nil {
+		exeDir := filepath.Dir(exePath)
+		candidates = append(candidates,
+			filepath.Join(exeDir, ".env"),
+			filepath.Join(exeDir, "..", ".env"),
+		)
+	}
+
+	seen := make(map[string]struct{}, len(candidates))
+	for _, candidate := range candidates {
+		candidate = filepath.Clean(candidate)
+		if _, ok := seen[candidate]; ok {
+			continue
+		}
+		seen[candidate] = struct{}{}
+
+		if err := godotenv.Load(candidate); err == nil {
+			log.Printf("Loaded environment from %s", candidate)
+			return
+		} else if !errors.Is(err, os.ErrNotExist) {
+			log.Printf("Failed to load %s: %v", candidate, err)
 		}
 	}
+
+	log.Println("No .env file found in known locations")
+}
+
+func main() {
+	loadEnv()
 
 	if len(os.Args) > 1 && os.Args[1] == "collect:waves" {
 		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
@@ -70,6 +98,11 @@ func main() {
 
 	// Validate environment variables
 	utils.ValidateEnv()
+	if measurementID := strings.TrimSpace(os.Getenv("GA_MEASUREMENT_ID")); measurementID == "" {
+		log.Println("Google Analytics disabled: GA_MEASUREMENT_ID is empty")
+	} else {
+		log.Printf("Google Analytics enabled: %s", measurementID)
+	}
 
 	// Database Connection
 	var err error

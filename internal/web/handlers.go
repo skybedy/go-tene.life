@@ -11,6 +11,7 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -58,8 +59,36 @@ func (h *Handler) getLocale(c echo.Context) string {
 	return i18n.NormalizeLocale(c.Param("locale"))
 }
 
+var gaMeasurementIDPattern = regexp.MustCompile(`(?i)\bG-[A-Z0-9]+\b`)
+
+func normalizedGAMeasurementID() string {
+	candidates := []string{
+		"GA_MEASUREMENT_ID",
+		"GOOGLE_ANALYTICS_ID",
+		"GOOGLE_ANALYTICS_MEASUREMENT_ID",
+		"GOOGLE_TAG_ID",
+		"GTAG_ID",
+	}
+
+	for _, key := range candidates {
+		raw := strings.TrimSpace(os.Getenv(key))
+		if raw == "" {
+			continue
+		}
+
+		match := gaMeasurementIDPattern.FindString(strings.ToUpper(raw))
+		if match != "" {
+			return match
+		}
+
+		log.Printf("GA disabled: %s is set but does not contain a valid GA4 measurement ID", key)
+	}
+
+	return ""
+}
+
 func (h *Handler) getGAConfig() (bool, string) {
-	measurementID := strings.TrimSpace(os.Getenv("GA_MEASUREMENT_ID"))
+	measurementID := normalizedGAMeasurementID()
 	if measurementID == "" {
 		return false, ""
 	}
