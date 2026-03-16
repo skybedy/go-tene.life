@@ -510,6 +510,9 @@
   .w-\[12\.5rem\] {
     width: 12.5rem;
   }
+  .w-\[14rem\] {
+    width: 14rem;
+  }
   .w-\[96\%\] {
     width: 96%;
   }
@@ -617,6 +620,9 @@
   }
   .gap-2 {
     gap: calc(var(--spacing) * 2);
+  }
+  .gap-2\.5 {
+    gap: calc(var(--spacing) * 2.5);
   }
   .gap-3 {
     gap: calc(var(--spacing) * 3);
@@ -1697,6 +1703,11 @@
   .sm\:w-64 {
     @media (width >= 40rem) {
       width: calc(var(--spacing) * 64);
+    }
+  }
+  .sm\:w-\[15rem\] {
+    @media (width >= 40rem) {
+      width: 15rem;
     }
   }
   .sm\:w-auto {
