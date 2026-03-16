@@ -18,16 +18,16 @@
                 </style>
                 <!-- Weather Info Box -->
                 <div class="col-start-1 row-start-1 self-start justify-self-end m-1 sm:m-2 md:m-3 lg:m-4 pointer-events-none z-10 w-[97%] sm:w-auto max-w-full justify-end flex">
-                    <div class="weather-overlay-shell w-full max-w-[100vw] lg:max-w-[52rem] rounded-[1.75rem] md:rounded-[2rem] p-3 md:p-4 lg:p-5 text-white pointer-events-auto mx-auto sm:mx-0">
-                        <div class="flex flex-col gap-3">
-                            <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="weather-overlay-shell w-full max-w-[100vw] lg:max-w-[52rem] rounded-[1.25rem] md:rounded-[2rem] p-2.5 md:p-4 lg:p-5 text-white pointer-events-auto mx-auto sm:mx-0">
+                        <div class="flex flex-col gap-2.5 md:gap-3">
+                            <div class="flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                                 <div class="weather-location-chip inline-flex items-center gap-1.5 weather-signal-chip rounded-full px-2.5 py-1 text-[0.62rem] md:text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-cyan-50">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-cyan-200" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
                                     </svg>
                                     Tenerife
                                 </div>
-                                <div class="flex flex-wrap gap-1.5 text-[0.58rem] md:text-[0.65rem] text-white/75">
+                                <div class="flex w-full flex-wrap gap-1.5 text-[0.58rem] md:w-auto md:text-[0.65rem] text-white/75">
                                     <div class="weather-meta-chip weather-signal-chip rounded-full px-2 py-1">
                                         {{ index .I18n "humidity" }}: {{ if .Weather }}{{ printf "%.0f" .Weather.Humidity }}{{ else }}-{{ end }}%
                                     </div>
@@ -37,43 +37,43 @@
                                 </div>
                             </div>
 
-                            <div class="weather-overlay-grid grid gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.3fr)]">
-                                <div class="weather-primary-card weather-kpi-card rounded-[1.5rem] p-3 md:p-4 lg:p-5 flex flex-col gap-4">
+                            <div class="weather-overlay-grid grid gap-2.5 md:gap-3">
+                                <div class="weather-primary-card weather-kpi-card rounded-[1.15rem] md:rounded-[1.5rem] p-3 md:p-4 lg:p-5 flex flex-col gap-3 md:gap-4">
                                     <div class="flex items-start justify-between gap-3">
                                         <div>
-                                            <div class="weather-kpi-headline text-lg lg:text-2xl font-bold tracking-tight leading-none widget-day-name">{{ .FormattedDate }}</div>
-                                            <div class="weather-kpi-subline mt-1 text-[0.68rem] md:text-xs uppercase tracking-[0.18em] text-white/45 widget-date-full">{{ .FormattedTime }}</div>
+                                            <div class="weather-kpi-headline text-base sm:text-lg lg:text-2xl font-bold tracking-tight leading-none widget-day-name">{{ .FormattedDate }}</div>
+                                            <div class="weather-kpi-subline mt-1 text-[0.62rem] md:text-xs uppercase tracking-[0.18em] text-white/45 widget-date-full">{{ .FormattedTime }}</div>
                                         </div>
                                         {{ if .Weather }}
-                                        <div class="rounded-2xl bg-white/8 p-2 text-white/85 md:p-2.5">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                                        <div class="rounded-2xl bg-white/8 p-2 text-white/85 md:p-2.5 shrink-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="md:h-[26px] md:w-[26px]"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
                                         </div>
                                         {{ end }}
                                     </div>
 
                                     {{ if .Weather }}
-                                    <div class="weather-primary-temp flex items-end gap-2">
-                                        <div class="weather-primary-temp-value text-6xl md:text-7xl font-semibold tracking-[-0.08em] leading-none">{{ printf "%.0f" .Weather.Temperature }}</div>
-                                        <div class="weather-primary-unit pb-2 text-2xl md:text-3xl font-light text-cyan-100/90">°C</div>
+                                    <div class="weather-primary-temp flex items-end gap-1.5 md:gap-2">
+                                        <div class="weather-primary-temp-value text-5xl sm:text-6xl md:text-7xl font-semibold tracking-[-0.08em] leading-none">{{ printf "%.0f" .Weather.Temperature }}</div>
+                                        <div class="weather-primary-unit pb-1.5 md:pb-2 text-xl sm:text-2xl md:text-3xl font-light text-cyan-100/90">°C</div>
                                     </div>
 
                                     <div class="weather-stat-grid grid grid-cols-2 gap-2 text-left">
                                         <div class="weather-stat-pill weather-signal-chip rounded-2xl px-3 py-2.5">
                                             <div class="text-[0.58rem] md:text-[0.62rem] uppercase tracking-[0.16em] text-white/45">{{ index .I18n "max" }}</div>
-                                            <div class="weather-mini-value-lg mt-1 text-lg md:text-xl font-semibold text-white">{{ if .DayMaxTempText }}{{ .DayMaxTempText }}°{{ else }}-{{ end }}</div>
+                                            <div class="weather-mini-value-lg mt-1 text-base sm:text-lg md:text-xl font-semibold text-white">{{ if .DayMaxTempText }}{{ .DayMaxTempText }}°{{ else }}-{{ end }}</div>
                                         </div>
                                         <div class="weather-stat-pill weather-signal-chip rounded-2xl px-3 py-2.5">
                                             <div class="text-[0.58rem] md:text-[0.62rem] uppercase tracking-[0.16em] text-white/45">{{ index .I18n "min" }}</div>
-                                            <div class="weather-mini-value-lg mt-1 text-lg md:text-xl font-semibold text-white">{{ if .DayMinTempText }}{{ .DayMinTempText }}°{{ else }}-{{ end }}</div>
+                                            <div class="weather-mini-value-lg mt-1 text-base sm:text-lg md:text-xl font-semibold text-white">{{ if .DayMinTempText }}{{ .DayMinTempText }}°{{ else }}-{{ end }}</div>
                                         </div>
                                     </div>
 
-                                    <div class="weather-updated-row mt-auto flex items-end justify-between gap-3 border-t border-white/10 pt-3">
+                                    <div class="weather-updated-row mt-auto flex flex-col items-start gap-2 border-t border-white/10 pt-3 sm:flex-row sm:items-end sm:justify-between sm:gap-3">
                                         <div>
                                             <div class="weather-mini-copy text-[0.58rem] md:text-[0.62rem] uppercase tracking-[0.16em] text-white/45">{{ index .I18n "weather_source_heading" }}</div>
-                                            <div class="weather-mini-value mt-1 text-sm md:text-base font-medium text-cyan-50">{{ index .I18n "webcam_title" }}</div>
+                                            <div class="weather-mini-value mt-1 text-[0.85rem] md:text-base font-medium text-cyan-50">{{ index .I18n "webcam_title" }}</div>
                                         </div>
-                                        <div class="weather-updated-text text-[0.55rem] md:text-[0.65rem] text-right text-white/45 local-time-element" data-ts="{{ .Weather.Timestamp }}">
+                                        <div class="weather-updated-text text-[0.55rem] md:text-[0.65rem] text-left sm:text-right text-white/45 local-time-element" data-ts="{{ .Weather.Timestamp }}">
                                             Updated: {{ .FormattedTime }}
                                         </div>
                                     </div>
@@ -84,19 +84,19 @@
                                     {{ end }}
                                 </div>
 
-                                <div class="weather-right-grid grid gap-2 md:grid-cols-2">
-                                    <div class="weather-sea-card weather-mini-card weather-mini-card--sea rounded-[1.35rem] p-3 md:col-span-2 md:p-4">
+                                <div class="weather-right-grid grid gap-2">
+                                    <div class="weather-sea-card weather-mini-card weather-mini-card--sea rounded-[1.05rem] md:rounded-[1.35rem] p-3 md:col-span-2 md:p-4">
                                         <div class="flex items-start justify-between gap-3">
-                                            <div>
+                                            <div class="min-w-0">
                                                 <div class="weather-mini-title text-[0.62rem] md:text-[0.68rem] uppercase tracking-[0.18em] text-white/45">{{ index .I18n "sea_temperature" }}</div>
                                                 <div class="weather-sea-values mt-2 flex flex-wrap items-end gap-x-4 gap-y-2">
                                                     <div>
                                                         <div class="weather-mini-copy text-[0.58rem] uppercase tracking-[0.16em] text-white/40">{{ index .I18n "temperature" }}</div>
-                                                        <div class="weather-mini-value-lg mt-1 text-2xl md:text-3xl font-semibold text-sky-100">{{ if .SeaTemperature }}{{ printf "%.1f" .SeaTemperatureVal }}°C{{ else }}-{{ end }}</div>
+                                                        <div class="weather-mini-value-lg mt-1 text-xl sm:text-2xl md:text-3xl font-semibold text-sky-100">{{ if .SeaTemperature }}{{ printf "%.1f" .SeaTemperatureVal }}°C{{ else }}-{{ end }}</div>
                                                     </div>
                                                     <div>
                                                         <div class="weather-mini-copy text-[0.58rem] uppercase tracking-[0.16em] text-white/40">{{ index .I18n "water_quality" }}</div>
-                                                        <div class="weather-mini-value mt-1 text-base md:text-lg font-semibold text-sky-100">{{ if .WaterQuality }}{{ waterQualityStatus .Locale .WaterQuality.Status }}{{ else }}-{{ end }}</div>
+                                                        <div class="weather-mini-value mt-1 text-sm md:text-lg font-semibold text-sky-100">{{ if .WaterQuality }}{{ waterQualityStatus .Locale .WaterQuality.Status }}{{ else }}-{{ end }}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -106,7 +106,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="weather-mini-card weather-mini-card--wave rounded-[1.35rem] p-3 md:p-4">
+                                    <div class="weather-mini-card weather-mini-card--wave rounded-[1.05rem] md:rounded-[1.35rem] p-3 md:p-4">
                                         <div class="flex items-start justify-between gap-2">
                                             <div class="weather-mini-title text-[0.62rem] md:text-[0.68rem] uppercase tracking-[0.18em] text-white/45">{{ index .I18n "wave_height" }}</div>
                                             {{ if .Waves }}
@@ -117,9 +117,9 @@
                                         <div class="mt-3 space-y-2">
                                             <div>
                                                 <div class="weather-mini-copy text-[0.58rem] uppercase tracking-[0.16em] text-white/40">{{ index .I18n "wave_height" }}</div>
-                                                <div class="weather-mini-value-lg mt-1 text-2xl font-semibold text-cyan-100">{{ printf "%.1f" .Waves.Hm0M }}m</div>
+                                                <div class="weather-mini-value-lg mt-1 text-xl sm:text-2xl font-semibold text-cyan-100">{{ printf "%.1f" .Waves.Hm0M }}m</div>
                                             </div>
-                                            <div class="flex items-end justify-between gap-3 text-sm">
+                                            <div class="flex items-end justify-between gap-3 text-[0.82rem] sm:text-sm">
                                                 <div>
                                                     <div class="weather-mini-copy text-[0.58rem] uppercase tracking-[0.16em] text-white/40">{{ index .I18n "wave_period" }}</div>
                                                     <div class="weather-mini-value mt-1 font-semibold text-cyan-50">{{ printf "%.0f" .Waves.PeriodS }}s</div>
@@ -135,12 +135,12 @@
                                         {{ end }}
                                     </div>
 
-                                    <div class="weather-mini-card weather-mini-card--tide rounded-[1.35rem] p-3 md:p-4">
+                                    <div class="weather-mini-card weather-mini-card--tide rounded-[1.05rem] md:rounded-[1.35rem] p-3 md:p-4">
                                         <div class="weather-mini-title text-[0.62rem] md:text-[0.68rem] uppercase tracking-[0.18em] text-white/45">{{ index .I18n "tide_high" }} / {{ index .I18n "tide_low" }}</div>
                                         <div class="mt-3 space-y-2">
                                             <div class="flex items-start justify-between gap-3">
                                                 <div class="weather-mini-copy text-[0.58rem] uppercase tracking-[0.16em] text-white/40">{{ index .I18n "tide_high" }}</div>
-                                                <div class="weather-mini-value text-right text-sm font-semibold text-teal-100">
+                                                <div class="weather-mini-value text-right text-[0.82rem] sm:text-sm font-semibold text-teal-100">
                                                     {{ if .TideHighEvents }}
                                                         {{ range .TideHighEvents }}
                                                             <div>{{ . }}</div>
@@ -152,7 +152,7 @@
                                             </div>
                                             <div class="flex items-start justify-between gap-3">
                                                 <div class="weather-mini-copy text-[0.58rem] uppercase tracking-[0.16em] text-white/40">{{ index .I18n "tide_low" }}</div>
-                                                <div class="weather-mini-value text-right text-sm font-semibold text-teal-100">
+                                                <div class="weather-mini-value text-right text-[0.82rem] sm:text-sm font-semibold text-teal-100">
                                                     {{ if .TideLowEvents }}
                                                         {{ range .TideLowEvents }}
                                                             <div>{{ . }}</div>
