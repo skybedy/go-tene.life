@@ -83,10 +83,10 @@
                             <div class="hidden sm:block w-px bg-white/10 relative -my-2 mx-0.5"></div>
                             
                             <!-- Right: Sub-modules grid/scroll -->
-                            <div class="flex flex-row gap-1.5 sm:gap-2 lg:gap-3 overflow-x-auto snap-x pb-1 sm:pb-0 w-full sm:w-auto sm:max-w-2xl scrollbar-hide" style="-webkit-overflow-scrolling: touch;">
+                            <div class="flex flex-row sm:grid sm:grid-cols-2 gap-1.5 sm:gap-2 lg:gap-3 overflow-x-auto sm:overflow-visible snap-x pb-1 sm:pb-0 w-full sm:w-auto sm:min-w-[22rem] sm:max-w-xl scrollbar-hide" style="-webkit-overflow-scrolling: touch;">
                                 
                                 <!-- Sea & Water Quality card -->
-                                <div class="snap-start shrink-0 w-[12.5rem] sm:w-[13.5rem] bg-white/5 rounded-xl p-2.5 sm:p-3 border border-white/5 flex flex-col relative justify-center">
+                                <div class="snap-start shrink-0 w-[12.5rem] sm:w-full sm:h-full bg-white/5 rounded-xl p-2.5 sm:p-3 border border-white/5 flex flex-col relative justify-center">
                                     <div class="flex justify-between items-center mb-1.5 sm:mb-2">
                                         <h3 class="text-[0.6rem] sm:text-[0.65rem] text-white/50 uppercase tracking-widest">{{ index .I18n "sea_temperature" }}</h3>
                                         {{ if .WaterQuality }}
@@ -106,7 +106,7 @@
                                 </div>
                                 
                                 <!-- Waves card -->
-                                <div class="snap-start shrink-0 w-[12.5rem] sm:w-[13.5rem] bg-white/5 rounded-xl p-2.5 sm:p-3 border border-white/5 flex flex-col relative justify-center">
+                                <div class="snap-start shrink-0 w-[12.5rem] sm:w-full sm:h-full bg-white/5 rounded-xl p-2.5 sm:p-3 border border-white/5 flex flex-col relative justify-center">
                                     <div class="flex justify-between items-center mb-1.5 sm:mb-2">
                                         <h3 class="text-[0.6rem] sm:text-[0.65rem] text-white/50 uppercase tracking-widest">{{ index .I18n "wave_height" }}</h3>
                                         {{ if .Waves }}
@@ -130,7 +130,7 @@
                                 </div>
                                 
                                 <!-- Tide card -->
-                                <div class="snap-start shrink-0 w-[12.5rem] sm:w-[13.5rem] bg-white/5 rounded-xl p-2.5 sm:p-3 border border-white/5 flex flex-col relative justify-center">
+                                <div class="snap-start shrink-0 w-[12.5rem] sm:w-full sm:h-full bg-white/5 rounded-xl p-2.5 sm:p-3 border border-white/5 flex flex-col relative justify-center">
                                     <div class="flex justify-between items-center mb-1.5 sm:mb-2">
                                         <h3 class="text-[0.6rem] sm:text-[0.65rem] text-white/50 uppercase tracking-widest">{{ index .I18n "tide_high" }} / <span class="lowercase">{{ index .I18n "tide_low" }}</span></h3>
                                     </div>
