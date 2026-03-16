@@ -1,6 +1,67 @@
 @import "tailwindcss";
 
 @layer components {
+    .weather-overlay-shell {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background:
+            radial-gradient(circle at top right, rgba(110, 231, 255, 0.18), transparent 34%),
+            linear-gradient(135deg, rgba(8, 15, 29, 0.95), rgba(17, 35, 52, 0.92) 52%, rgba(8, 20, 34, 0.95));
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+    }
+
+    .weather-overlay-shell::before {
+        content: "";
+        position: absolute;
+        inset: auto -12% -28% auto;
+        width: 15rem;
+        height: 15rem;
+        border-radius: 9999px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.28), transparent 70%);
+        pointer-events: none;
+    }
+
+    .weather-kpi-card {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.04));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .weather-signal-chip {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(8px);
+    }
+
+    .weather-mini-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .weather-mini-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 3px;
+        opacity: 0.9;
+    }
+
+    .weather-mini-card--sea::before {
+        background: linear-gradient(180deg, #7dd3fc, #38bdf8);
+    }
+
+    .weather-mini-card--wave::before {
+        background: linear-gradient(180deg, #67e8f9, #06b6d4);
+    }
+
+    .weather-mini-card--tide::before {
+        background: linear-gradient(180deg, #5eead4, #14b8a6);
+    }
+
     .pws-temp-dot {
         width: 34px;
         height: 34px;
