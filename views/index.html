@@ -19,14 +19,14 @@
                 <!-- Weather Info Box -->
                 <div class="col-start-1 row-start-1 self-start justify-self-end m-1 sm:m-2.5 md:m-3.5 lg:m-4.5 xl:m-5 2xl:m-6 pointer-events-none z-10 w-[96%] sm:w-auto max-w-full justify-end flex">
                     
-                    <div class="w-full sm:w-fit sm:max-w-2xl rounded-2xl sm:rounded-[2rem] bg-[#1a1c1e]/90 backdrop-blur-xl border border-white/10 shadow-2xl p-4 sm:p-5 md:p-6 text-white pointer-events-auto overflow-hidden mx-auto sm:mx-0">
-                        <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                    <div class="w-full sm:w-fit sm:max-w-2xl rounded-2xl sm:rounded-[2rem] bg-[#1a1c1e]/90 backdrop-blur-xl border border-white/10 shadow-2xl p-3 sm:p-4 md:p-5 text-white pointer-events-auto overflow-hidden mx-auto sm:mx-0">
+                        <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-5">
                             
                             <!-- Left: Main Weather -->
-                            <div class="flex-1 min-w-[12rem] flex flex-col pt-1">
-                                <div class="flex justify-between items-start mb-2 sm:mb-4">
-                                    <div class="inline-flex items-center gap-1.5 bg-[#d0eefb] text-[#1a1c1e] text-[0.6rem] sm:text-[0.65rem] md:text-xs font-bold px-2.5 py-1.5 rounded-full">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-3.5 sm:w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                            <div class="flex-1 min-w-[11rem] flex flex-col pt-0.5">
+                                <div class="flex justify-between items-start mb-1.5 sm:mb-2 text-white">
+                                    <div class="inline-flex items-center gap-1.5 bg-[#d0eefb] text-[#1a1c1e] text-[0.6rem] sm:text-xs font-bold px-2 py-1 rounded-full">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
                                         </svg>
                                         Tenerife
@@ -34,45 +34,45 @@
                                     
                                     {{ if .Weather }}
                                     <!-- Simple cloud icon -->
-                                    <div class="opacity-80">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                                    <div class="opacity-80 pb-0.5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
                                     </div>
                                     {{ end }}
                                 </div>
                                 
-                                <div class="mb-1">
-                                    <div class="text-xl sm:text-2xl font-bold tracking-tight leading-none mb-1 widget-day-name">
+                                <div class="mb-0">
+                                    <div class="text-lg sm:text-xl font-bold tracking-tight leading-none mb-0.5 widget-day-name">
                                         {{ .FormattedDate }}
                                     </div>
-                                    <div class="text-[0.65rem] sm:text-[0.7rem] text-white/50 mb-3 sm:mb-5 widget-date-full">
+                                    <div class="text-[0.6rem] sm:text-[0.65rem] text-white/50 mb-1.5 sm:mb-2 widget-date-full">
                                         {{ .FormattedTime }}
                                     </div>
 
                                     {{ if .Weather }}
-                                    <div class="flex items-start gap-1 mb-1">
-                                        <div class="text-6xl sm:text-7xl font-medium tracking-tighter leading-none">{{ printf "%.0f" .Weather.Temperature }}</div>
-                                        <div class="text-3xl sm:text-4xl text-white/80 font-light mt-0.5">°C</div>
+                                    <div class="flex items-start gap-1 mb-0.5">
+                                        <div class="text-5xl sm:text-6xl font-medium tracking-tighter leading-none">{{ printf "%.0f" .Weather.Temperature }}</div>
+                                        <div class="text-2xl sm:text-3xl text-white/80 font-light mt-0.5">°C</div>
                                     </div>
                                     
-                                    <div class="text-[0.65rem] sm:text-[0.7rem] text-white/70 mb-3 sm:mb-4 font-medium flex items-center gap-2">
+                                    <div class="text-[0.6rem] sm:text-[0.65rem] text-white/70 mb-2 sm:mb-2 font-medium flex items-center gap-2">
                                         {{ if or .DayMaxTempText .DayMinTempText }}
                                         <span class="text-white/50">High:</span> <span class="text-white">{{ if .DayMaxTempText }}{{ .DayMaxTempText }}°{{ else }}-{{ end }}</span> 
-                                        <span class="text-white/50 ml-1">Low:</span> <span class="text-white">{{ if .DayMinTempText }}{{ .DayMinTempText }}°{{ else }}-{{ end }}</span>
+                                        <span class="text-white/50 ml-0.5">Low:</span> <span class="text-white">{{ if .DayMinTempText }}{{ .DayMinTempText }}°{{ else }}-{{ end }}</span>
                                         {{ else }}
                                         {{ index .I18n "pressure" }}: {{ printf "%.0f" .Weather.Pressure }} hPa
                                         {{ end }}
                                     </div>
                                     {{ else }}
-                                    <div class="text-sm text-white/50 my-6">{{ index .I18n "weather_unavailable" }}</div>
+                                    <div class="text-xs text-white/50 my-4">{{ index .I18n "weather_unavailable" }}</div>
                                     {{ end }}
                                 </div>
                                 
-                                <div class="mt-auto pt-3 border-t border-white/10 flex justify-between items-end">
-                                    <div class="flex gap-3 text-[0.6rem] sm:text-[0.65rem] text-white/40">
+                                <div class="mt-auto pt-2 mt-1 border-t border-white/10 flex justify-between items-end">
+                                    <div class="flex gap-2 text-[0.55rem] sm:text-[0.6rem] text-white/40">
                                         <span>{{ index .I18n "humidity" }}: {{ if .Weather }}{{ printf "%.0f" .Weather.Humidity }}{{ else }}-{{ end }}%</span>
                                     </div>
                                     {{ if .Weather }}
-                                    <div class="text-[0.55rem] text-white/30 text-right local-time-element" data-ts="{{ .Weather.Timestamp }}">
+                                    <div class="text-[0.5rem] text-white/30 text-right local-time-element" data-ts="{{ .Weather.Timestamp }}">
                                         Updated: {{ .FormattedTime }}
                                     </div>
                                     {{ end }}
@@ -80,86 +80,86 @@
                             </div>
                             
                             <!-- Vertical Divider on desktop, invisible on mobile -->
-                            <div class="hidden sm:block w-px bg-white/10 relative -my-2 mx-1"></div>
+                            <div class="hidden sm:block w-px bg-white/10 relative -my-2 mx-0.5"></div>
                             
                             <!-- Right: Sub-modules grid/scroll -->
-                            <div class="flex flex-row sm:flex-col gap-2 sm:gap-3 overflow-x-auto snap-x pb-2 w-full sm:w-auto sm:pb-0 sm:min-w-[13.5rem] scrollbar-hide" style="-webkit-overflow-scrolling: touch;">
+                            <div class="flex flex-row sm:flex-col gap-1.5 sm:gap-2 overflow-x-auto snap-x pb-1 sm:pb-0 w-full sm:w-auto sm:min-w-[12rem] scrollbar-hide" style="-webkit-overflow-scrolling: touch;">
                                 
                                 <!-- Sea & Water Quality card -->
-                                <div class="snap-start shrink-0 w-[14rem] sm:w-[15rem] bg-white/5 rounded-2xl p-4 border border-white/5 flex flex-col relative justify-center">
-                                    <div class="flex justify-between items-center mb-3">
-                                        <h3 class="text-xs sm:text-sm text-white/50 uppercase tracking-widest">{{ index .I18n "sea_temperature" }}</h3>
+                                <div class="snap-start shrink-0 w-[12.5rem] sm:w-[13.5rem] bg-white/5 rounded-xl p-2.5 sm:p-3 border border-white/5 flex flex-col relative justify-center">
+                                    <div class="flex justify-between items-center mb-1.5 sm:mb-2">
+                                        <h3 class="text-[0.6rem] sm:text-[0.65rem] text-white/50 uppercase tracking-widest">{{ index .I18n "sea_temperature" }}</h3>
                                         {{ if .WaterQuality }}
-                                        <div class="text-[0.45rem] sm:text-[0.5rem] bg-white/10 text-white/60 px-1.5 py-0.5 rounded local-time-element" data-utc="{{ .WaterQuality.UpdatedAtUTC }}">Upd</div>
+                                        <div class="text-[0.45rem] sm:text-[0.45rem] bg-white/10 text-white/60 px-1 py-0.5 rounded local-time-element" data-utc="{{ .WaterQuality.UpdatedAtUTC }}">Upd</div>
                                         {{ end }}
                                     </div>
-                                    <div class="flex flex-col gap-2.5">
+                                    <div class="flex flex-col gap-1">
                                         <div class="flex justify-between items-baseline">
-                                            <span class="text-sm sm:text-base text-white/70">{{ index .I18n "temperature" }}</span>
-                                            <strong class="font-medium text-base sm:text-lg text-blue-200">{{ if .SeaTemperature }}{{ printf "%.1f" .SeaTemperatureVal }}°C{{ else }}-{{ end }}</strong>
+                                            <span class="text-[0.7rem] sm:text-xs text-white/70">{{ index .I18n "temperature" }}</span>
+                                            <strong class="font-medium text-[0.8rem] sm:text-sm text-blue-200">{{ if .SeaTemperature }}{{ printf "%.1f" .SeaTemperatureVal }}°C{{ else }}-{{ end }}</strong>
                                         </div>
                                         <div class="flex justify-between items-baseline">
-                                            <span class="text-sm sm:text-base text-white/70">{{ index .I18n "water_quality" }}</span>
-                                            <strong class="font-medium text-base sm:text-lg text-blue-200">{{ if .WaterQuality }}{{ waterQualityStatus .Locale .WaterQuality.Status }}{{ else }}-{{ end }}</strong>
+                                            <span class="text-[0.7rem] sm:text-xs text-white/70">{{ index .I18n "water_quality" }}</span>
+                                            <strong class="font-medium text-[0.8rem] sm:text-sm text-blue-200">{{ if .WaterQuality }}{{ waterQualityStatus .Locale .WaterQuality.Status }}{{ else }}-{{ end }}</strong>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <!-- Waves card -->
-                                <div class="snap-start shrink-0 w-[14rem] sm:w-[15rem] bg-white/5 rounded-2xl p-4 border border-white/5 flex flex-col relative justify-center">
-                                    <div class="flex justify-between items-center mb-3">
-                                        <h3 class="text-xs sm:text-sm text-white/50 uppercase tracking-widest">{{ index .I18n "wave_height" }}</h3>
+                                <div class="snap-start shrink-0 w-[12.5rem] sm:w-[13.5rem] bg-white/5 rounded-xl p-2.5 sm:p-3 border border-white/5 flex flex-col relative justify-center">
+                                    <div class="flex justify-between items-center mb-1.5 sm:mb-2">
+                                        <h3 class="text-[0.6rem] sm:text-[0.65rem] text-white/50 uppercase tracking-widest">{{ index .I18n "wave_height" }}</h3>
                                         {{ if .Waves }}
-                                        <div class="text-[0.45rem] sm:text-[0.5rem] bg-white/10 text-white/60 px-1.5 py-0.5 rounded local-time-element" data-utc="{{ .Waves.FetchedAtUTC }}">Upd</div>
+                                        <div class="text-[0.45rem] sm:text-[0.45rem] bg-white/10 text-white/60 px-1 py-0.5 rounded local-time-element" data-utc="{{ .Waves.FetchedAtUTC }}">Upd</div>
                                         {{ end }}
                                     </div>
                                     {{ if .Waves }}
-                                    <div class="flex flex-col gap-2.5">
+                                    <div class="flex flex-col gap-1">
                                         <div class="flex justify-between items-baseline">
-                                            <span class="text-sm sm:text-base text-white/70">{{ index .I18n "wave_height" }} <span class="text-white/30">|</span> Per.</span>
-                                            <strong class="font-medium text-base sm:text-lg text-cyan-200">{{ printf "%.1f" .Waves.Hm0M }}m <span class="text-cyan-200/50">|</span> {{ printf "%.0f" .Waves.PeriodS }}s</strong>
+                                            <span class="text-[0.7rem] sm:text-xs text-white/70">{{ index .I18n "wave_height" }} <span class="text-white/30">|</span> Per.</span>
+                                            <strong class="font-medium text-[0.8rem] sm:text-sm text-cyan-200">{{ printf "%.1f" .Waves.Hm0M }}m <span class="text-cyan-200/50">|</span> {{ printf "%.0f" .Waves.PeriodS }}s</strong>
                                         </div>
                                         <div class="flex justify-between items-baseline">
-                                            <span class="text-sm sm:text-base text-white/70">{{ index .I18n "wave_direction" }}</span>
-                                            <strong class="font-medium text-base sm:text-lg text-cyan-200">{{ printf "%.0f" .Waves.MeanDirDeg }}°</strong>
+                                            <span class="text-[0.7rem] sm:text-xs text-white/70">{{ index .I18n "wave_direction" }}</span>
+                                            <strong class="font-medium text-[0.8rem] sm:text-sm text-cyan-200">{{ printf "%.0f" .Waves.MeanDirDeg }}°</strong>
                                         </div>
                                     </div>
                                     {{ else }}
-                                    <div class="text-sm text-white/50">-</div>
+                                    <div class="text-[0.7rem] text-white/50">-</div>
                                     {{ end }}
                                 </div>
                                 
                                 <!-- Tide card -->
-                                <div class="snap-start shrink-0 w-[14rem] sm:w-[15rem] bg-white/5 rounded-2xl p-4 border border-white/5 flex flex-col relative justify-center">
-                                    <div class="flex justify-between items-center mb-3">
-                                        <h3 class="text-xs sm:text-sm text-white/50 uppercase tracking-widest">{{ index .I18n "tide_high" }} / <span class="lowercase">{{ index .I18n "tide_low" }}</span></h3>
+                                <div class="snap-start shrink-0 w-[12.5rem] sm:w-[13.5rem] bg-white/5 rounded-xl p-2.5 sm:p-3 border border-white/5 flex flex-col relative justify-center">
+                                    <div class="flex justify-between items-center mb-1.5 sm:mb-2">
+                                        <h3 class="text-[0.6rem] sm:text-[0.65rem] text-white/50 uppercase tracking-widest">{{ index .I18n "tide_high" }} / <span class="lowercase">{{ index .I18n "tide_low" }}</span></h3>
                                     </div>
-                                    <div class="flex flex-col gap-1.5">
+                                    <div class="flex flex-col gap-0.5">
                                         {{ if .TideHighEvents }}
                                             {{ range .TideHighEvents }}
-                                            <div class="flex justify-between items-baseline">
-                                                <span class="text-sm sm:text-base text-white/70">{{ index $.I18n "tide_high" }}</span>
-                                                <strong class="font-medium text-base sm:text-lg text-teal-200 pb-[1px]">{{ . }}</strong>
+                                            <div class="flex justify-between items-baseline leading-tight">
+                                                <span class="text-[0.7rem] sm:text-xs text-white/70">{{ index $.I18n "tide_high" }}</span>
+                                                <strong class="font-medium text-[0.8rem] sm:text-sm text-teal-200">{{ . }}</strong>
                                             </div>
                                             {{ end }}
                                         {{ else }}
-                                            <div class="flex justify-between items-baseline">
-                                                <span class="text-sm sm:text-base text-white/70">{{ index .I18n "tide_high" }}</span>
-                                                <strong class="font-medium text-base sm:text-lg text-teal-200 pb-[1px]">-</strong>
+                                            <div class="flex justify-between items-baseline leading-tight">
+                                                <span class="text-[0.7rem] sm:text-xs text-white/70">{{ index .I18n "tide_high" }}</span>
+                                                <strong class="font-medium text-[0.8rem] sm:text-sm text-teal-200">-</strong>
                                             </div>
                                         {{ end }}
 
                                         {{ if .TideLowEvents }}
                                             {{ range .TideLowEvents }}
-                                            <div class="flex justify-between items-baseline">
-                                                <span class="text-sm sm:text-base text-white/70">{{ index $.I18n "tide_low" }}</span>
-                                                <strong class="font-medium text-base sm:text-lg text-teal-200">{{ . }}</strong>
+                                            <div class="flex justify-between items-baseline leading-tight">
+                                                <span class="text-[0.7rem] sm:text-xs text-white/70">{{ index $.I18n "tide_low" }}</span>
+                                                <strong class="font-medium text-[0.8rem] sm:text-sm text-teal-200">{{ . }}</strong>
                                             </div>
                                             {{ end }}
                                         {{ else }}
-                                            <div class="flex justify-between items-baseline">
-                                                <span class="text-sm sm:text-base text-white/70">{{ index .I18n "tide_low" }}</span>
-                                                <strong class="font-medium text-base sm:text-lg text-teal-200">-</strong>
+                                            <div class="flex justify-between items-baseline leading-tight">
+                                                <span class="text-[0.7rem] sm:text-xs text-white/70">{{ index .I18n "tide_low" }}</span>
+                                                <strong class="font-medium text-[0.8rem] sm:text-sm text-teal-200">-</strong>
                                             </div>
                                         {{ end }}
                                     </div>
