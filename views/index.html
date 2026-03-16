@@ -17,8 +17,8 @@
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
                 </style>
                 <!-- Weather Info Box -->
-                <div class="col-start-1 row-start-1 self-start justify-self-end m-1 sm:m-2 md:m-3 lg:m-4 pointer-events-none z-10 w-[97%] sm:w-auto max-w-full justify-end flex">
-                    <div class="weather-overlay-shell w-full max-w-[100vw] lg:max-w-[52rem] rounded-[1.25rem] md:rounded-[2rem] p-2.5 md:p-4 lg:p-5 text-white pointer-events-auto mx-auto sm:mx-0">
+                <div class="col-start-1 row-start-1 self-start justify-self-end m-1 sm:m-2 md:m-3 lg:m-4 pointer-events-none z-10 w-[60%] min-w-[12.5rem] max-w-full justify-end flex sm:w-auto">
+                    <div class="weather-overlay-shell w-full max-w-[14rem] sm:max-w-[24rem] lg:max-w-[52rem] rounded-[1.25rem] md:rounded-[2rem] p-2.5 md:p-4 lg:p-5 text-white pointer-events-auto ml-auto">
                         <div class="flex flex-col gap-2.5 md:gap-3">
                             <div class="flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                                 <div class="weather-location-chip inline-flex items-center gap-1.5 weather-signal-chip rounded-full px-2.5 py-1 text-[0.62rem] md:text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-cyan-50">
@@ -71,10 +71,21 @@
                                     <div class="weather-updated-row mt-auto flex flex-col items-start gap-2 border-t border-white/10 pt-3 sm:flex-row sm:items-end sm:justify-between sm:gap-3">
                                         <div>
                                             <div class="weather-mini-copy text-[0.58rem] md:text-[0.62rem] uppercase tracking-[0.16em] text-white/45">{{ index .I18n "weather_source_heading" }}</div>
-                                            <div class="weather-mini-value mt-1 text-[0.85rem] md:text-base font-medium text-cyan-50">{{ index .I18n "webcam_title" }}</div>
+                                            <div class="weather-mini-value mt-1 hidden text-[0.85rem] md:text-base font-medium text-cyan-50 sm:block">{{ index .I18n "webcam_title" }}</div>
                                         </div>
                                         <div class="weather-updated-text text-[0.55rem] md:text-[0.65rem] text-left sm:text-right text-white/45 local-time-element" data-ts="{{ .Weather.Timestamp }}">
                                             Updated: {{ .FormattedTime }}
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-2 grid grid-cols-2 gap-2 sm:hidden">
+                                        <div class="weather-stat-pill weather-signal-chip rounded-2xl px-2.5 py-2">
+                                            <div class="weather-mini-copy text-[0.56rem] uppercase tracking-[0.16em] text-white/45">{{ index .I18n "sea_temperature" }}</div>
+                                            <div class="weather-mini-value mt-1 font-semibold text-sky-100">{{ if .SeaTemperature }}{{ printf "%.1f" .SeaTemperatureVal }}°C{{ else }}-{{ end }}</div>
+                                        </div>
+                                        <div class="weather-stat-pill weather-signal-chip rounded-2xl px-2.5 py-2">
+                                            <div class="weather-mini-copy text-[0.56rem] uppercase tracking-[0.16em] text-white/45">{{ index .I18n "wave_height" }}</div>
+                                            <div class="weather-mini-value mt-1 font-semibold text-cyan-100">{{ if .Waves }}{{ printf "%.1f" .Waves.Hm0M }}m{{ else }}-{{ end }}</div>
                                         </div>
                                     </div>
                                     {{ else }}
@@ -84,7 +95,7 @@
                                     {{ end }}
                                 </div>
 
-                                <div class="weather-right-grid grid gap-2">
+                                <div class="weather-right-grid hidden gap-2 sm:grid">
                                     <div class="weather-sea-card weather-mini-card weather-mini-card--sea rounded-[1.05rem] md:rounded-[1.35rem] p-3 md:col-span-2 md:p-4">
                                         <div class="flex items-start justify-between gap-3">
                                             <div class="min-w-0">

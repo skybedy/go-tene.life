@@ -158,6 +158,7 @@
         .weather-overlay-shell {
             padding: 0.55rem;
             border-radius: 1.15rem;
+            max-width: min(58vw, 14rem);
         }
 
         .weather-overlay-shell::before {
@@ -186,6 +187,24 @@
 
         .weather-mini-value-lg {
             font-size: 1.25rem;
+        }
+    }
+
+    @media (max-width: 639px) {
+        .weather-primary-card {
+            gap: 0.75rem;
+        }
+
+        .weather-primary-temp-value {
+            font-size: clamp(2.8rem, 12vw, 3.9rem);
+        }
+
+        .weather-primary-unit {
+            font-size: 1.1rem;
+        }
+
+        .weather-stat-pill {
+            padding: 0.5rem 0.65rem;
         }
     }
 
