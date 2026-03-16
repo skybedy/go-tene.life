@@ -8,138 +8,88 @@
         <div
             class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm overflow-hidden border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
 
-            <div class="relative aspect-video">
+            <div class="grid aspect-video">
                 <img src="{{ if .WebcamImageURL }}{{ .WebcamImageURL }}{{ else }}/webcam/image.jpg{{ end }}" alt="{{ index .I18n "webcam_view_alt" }}"
-                    class="w-full h-full object-cover rounded-t-lg sm:rounded-t-xl md:rounded-t-2xl">
+                    class="col-start-1 row-start-1 w-full h-full object-cover rounded-t-lg sm:rounded-t-xl md:rounded-t-2xl">
 
                 <!-- Weather Info Box -->
-                <div class="weather-info-box absolute top-1 right-1 sm:top-2.5 sm:right-2.5 md:top-3.5 md:right-3.5 lg:top-4.5 lg:right-4.5 xl:top-5 xl:right-5 2xl:top-6 2xl:right-6
-                            max-w-[54%] sm:max-w-[66%] md:max-w-[60%] lg:max-w-[54%] xl:max-w-[48%] 2xl:max-w-[50%]
-                            max-h-[calc(100%-0.5rem)] sm:max-h-[calc(100%-1rem)] md:max-h-[calc(100%-1rem)] lg:max-h-none
-                            px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-2.5 md:py-1.5 lg:px-4 lg:py-2.5 xl:px-5 xl:py-3 2xl:px-6 2xl:py-4
-                            rounded-lg sm:rounded-xl md:rounded-2xl
-                            bg-black/40
-                            text-[0.42rem] leading-tight sm:text-[0.66rem] md:text-[0.68rem] lg:text-[0.82rem] xl:text-[1.05rem] 2xl:text-[1.22rem] text-white font-semibold sm:font-bold
-                            flex flex-col gap-y-0 sm:gap-y-1 md:gap-y-1 items-start justify-center
-                            overflow-y-auto lg:overflow-visible
-                            backdrop-blur-sm shadow-lg">
-
-                    <p class="w-full flex items-center justify-between underline pt-1 sm:pt-1.5">
-                        <span>{{ .FormattedDate }} - {{ .FormattedTime }}</span>
-                        <span class="uppercase text-[0.72em] px-1 py-0.5 rounded-full bg-white/20 border border-white/35">Live</span>
-                    </p>
-
-                    {{ if .Weather }}
-                    <table class="weather-info-table w-full">
-                        <tr>
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-[2px]">{{ index .I18n "temperature" }}</td>
-                            <td class="text-right pt-[2px]">{{ printf "%.1f" .Weather.Temperature }} °C</td>
-                        </tr>
-                        {{ if or .DayMaxTemperature .DayMinTemperature }}
-                        <tr>
-                            <td colspan="2" class="pt-0.5 pb-0.5 text-[0.66em] sm:text-[0.9em]">
-                                {{ if .DayMaxTemperature }}
-                                <div class="flex justify-between text-red-300">
-                                    <span>↑ {{ index .I18n "max" }}: ({{ .DayMaxTime }})</span>
-                                    <span>{{ .DayMaxTempText }} °C</span>
+                <div class="col-start-1 row-start-1 self-start justify-self-end m-1 sm:m-2.5 md:m-3.5 lg:m-4.5 xl:m-5 2xl:m-6">
+                    <div class="w-fit rounded-xl sm:rounded-2xl bg-zinc-950/68 p-2.5 sm:p-3.5 md:p-4.5 backdrop-blur-sm shadow-xl">
+                        <div class="grid grid-cols-2 gap-1.5 sm:gap-2 md:gap-3">
+                            <div class="weather-info-box h-24 w-30 sm:h-28 sm:w-36 md:h-32 md:w-42 lg:h-36 lg:w-48 rounded-lg sm:rounded-xl bg-zinc-900/80 shadow-lg p-2 sm:p-2.5 md:p-3 text-white flex flex-col">
+                                <p class="text-[0.56rem] sm:text-[0.68rem] md:text-[0.78rem] font-semibold text-white/70">{{ index .I18n "temperature" }}</p>
+                                {{ if .Weather }}
+                                <div class="mt-1 flex flex-1 flex-col">
+                                    <div class="text-[1.55rem] sm:text-[1.95rem] md:text-[2.35rem] lg:text-[2.7rem] font-semibold leading-none tracking-tight">
+                                        {{ printf "%.1f" .Weather.Temperature }}°C
+                                    </div>
+                                    <div class="mt-1.5 space-y-0.5 sm:space-y-1 text-[0.62rem] sm:text-[0.75rem] md:text-[0.88rem] leading-tight">
+                                        <div class="flex items-baseline justify-between gap-1">
+                                            <span class="text-white/65">{{ index .I18n "pressure" }}</span>
+                                            <span>{{ printf "%.0f" .Weather.Pressure }}</span>
+                                        </div>
+                                        <div class="flex items-baseline justify-between gap-1">
+                                            <span class="text-white/65">{{ index .I18n "humidity" }}</span>
+                                            <span>{{ printf "%.0f" .Weather.Humidity }}%</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                {{ end }}
-                                {{ if .DayMinTemperature }}
-                                <div class="flex justify-between text-blue-300">
-                                    <span>↓ {{ index .I18n "min" }}: ({{ .DayMinTime }})</span>
-                                    <span>{{ .DayMinTempText }} °C</span>
-                                </div>
-                                {{ end }}
-                            </td>
-                        </tr>
-                        {{ end }}
-                        <tr>
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3">{{ index .I18n "pressure" }}</td>
-                            <td class="text-right">{{ printf "%.1f" .Weather.Pressure }} hPa</td>
-                        </tr>
-                        <tr>
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3">{{ index .I18n "humidity" }}</td>
-                            <td class="text-right">{{ printf "%.0f" .Weather.Humidity }} %</td>
-                        </tr>
-                        <tr class="border-t border-white/30">
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "sea_temperature" }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1">
-                                {{ if .SeaTemperature }}
-                                {{ printf "%.1f" .SeaTemperatureVal }} °C
                                 {{ else }}
-                                -
+                                <p class="mt-1 text-[0.72rem] sm:text-[0.9rem] md:text-[1.05rem] leading-tight text-white/70">{{ index .I18n "weather_unavailable" }}</p>
                                 {{ end }}
-                            </td>
-                        </tr>
-                        {{ if or .TideHighEvents .TideLowEvents }}
-                        {{ if .TideHighEvents }}
-                        {{ range $i, $event := .TideHighEvents }}
-                        <tr>
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1 {{ if eq $i 0 }}border-t border-white/30{{ end }}">{{ if eq $i 0 }}{{ index $.I18n "tide_high" }}{{ end }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1 {{ if eq $i 0 }}border-t border-white/30{{ end }}" style="font-variant-numeric: tabular-nums; white-space: pre;">{{ $event }}</td>
-                        </tr>
-                        {{ end }}
-                        {{ else }}
-                        <tr>
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1 border-t border-white/30">{{ index .I18n "tide_high" }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1 border-t border-white/30" style="font-variant-numeric: tabular-nums; white-space: pre;">-</td>
-                        </tr>
-                        {{ end }}
-                        {{ if .TideLowEvents }}
-                        {{ range $i, $event := .TideLowEvents }}
-                        <tr>
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ if eq $i 0 }}{{ index $.I18n "tide_low" }}{{ end }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1" style="font-variant-numeric: tabular-nums; white-space: pre;">{{ $event }}</td>
-                        </tr>
-                        {{ end }}
-                        {{ else }}
-                        <tr>
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "tide_low" }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1" style="font-variant-numeric: tabular-nums; white-space: pre;">-</td>
-                        </tr>
-                        {{ end }}
-                        {{ end }}
-                        {{ if .Waves }}
-                        <tr class="border-t border-white/30">
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "wave_height" }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1">{{ printf "%.2f" .Waves.Hm0M }} m</td>
-                        </tr>
-                        <tr>
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "wave_period" }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1">{{ printf "%.2f" .Waves.PeriodS }} s</td>
-                        </tr>
-                        <tr>
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "wave_direction" }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1">{{ printf "%.0f" .Waves.MeanDirDeg }}° ({{ waveDirectionLabel .Locale .Waves.MeanDirDeg }})</td>
-                        </tr>
-                        {{ end }}
-                        {{ if .WaterQuality }}
-                        <tr class="border-t border-white/30">
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">
-                                <span class="water-quality-label inline-flex items-center gap-1">
-                                    <span>{{ index .I18n "water_quality" }}</span>
-                                    
-                                </span>
-                            </td>
-                            <td class="text-right pt-0.5 sm:pt-1">
-                                {{ waterQualityStatus .Locale .WaterQuality.Status }}
-                                <details class="group relative inline-block align-middle ml-0.5">
-                                    <summary class="water-quality-help relative -top-0.5 inline-flex h-2 w-2 sm:h-3.5 sm:w-3.5 xl:h-5 xl:w-5 items-center justify-center rounded-full border border-white/70 text-[0.6em] leading-none cursor-pointer list-none">?</summary>
-                                    <span class="pointer-events-none absolute right-0 top-full z-30 mt-1 block w-56 sm:w-64 rounded-md border border-white/35 bg-white/20 backdrop-blur-sm shadow-lg px-2.5 py-1.5 text-[0.72rem] sm:text-[0.82rem] font-medium leading-snug text-left text-white opacity-0 transition-opacity duration-150 group-open:opacity-100">{{ waterQualityTooltip .Locale }}</span>
-                                </details>
-                            </td>
-                        </tr>
-                        {{ if .WaterQuality.SampleDate }}
-                        <tr>
-                            <td class="pr-1.5 sm:pr-2 md:pr-2.5 lg:pr-3 pt-0.5 sm:pt-1">{{ index .I18n "water_sample_date" }}</td>
-                            <td class="text-right pt-0.5 sm:pt-1">{{ .WaterQuality.SampleDate }}</td>
-                        </tr>
-                        {{ end }}
-                        {{ end }}
-                    </table>
-                    {{ else }}
-                    <p>{{ index .I18n "weather_unavailable" }}</p>
-                    {{ end }}
+                            </div>
+
+                            <div class="weather-info-box h-24 w-30 sm:h-28 sm:w-36 md:h-32 md:w-42 lg:h-36 lg:w-48 rounded-lg sm:rounded-xl bg-zinc-900/80 shadow-lg p-2 sm:p-2.5 md:p-3 text-white flex flex-col">
+                                <p class="text-[0.72rem] sm:text-[0.9rem] md:text-[1.05rem] font-semibold text-white/80">{{ index .I18n "sea_temperature" }}</p>
+                                <div class="mt-1 space-y-0.5 sm:space-y-1 text-[0.72rem] sm:text-[0.9rem] md:text-[1.05rem] leading-tight">
+                                    <div class="flex items-baseline justify-between gap-1">
+                                        <span class="text-white/70">{{ index .I18n "sea_temperature" }}</span>
+                                        <span>{{ if .SeaTemperature }}{{ printf "%.1f" .SeaTemperatureVal }}°{{ else }}-{{ end }}</span>
+                                    </div>
+                                    <div class="flex items-baseline justify-between gap-1">
+                                        <span class="text-white/70">{{ index .I18n "water_quality" }}</span>
+                                        <span>{{ if .WaterQuality }}{{ waterQualityStatus .Locale .WaterQuality.Status }}{{ else }}-{{ end }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="weather-info-box h-24 w-30 sm:h-28 sm:w-36 md:h-32 md:w-42 lg:h-36 lg:w-48 rounded-lg sm:rounded-xl bg-zinc-900/80 shadow-lg p-2 sm:p-2.5 md:p-3 text-white flex flex-col">
+                                <p class="text-[0.72rem] sm:text-[0.9rem] md:text-[1.05rem] font-semibold text-white/80">{{ index .I18n "tide_high" }} / {{ index .I18n "tide_low" }}</p>
+                                <div class="mt-1 space-y-0.5 sm:space-y-1 text-[0.72rem] sm:text-[0.9rem] md:text-[1.05rem] leading-tight">
+                                    <div class="flex items-baseline justify-between gap-1">
+                                        <span class="text-white/70">{{ index .I18n "tide_high" }}</span>
+                                        <span>{{ if .TideHighEvents }}{{ index .TideHighEvents 0 }}{{ else }}-{{ end }}</span>
+                                    </div>
+                                    <div class="flex items-baseline justify-between gap-1">
+                                        <span class="text-white/70">{{ index .I18n "tide_low" }}</span>
+                                        <span>{{ if .TideLowEvents }}{{ index .TideLowEvents 0 }}{{ else }}-{{ end }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="weather-info-box h-24 w-30 sm:h-28 sm:w-36 md:h-32 md:w-42 lg:h-36 lg:w-48 rounded-lg sm:rounded-xl bg-zinc-900/80 shadow-lg p-2 sm:p-2.5 md:p-3 text-white flex flex-col">
+                                <p class="text-[0.72rem] sm:text-[0.9rem] md:text-[1.05rem] font-semibold text-white/80">{{ index .I18n "wave_height" }}</p>
+                                {{ if .Waves }}
+                                <div class="mt-1 space-y-0.5 sm:space-y-1 text-[0.72rem] sm:text-[0.9rem] md:text-[1.05rem] leading-tight">
+                                    <div class="flex items-baseline justify-between gap-1">
+                                        <span class="text-white/70">{{ index .I18n "wave_height" }}</span>
+                                        <span>{{ printf "%.2f" .Waves.Hm0M }} m</span>
+                                    </div>
+                                    <div class="flex items-baseline justify-between gap-1">
+                                        <span class="text-white/70">{{ index .I18n "wave_period" }}</span>
+                                        <span>{{ printf "%.1f" .Waves.PeriodS }} s</span>
+                                    </div>
+                                    <div class="flex items-baseline justify-between gap-1">
+                                        <span class="text-white/70">{{ index .I18n "wave_direction" }}</span>
+                                        <span>{{ printf "%.0f" .Waves.MeanDirDeg }}°</span>
+                                    </div>
+                                </div>
+                                {{ else }}
+                                <p class="mt-1 text-[0.72rem] sm:text-[0.9rem] md:text-[1.05rem] leading-tight text-white/70">-</p>
+                                {{ end }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Lupa v levém horním rohu -->
