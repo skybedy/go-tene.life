@@ -418,6 +418,9 @@
   .h-9 {
     height: calc(var(--spacing) * 9);
   }
+  .h-10 {
+    height: calc(var(--spacing) * 10);
+  }
   .h-32 {
     height: calc(var(--spacing) * 32);
   }
@@ -426,6 +429,9 @@
   }
   .h-80 {
     height: calc(var(--spacing) * 80);
+  }
+  .h-100 {
+    height: calc(var(--spacing) * 100);
   }
   .h-\[0\.55rem\] {
     height: 0.55rem;
@@ -442,17 +448,8 @@
   .max-h-\[calc\(100\%-0\.5rem\)\] {
     max-height: calc(100% - 0.5rem);
   }
-  .min-h-40 {
-    min-height: calc(var(--spacing) * 40);
-  }
   .min-h-screen {
     min-height: 100vh;
-  }
-  .w-1 {
-    width: calc(var(--spacing) * 1);
-  }
-  .w-1\/2 {
-    width: calc(1/2 * 100%);
   }
   .w-2 {
     width: calc(var(--spacing) * 2);
@@ -478,14 +475,23 @@
   .w-44 {
     width: calc(var(--spacing) * 44);
   }
+  .w-50 {
+    width: calc(var(--spacing) * 50);
+  }
   .w-56 {
     width: calc(var(--spacing) * 56);
   }
   .w-\[0\.55rem\] {
     width: 0.55rem;
   }
+  .w-\[50\%\] {
+    width: 50%;
+  }
   .w-\[60\%\] {
     width: 60%;
+  }
+  .w-\[200px\] {
+    width: 200px;
   }
   .w-auto {
     width: auto;
@@ -657,8 +663,23 @@
   .rounded-2xl {
     border-radius: var(--radius-2xl);
   }
-  .rounded-3xl {
-    border-radius: var(--radius-3xl);
+  .rounded-\[0\.3rem\] {
+    border-radius: 0.3rem;
+  }
+  .rounded-\[0\.4rem\] {
+    border-radius: 0.4rem;
+  }
+  .rounded-\[0\.5rem\] {
+    border-radius: 0.5rem;
+  }
+  .rounded-\[0\.6rem\] {
+    border-radius: 0.6rem;
+  }
+  .rounded-\[0\.7rem\] {
+    border-radius: 0.7rem;
+  }
+  .rounded-\[0\.8rem\] {
+    border-radius: 0.8rem;
   }
   .rounded-\[1\.05rem\] {
     border-radius: 1.05rem;
@@ -668,6 +689,9 @@
   }
   .rounded-\[1\.25rem\] {
     border-radius: 1.25rem;
+  }
+  .rounded-\[1rem\] {
+    border-radius: 1rem;
   }
   .rounded-full {
     border-radius: calc(infinity * 1px);
@@ -728,12 +752,6 @@
       border-color: color-mix(in oklab, var(--color-white) 15%, transparent);
     }
   }
-  .border-white\/20 {
-    border-color: color-mix(in srgb, #fff 20%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      border-color: color-mix(in oklab, var(--color-white) 20%, transparent);
-    }
-  }
   .border-white\/30 {
     border-color: color-mix(in srgb, #fff 30%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -751,9 +769,6 @@
     @supports (color: color-mix(in lab, red, red)) {
       border-color: color-mix(in oklab, var(--color-white) 70%, transparent);
     }
-  }
-  .bg-amber-900 {
-    background-color: var(--color-amber-900);
   }
   .bg-black {
     background-color: var(--color-black);
@@ -800,15 +815,6 @@
   .bg-gray-100 {
     background-color: var(--color-gray-100);
   }
-  .bg-red-500 {
-    background-color: var(--color-red-500);
-  }
-  .bg-red-500\/30 {
-    background-color: color-mix(in srgb, oklch(63.7% 0.237 25.331) 30%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-red-500) 30%, transparent);
-    }
-  }
   .bg-slate-100 {
     background-color: var(--color-slate-100);
   }
@@ -825,12 +831,6 @@
     background-color: color-mix(in srgb, #fff 8%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-white) 8%, transparent);
-    }
-  }
-  .bg-white\/10 {
-    background-color: color-mix(in srgb, #fff 10%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-white) 10%, transparent);
     }
   }
   .bg-white\/20 {
@@ -985,10 +985,6 @@
   }
   .align-middle {
     vertical-align: middle;
-  }
-  .text-4xl {
-    font-size: var(--text-4xl);
-    line-height: var(--tw-leading, var(--text-4xl--line-height));
   }
   .text-5xl {
     font-size: var(--text-5xl);
@@ -1657,6 +1653,11 @@
       row-gap: calc(var(--spacing) * 1);
     }
   }
+  .sm\:rounded-\[1\.25rem\] {
+    @media (width >= 40rem) {
+      border-radius: 1.25rem;
+    }
+  }
   .sm\:rounded-xl {
     @media (width >= 40rem) {
       border-radius: var(--radius-xl);
@@ -1846,11 +1847,6 @@
       margin: calc(var(--spacing) * 3);
     }
   }
-  .md\:m-4 {
-    @media (width >= 48rem) {
-      margin: calc(var(--spacing) * 4);
-    }
-  }
   .md\:mt-8 {
     @media (width >= 48rem) {
       margin-top: calc(var(--spacing) * 8);
@@ -1958,6 +1954,11 @@
   .md\:rounded-\[2rem\] {
     @media (width >= 48rem) {
       border-radius: 2rem;
+    }
+  }
+  .md\:rounded-\[4xl\] {
+    @media (width >= 48rem) {
+      border-radius: 4xl;
     }
   }
   .md\:rounded-t-2xl {
