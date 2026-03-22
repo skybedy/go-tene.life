@@ -122,12 +122,16 @@ func main() {
 	// Initialize Echo
 	e := echo.New()
 
-	// Start internal waves collector loop (no cron required).
-	startWavesCollectorLoop()
-	// Start internal water collector loop (no cron required).
-	startWaterCollectorLoop()
-	// Start internal PWS collector loop (no cron required).
-	startPWSCollectorLoop(weatherStore, emailNotifier)
+	if shouldStartExternalCollectors() {
+		// Start internal waves collector loop (no cron required).
+		startWavesCollectorLoop()
+		// Start internal water collector loop (no cron required).
+		startWaterCollectorLoop()
+		// Start internal PWS collector loop (no cron required).
+		startPWSCollectorLoop(weatherStore, emailNotifier)
+	} else {
+		log.Println("external collectors disabled for local development startup")
+	}
 
 	// Middleware
 	e.Use(middleware.Recover())
@@ -283,6 +287,20 @@ func main() {
 		port = "8080"
 	}
 	e.Logger.Fatal(e.Start(":" + port))
+}
+
+func shouldStartExternalCollectors() bool {
+	if os.Getenv("ENABLE_EXTERNAL_COLLECTORS") == "1" {
+		return true
+	}
+
+	appEnv := strings.ToLower(strings.TrimSpace(os.Getenv("APP_ENV")))
+	switch appEnv {
+	case "local", "development", "dev":
+		return false
+	default:
+		return true
+	}
 }
 
 func startWavesCollectorLoop() {
