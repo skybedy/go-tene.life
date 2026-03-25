@@ -22,51 +22,64 @@
 
 
                 <!-- Weather Info Box -->
-                <div
-                    class="col-start-1 row-start-1 self-start justify-self-end m-1 sm:m-2 md:m-3 lg:m-4 w-[60%] sm:w-[50%]">
-                    <div
-                        class="grid w-full grid-cols-4 grid-rows-2 gap-0.5 rounded-md border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 p-0.5 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm sm:p-1.5 md:p-2.5">
-                        <div
-                            class="text-xs grid grid-cols-2 grid-rows-[1fr_1fr_1fr_1fr] gap-[1px] col-span-2 row-span-2 rounded-sm border border-white/6 bg-[linear-gradient(180deg,rgba(58,74,102,0.5),rgba(31,48,74,0.48))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                <!-- Vnejsi poloha, odsazeni. atd -->
+                <div class="col-start-1 row-start-1 self-start justify-self-end m-1 sm:m-2 md:m-3 lg:m-4  sm:w-[50%]">
+                    <!-- Barvy, fonty, atd -->
+                    <div class="grid grid-flow-col w-full grid-cols-4 grid-rows-2 gap-px rounded-md border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 p-0.5 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm sm:p-1.5 md:p-2.5">
+                        
 
-                            <div id="test"
-                                class="row-span-2 rounded-sm border border-cyan-300/12 bg-[linear-gradient(180deg,rgba(18,103,126,0.38),rgba(31,48,74,0.46))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] flex flex-col justify-center items-center leading-none">
+                            <!-- Teplota -->
+                            <div class="glass-tile row-span-2 rounded-sm border border-cyan-300/12 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] flex flex-col justify-around items-center leading-none">
+                                <div class="text-[0.5rem] font-light uppercase text-white/80">VZDUCH</div>
+                                <div class="text-center">
+                                    <div class="text-cyan-300 font-semibold text-[1rem]">25,1</div>
+                                    <div class="text-white/70 font-light text-[0.7rem] mt-0.5">°C</div>
+                                </div>
+                            </div>
 
-                                <div class="text-cyan-300 font-semibold text-[0.9rem]">25,1</div>
+                            <!-- Max Temp -->
+                            <div class="glass-tile flex flex-col justify-around px-0.5 rounded-[0.2rem] border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                                <div class="text-[0.5rem] font-light uppercase text-white/80">MAX</div>
+                                <div class="text-cyan-300 text-[0.6rem] font-semibold leading-none">20,1°C</div>
+                            </div>
+
+                             <!-- Min Temp -->
+                            <div class="glass-tile flex flex-col justify-around px-0.5 rounded-[0.2rem] border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                                <div class="text-[0.5rem] font-light uppercase text-white/80">MIN</div>
+                                <div class="text-cyan-300 text-[0.6rem] font-semibold leading-none">19,1°C</div>
+                            </div>
+                          
+                            <!-- Tlak -->
+                            <div class="glass-tile flex flex-col justify-around px-0.5 rounded-[0.2rem] border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                                <div class="text-[0.5rem] font-light uppercase text-white/80">TLAK</div>
+                                <div class="text-cyan-300 text-[0.6rem] font-semibold leading-none">1012hPa</div>
+                            </div>
+                            
+                            <!-- Vlhkost -->
+                            <div class="glass-tile flex flex-col justify-around px-0.5 rounded-[0.2rem] border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                                <div class="text-[0.5rem] font-light uppercase text-white/80">VLHKOST</div>
+                                <div class="text-cyan-300 text-[0.6rem] font-semibold">68%</div>
+                            </div>
+
+                                <!-- Sea  temperature-->
+                            <div class="glass-tile row-span-2 rounded-sm border border-cyan-300/12 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] flex flex-col justify-center items-center leading-none">
+                                <div class="text-[0.5rem] font-light uppercase text-white/80 mb-2">MOŘE</div>
+                                <div class="text-cyan-300 font-semibold text-[1rem]">25,1</div>
                                 <div class="text-white/70 font-light text-[0.7rem] mt-0.5">°C</div>
-
                             </div>
 
-                            <div
-                                class="flex flex-col justify-center p-[0.05rem] rounded-[0.2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-                                <div class="text-[0.4rem] font-light uppercase text-white/80">TLAK</div>
-                                <div class="text-cyan-300 text-[0.5rem] font-semibold leading-none">1012hPa</div>
-                            </div>
-                            <div
-                                class="flex flex-col justify-center p-0.5 rounded-[0.2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-                                <div class="text-[0.4rem] font-light uppercase text-white/80">VLHKOST</div>
-                                <div class="text-cyan-300 text-[0.5rem] font-semibold leading-none">68%</div>
-                            </div>
-
-                            <div class="bg-amer-800">4</div>
-                            <div class="bg-amer-600">5</div>
-                            <div class="col-span-2 bg-amer-600">6</div>
+                        
+                            
+                  
 
 
 
-                        </div>
-                        <div
-                            class="col-span-2 rounded-sm border border-cyan-300/12 bg-[linear-gradient(180deg,rgba(18,103,126,0.38),rgba(31,48,74,0.46))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-                            2
-                        </div>
-                        <div
-                            class="rounded-sm border border-cyan-300/8 bg-[linear-gradient(180deg,rgba(48,67,93,0.48),rgba(25,41,66,0.48))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-                            3
-                        </div>
-                        <div
-                            class="rounded-sm border border-cyan-300/8 bg-[linear-gradient(180deg,rgba(48,67,93,0.48),rgba(20,35,58,0.5))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-                            4
-                        </div>
+
+                        
+                        
+                        
+                        
+                  
 
 
 

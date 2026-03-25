@@ -11,6 +11,10 @@
         box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
     }
 
+    .glass-tile {
+        background: linear-gradient(180deg, rgba(18, 103, 126, 0.38), rgba(31, 48, 74, 0.46));
+    }
+
     .weather-overlay-shell::before {
         content: "";
         position: absolute;
