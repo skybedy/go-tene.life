@@ -12,7 +12,7 @@
     }
 
     .glass-tile {
-        background: linear-gradient(180deg, rgba(18, 103, 126, 0.38), rgba(31, 48, 74, 0.46));
+        @apply flex flex-col bg-linear-to-b from-[#12677e]/38 to-[#1f304a]/46 px-1 py-0.5 rounded-md border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)];
     }
 
     .weather-overlay-shell::before {
