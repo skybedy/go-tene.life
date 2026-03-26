@@ -324,8 +324,8 @@ func (h *Handler) getCachedTideData(reference time.Time) ([]string, []string) {
 	high := make([]string, 0, 2)
 	low := make([]string, 0, 2)
 	for _, ev := range selected {
-		timeLabel := strings.TrimPrefix(ev.EventTimeLocal.Format("15:04"), "0")
-		item := fmt.Sprintf("%5s (%s m)", timeLabel, formatTideHeightSigned(ev.HeightM))
+		timeLabel := strings.TrimSpace(strings.TrimPrefix(ev.EventTimeLocal.Format("15:04"), "0"))
+		item := fmt.Sprintf("%s\n%s m", timeLabel, formatTideHeightSigned(ev.HeightM))
 		switch ev.EventType {
 		case "HIGH":
 			high = append(high, item)
