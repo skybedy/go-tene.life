@@ -114,7 +114,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 			return c.Render(http.StatusOK, "index.html", models.PageData{
 				FormattedDate:      time.Now().Format("2. 1. 2006"),
 				FormattedDateSmall: time.Now().Format("2.1."),
-				FormattedTime:      time.Now().Format("15:04"),
+				FormattedTime:      strings.TrimPrefix(time.Now().Format("15:04"), "0"),
 				WebcamImageURL:  webcamImageURL,
 				Locale:          locale,
 				LocalePrefix:    i18n.LocalePrefix(locale),
@@ -226,7 +226,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		DayMinTime:        dayMinTime,
 		FormattedDate:      ts.Format("2. 1. 2006"),
 		FormattedDateSmall: ts.Format("2.1."),
-		FormattedTime:      ts.Format("15:04"),
+		FormattedTime:      strings.TrimPrefix(ts.Format("15:04"), "0"),
 		PageTitle:         "",
 		Locale:            locale,
 		LocalePrefix:      i18n.LocalePrefix(locale),
@@ -344,7 +344,7 @@ func (h *Handler) getCachedTideData(reference time.Time) ([]models.TideEventView
 
 	var fetchedAtStr string
 	if len(selected) > 0 {
-		fetchedAtStr = selected[0].FetchedAt.Local().Format("2.1. 15:04")
+		fetchedAtStr = selected[0].FetchedAt.Local().Format("2.1.") + " " + strings.TrimPrefix(selected[0].FetchedAt.Local().Format("15:04"), "0")
 	}
 
 	high := make([]models.TideEventView, 0, 2)

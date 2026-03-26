@@ -25,7 +25,7 @@
                 <!-- Vnejsi poloha, odsazeni. atd -->
                 <div class="col-start-1 row-start-1 self-start justify-self-end m-1 sm:m-2 md:m-3 lg:m-4">
                     <!-- Barvy, fonty, atd -->
-                    <div class="grid grid-cols-6 md:grid-cols-7 grid-rows-[1fr_1fr_auto] gap-px rounded-md border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 p-0.5 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm sm:p-1.5 md:p-2.5 leading-none">
+                    <div class="grid grd-cols-6 md:grid-cols-7 grid-rows-[1fr_1fr_auto] gap-px rounded-md border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 p-0.5 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm sm:p-1.5 md:p-2.5 leading-none">
                         
 
                             <!-- Teplota -->
@@ -40,27 +40,27 @@
  
 
                             <!-- Max Temp -->
-                            <div class="glass-tile col-start-2 row-start-1">
+                            <div class="glass-tile col-start-3 row-start-1 flex flex-col justify-center items-center">
                                 <div class="text-[0.45rem] font-bold text-white/90 mb-px">MAX</div>
-                                <div class="text-cyan-300 text-[0.45rem] font-semibold">20,1°C</div>
+                                <div class="text-cyan-300 text-[0.45rem] font-semibold leading-none">{{ if .DayMaxTempText }}{{ .DayMaxTempText }}°C/{{ .DayMaxTime }}{{ else }}--/--{{ end }}</div>
                             </div>
 
                              <!-- Min Temp -->
-                            <div class="glass-tile col-start-2 row-start-2">
+                            <div class="glass-tile col-start-3 row-start-2 flex flex-col justify-center items-center">
                                 <div class="text-[0.45rem] font-bold text-white/90 mb-px">MIN</div>
-                                <div class="text-cyan-300 text-[0.45rem] font-semibold">19,1°C</div>
+                                <div class="text-cyan-300 text-[0.45rem] font-semibold leading-none">{{ if .DayMinTempText }}{{ .DayMinTempText }}°C/{{ .DayMinTime }}{{ else }}--/--{{ end }}</div>
                             </div>
 
                             <!-- Tlak -->
-                            <div class="glass-tile col-start-3 row-start-1">
+                            <div class="glass-tile col-start-2 row-start-1 flex flex-col justify-center items-center">
                                 <div class="text-[0.45rem] font-bold text-white/90 mb-px">TLAK</div>
-                                <div class="text-cyan-300 text-[0.45rem] font-semibold">1012hPa</div>
+                                <div class="text-cyan-300 text-[0.45rem] font-semibold">{{ if .Weather }}{{ printf "%.0f" .Weather.Pressure }}hPa{{ else }}--{{ end }}</div>
                             </div>
 
                              <!-- Vlhkost -->
-                            <div class="glass-tile col-start-3 row-start-2">
+                            <div class="glass-tile col-start-2 row-start-2 flex flex-col justify-center items-center">
                                 <div class="text-[0.45rem] font-bold text-white/90 mb-px">VLHKOST</div>
-                                <div class="text-cyan-300 text-[0.45rem] font-semibold">68%</div>
+                                <div class="text-cyan-300 text-[0.45rem] font-semibold">{{ if .Weather }}{{ printf "%.0f" .Weather.Humidity }}%{{ else }}--{{ end }}</div>
                             </div>
 
 
@@ -150,9 +150,14 @@
 
                             <!-- NOVÉ SLOUPCE (Třetí řádek) -->
 
-                            <!-- 1. sloupec: pod Vzduch, Max/Min, Tlak/Vlhkost (Zabírá sloupce 1 až 3) -->
-                            <div class="glass-tile col-start-1 col-span-3 row-start-3 flex items-center justify-center p-0.5 rounded-sm">
-                                <div class="text-cyan-300 font-bold text-[0.4rem] leading-none uppercase">UPDATE: {{ .FormattedDateSmall }} {{ .FormattedTime }}</div>
+                            <!-- Spojené aktualizace pro Vzduch, Tlak a Vlhkost (Zabírá sloupce 1 a 2) -->
+                            <div class="glass-tile col-start-1 col-span-2 row-start-3 flex items-center justify-center p-0.5 rounded-sm">
+                                <div class="text-cyan-300 font-bold text-[0.4rem] leading-none uppercase">{{ .FormattedDateSmall }} {{ .FormattedTime }}</div>
+                            </div>
+
+                             <!-- Box pod Max/Min (Zabírá 3. sloupec) -->
+                            <div class="glass-tile col-start-3 col-span-1 row-start-3 flex items-center justify-center p-0.5 rounded-sm">
+                                <div class="text-cyan-300 font-bold text-[0.4rem] leading-none uppercase">EXTRÉMY</div>
                             </div>
 
                             <!-- 2. sloupec: pod Moře (Na mobilu 1 sloupec, na desktopu 2 sloupce včetně místa pod 'Vlny') -->

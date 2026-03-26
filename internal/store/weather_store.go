@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"database/sql"
+	"strings"
 	"time"
 
 	"github.com/skybedy/laravel-tene.life/internal/models"
@@ -246,7 +247,7 @@ func (s *WeatherStore) GetDailyTemperatureExtremes(date string) (*float64, strin
 }
 
 func formatTimeHM(ts time.Time) string {
-	return ts.Format("15:04")
+	return strings.TrimPrefix(ts.Format("15:04"), "0")
 }
 
 func (s *WeatherStore) GetTideEvents(ctx context.Context, dateLocal, locationKey string) ([]models.TideEvent, error) {
