@@ -23,51 +23,57 @@
 
                 <!-- Weather Info Box -->
                 <!-- Vnejsi poloha, odsazeni. atd -->
-                <div class="col-start-1 row-start-1 self-start justify-self-end m-1 sm:m-2 md:m-3 lg:m-4  sm:w-[50%]">
+                <div class="col-start-1 row-start-1 self-start justify-self-end m-1 sm:m-2 md:m-3 lg:m-4">
                     <!-- Barvy, fonty, atd -->
-                    <div class="grid grid-flow-col w-full grid-cols-6 md:grid-cols-7 grid-rows-2 gap-px rounded-md border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 p-0.5 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm sm:p-1.5 md:p-2.5 leading-none">
+                    <div class="grid grid-cols-6 md:grid-cols-7 grid-rows-[1fr_1fr_auto] gap-px rounded-md border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 p-0.5 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm sm:p-1.5 md:p-2.5 leading-none">
                         
 
                             <!-- Teplota -->
-                            <div class="glass-tile row-span-2  text-center">
-                                <div class="text-[0.45rem] font-bold text-white/90 mb-1">VZDUCH</div>
-                                <div class="text-cyan-300 font-semibold text-[0.8rem] mb-0.5">25,1</div>
-                                <div class="text-white/70 font-light text-[0.8rem]">°C</div>
+                            <div class="glass-tile row-span-2 col-start-1 row-start-1 text-center">
+                                <div class="text-[0.45rem] font-bold text-white/90 uppercase mb-1.5">VZDUCH</div>
+                                <div class="text-cyan-300 font-semibold text-[0.7rem] mb-0.5">25,1</div>
+                                <div class="text-white/70 font-light text-[0.7rem]">°C</div>
                             </div>
 
+                        
+                            
+ 
+
                             <!-- Max Temp -->
-                            <div class="glass-tile">
-                                <div class="text-[0.5rem] font-bold text-white/90 mb-[2px]">MAX</div>
-                                <div class="text-cyan-300 text-[0.6rem] font-semibold">20,1°C</div>
+                            <div class="glass-tile col-start-2 row-start-1">
+                                <div class="text-[0.45rem] font-bold text-white/90 mb-px">MAX</div>
+                                <div class="text-cyan-300 text-[0.45rem] font-semibold">20,1°C</div>
                             </div>
 
                              <!-- Min Temp -->
-                            <div class="glass-tile">
-                                <div class="text-[0.5rem] font-bold text-white/90 mb-[2px]">MIN</div>
-                                <div class="text-cyan-300 text-[0.6rem] font-semibold">19,1°C</div>
+                            <div class="glass-tile col-start-2 row-start-2">
+                                <div class="text-[0.45rem] font-bold text-white/90 mb-px">MIN</div>
+                                <div class="text-cyan-300 text-[0.45rem] font-semibold">19,1°C</div>
                             </div>
 
                             <!-- Tlak -->
-                            <div class="glass-tile">
-                                <div class="text-[0.5rem] font-bold text-white/90 mb-[2px]">TLAK</div>
-                                <div class="text-cyan-300 text-[0.6rem] font-semibold">1012hPa</div>
+                            <div class="glass-tile col-start-3 row-start-1">
+                                <div class="text-[0.45rem] font-bold text-white/90 mb-px">TLAK</div>
+                                <div class="text-cyan-300 text-[0.45rem] font-semibold">1012hPa</div>
                             </div>
 
                              <!-- Vlhkost -->
-                            <div class="glass-tile">
-                                <div class="text-[0.5rem] font-bold text-white/90 mb-[2px]">VLHKOST</div>
-                                <div class="text-cyan-300 text-[0.6rem] font-semibold">68%</div>
+                            <div class="glass-tile col-start-3 row-start-2">
+                                <div class="text-[0.45rem] font-bold text-white/90 mb-px">VLHKOST</div>
+                                <div class="text-cyan-300 text-[0.45rem] font-semibold">68%</div>
                             </div>
+
 
                             <!-- Sea  temperature-->
-                            <div class="glass-tile row-span-2  text-center">
-                                <div class="text-[0.45rem] font-bold text-white/90 mb-1">MOŘE</div>
-                                <div class="text-cyan-300 font-semibold text-[1rem] mb-0.5">20.2</div>
-                                <div class="text-white/70 font-light text-[0.8rem]">°C</div>
+                            <div class="glass-tile row-span-2 col-start-4 row-start-1 text-center">
+                                <div class="text-[0.45rem] font-bold text-white/90 uppercase mb-1.5">MOŘE</div>
+                                <div class="text-cyan-300 font-semibold text-[0.7rem] mb-0.5">20.2</div>
+                                <div class="text-white/70 font-light text-[0.7rem]">°C</div>
                             </div>
 
+
                             <!-- Vlny -->
-                            <div class="glass-tile row-span-2 text-center justify-between hidden md:flex">
+                            <div class="glass-tile row-span-2 col-start-5 row-start-1 text-center justify-between hidden md:flex">
                                 <div class="text-[0.5rem] font-bold text-white/90 mb-0.5">VLNY</div>
                                 {{ if .Waves }}
                                 <div class="text-cyan-300 font-semibold text-[0.9rem] leading-none mb-1">
@@ -88,37 +94,76 @@
                                 {{ end }}
                             </div>
 
-                             <!-- Příliv -->
-                            <div class="glass-tile row-span-2 flex flex-col justify-between py-1">
-                                <div class="text-[0.45rem] font-bold text-white/90 uppercase text-center w-full mb-1">
+
+                                                       <!-- Příliv -->
+                            <div class="glass-tile row-span-2 col-start-5 md:col-start-6 row-start-1 text-center">
+                               
+                                <div class="text-[0.45rem] font-bold text-white/90 uppercase mb-px">
                                     {{ index .I18n "tide_high" }}
                                 </div>
-                                <div class="flex-1 flex flex-col justify-center items-center gap-1 w-full text-center">
+                               
+                                <div class="flex flex-col">
                                     {{ if .TideHighEvents }}
-                                        {{ range .TideHighEvents }}
-                                        <div class="text-cyan-300 font-semibold text-[0.5rem] lg:text-[0.55rem] leading-tight whitespace-pre-line w-full">{{ . }}</div>
+                                        {{ $lenHigh := len .TideHighEvents }}
+                                            {{ range $i, $event := .TideHighEvents }}
+                                                <div class="flex flex-col">
+                                                    <div class="text-cyan-300 font-bold text-[0.45rem]">{{ .Time }}</div>
+
+                                                    <div class="text-white font-semibold text-[0.45rem]">{{ .Height }}</div>
+                                                </div>
+                                                {{ if and (eq $lenHigh 2) (eq $i 0) }}
+                                                    <hr class="w-3/4 mx-auto border-t border-white/50 mb-px">
+                                                {{ end }}
                                         {{ end }}
                                     {{ else }}
-                                        <div class="text-white/30 text-[0.6rem] italic">--</div>
+                                        <div class="text-white/30 text-[0.5rem] italic">--</div>
                                     {{ end }}
                                 </div>
                             </div>
 
-                            <!-- Odliv -->
-                            <div class="glass-tile row-span-2 flex flex-col justify-between py-1">
-                                <div class="text-[0.45rem] font-bold text-white/90 uppercase text-center w-full mb-1">
+                       
+
+                             <!-- Odliv -->
+                            <div class="glass-tile row-span-2 col-start-6 md:col-start-7 row-start-1 text-center">
+                               
+                                <div class="text-[0.45rem] font-bold text-white/90 uppercase mb-px">
                                     {{ index .I18n "tide_low" }}
                                 </div>
-                                <div class="flex-1 flex flex-col justify-center items-center gap-1 w-full text-center">
+                               
+                                <div class="flex flex-col">
                                     {{ if .TideLowEvents }}
-                                        {{ range .TideLowEvents }}
-                                        <div class="text-cyan-300 font-semibold text-[0.5rem] lg:text-[0.55rem] leading-tight whitespace-pre-line w-full">{{ . }}</div>
+                                        {{ $lenLow := len .TideLowEvents }}
+                                            {{ range $i, $event := .TideLowEvents }}
+                                                <div class="flex flex-col">
+                                                    <div class="text-cyan-300 font-bold text-[0.45rem]">{{ .Time }}</div>
+                                                    <div class="text-white font-semibold text-[0.45rem]">{{ .Height }}</div>
+                                                </div>
+                                                {{ if and (eq $lenLow 2) (eq $i 0) }}
+                                                    <hr class="w-3/4 mx-auto border-t border-white/50 mb-px">
+                                                {{ end }}
                                         {{ end }}
                                     {{ else }}
-                                        <div class="text-white/30 text-[0.6rem] italic">--</div>
+                                        <div class="text-white/30 text-[0.5rem] italic">--</div>
                                     {{ end }}
                                 </div>
-                            </div>                    
+                            </div>
+
+                            <!-- NOVÉ SLOUPCE (Třetí řádek) -->
+
+                            <!-- 1. sloupec: pod Vzduch, Max/Min, Tlak/Vlhkost (Zabírá sloupce 1 až 3) -->
+                            <div class="glass-tile col-start-1 col-span-3 row-start-3 flex items-center justify-center p-0.5 rounded-sm">
+                                <div class="text-cyan-300 font-bold text-[0.4rem] leading-none uppercase">UPDATE: {{ .FormattedDateSmall }} {{ .FormattedTime }}</div>
+                            </div>
+
+                            <!-- 2. sloupec: pod Moře (Na mobilu 1 sloupec, na desktopu 2 sloupce včetně místa pod 'Vlny') -->
+                            <div class="glass-tile col-start-4 col-span-1 md:col-span-2 row-start-3 flex items-center justify-center p-0.5 rounded-sm">
+                                <div class="text-cyan-300 font-bold text-[0.4rem] leading-none uppercase">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</div>
+                            </div>
+
+                            <!-- 3. sloupec: pod Příliv a Odliv (Zabírá 2 sloupce na všech obrazovkách) -->
+                            <div class="glass-tile col-start-5 md:col-start-6 col-span-2 row-start-3 flex items-center justify-center p-0.5 rounded-sm">
+                                <div class="text-cyan-300 font-bold text-[0.4rem] leading-none uppercase">{{ if .TideUpdatedAt }}{{ .TideUpdatedAt }}{{ else }}--{{ end }}</div>
+                            </div>
                             
 
 

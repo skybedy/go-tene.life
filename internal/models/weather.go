@@ -7,6 +7,11 @@ type WeatherData struct {
 	Humidity    float64 `json:"humidity"`
 }
 
+type TideEventView struct {
+	Time   string
+	Height string
+}
+
 type LanguageOption struct {
 	Code string
 	Name string
@@ -16,11 +21,13 @@ type PageData struct {
 	Weather           *WeatherData
 	WebcamImageURL    string
 	SeaTemperature    *float64
+	SeaTemperatureDate string
 	SeaTemperatureVal float64
 	NextHighTide      string
 	NextLowTide       string
-	TideHighEvents    []string
-	TideLowEvents     []string
+	TideHighEvents    []TideEventView
+	TideLowEvents     []TideEventView
+	TideUpdatedAt     string
 	Waves             *WavesLatest
 	WaterQuality      *WaterQualityLatest
 	DayMaxTemperature *float64
@@ -30,6 +37,7 @@ type PageData struct {
 	DayMaxTime        string
 	DayMinTime        string
 	FormattedDate     string
+	FormattedDateSmall string
 	FormattedTime     string
 	PageTitle         string
 	Locale            string
