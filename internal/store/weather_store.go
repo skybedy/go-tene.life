@@ -187,7 +187,7 @@ func (s *WeatherStore) StoreSeaTemperature(date string, temp float64) error {
 	return err
 }
 
-func (s *WeatherStore) GetDailyTemperatureExtremes(date string) (*float64, string, *float64, string, error) {
+func (s *WeatherStore) GetDailyTemperatureExtremes(date string) (*float64, *time.Time, *float64, *time.Time, error) {
 	query := `
 		SELECT
 			(SELECT temperature
@@ -218,13 +218,13 @@ func (s *WeatherStore) GetDailyTemperatureExtremes(date string) (*float64, strin
 	var minAt sql.NullTime
 
 	if err := s.DB.QueryRow(query, date, date, date, date).Scan(&maxTemp, &maxAt, &minTemp, &minAt); err != nil {
-		return nil, "", nil, "", err
+		return nil, nil, nil, nil, err
 	}
 
 	var maxPtr *float64
 	var minPtr *float64
-	maxTime := ""
-	minTime := ""
+	var maxTime *time.Time
+	var minTime *time.Time
 
 	if maxTemp.Valid {
 		v := maxTemp.Float64
@@ -235,10 +235,10 @@ func (s *WeatherStore) GetDailyTemperatureExtremes(date string) (*float64, strin
 		minPtr = &v
 	}
 	if maxAt.Valid {
-		maxTime = formatTimeHM(maxAt.Time)
+		maxTime = &maxAt.Time
 	}
 	if minAt.Valid {
-		minTime = formatTimeHM(minAt.Time)
+		minTime = &minAt.Time
 	}
 
 	return maxPtr, maxTime, minPtr, minTime, nil

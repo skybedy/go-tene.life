@@ -110,9 +110,11 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		log.Printf("Error getting weather data: %v", err)
 		// Continue with cached data if available, or empty data
 		if weather == nil && seaTemp == nil {
+			loc, _ := time.LoadLocation("Atlantic/Canary")
+			now := time.Now().In(loc)
 			return c.Render(http.StatusOK, "index.html", models.PageData{
-				FormattedDate:   time.Now().Format("2. 1. 2006"),
-				FormattedTime:   time.Now().Format("15:04"),
+				FormattedDate:   now.Format("2. 1. 2006"),
+				FormattedTime:   now.Format("15:04"),
 				WebcamImageURL:  webcamImageURL,
 				Locale:          locale,
 				LocalePrefix:    i18n.LocalePrefix(locale),
@@ -126,19 +128,20 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		}
 	}
 
-	// 2. Format Date/Time
-	ts := time.Now()
+	// 2. Format Date/Time (force Atlantic/Canary timezone)
+	loc, _ := time.LoadLocation("Atlantic/Canary")
+	ts := time.Now().In(loc)
 	if weather != nil && weather.Timestamp > 0 {
-		ts = time.Unix(weather.Timestamp, 0)
+		ts = time.Unix(weather.Timestamp, 0).In(loc)
 	}
 
 	var dayMaxTemperature *float64
 	var dayMinTemperature *float64
-	dayMaxTempText := ""
-	dayMinTempText := ""
 	dayMaxTime := ""
 	dayMinTime := ""
-	if maxTemp, maxTime, minTemp, minTime, extErr := h.WeatherStore.GetDailyTemperatureExtremes(ts.Format("2006-01-02")); extErr == nil {
+	dayMaxTempText := ""
+	dayMinTempText := ""
+	if maxTemp, maxAt, minTemp, minAt, extErr := h.WeatherStore.GetDailyTemperatureExtremes(ts.Format("2006-01-02")); extErr == nil {
 		dayMaxTemperature = maxTemp
 		dayMinTemperature = minTemp
 		if maxTemp != nil {
@@ -147,8 +150,12 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		if minTemp != nil {
 			dayMinTempText = fmt.Sprintf("%.1f", *minTemp)
 		}
-		dayMaxTime = maxTime
-		dayMinTime = minTime
+		if maxAt != nil {
+			dayMaxTime = maxAt.In(loc).Format("15:04")
+		}
+		if minAt != nil {
+			dayMinTime = minAt.In(loc).Format("15:04")
+		}
 	} else {
 		log.Printf("Error fetching daily temperature extremes: %v", extErr)
 	}
