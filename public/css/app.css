@@ -9,6 +9,7 @@
       "Courier New", monospace;
     --color-red-300: oklch(80.8% 0.114 19.571);
     --color-red-600: oklch(57.7% 0.245 27.325);
+    --color-amber-400: oklch(82.8% 0.189 84.429);
     --color-teal-100: oklch(95.3% 0.051 180.801);
     --color-cyan-50: oklch(98.4% 0.019 200.873);
     --color-cyan-100: oklch(95.6% 0.045 203.388);
@@ -334,12 +335,6 @@
   .row-start-3 {
     grid-row-start: 3;
   }
-  .m-0 {
-    margin: calc(var(--spacing) * 0);
-  }
-  .m-0\.5 {
-    margin: calc(var(--spacing) * 0.5);
-  }
   .m-1 {
     margin: calc(var(--spacing) * 1);
   }
@@ -403,8 +398,14 @@
   .mb-8 {
     margin-bottom: calc(var(--spacing) * 8);
   }
+  .mb-\[0\.5\] {
+    margin-bottom: 0.5;
+  }
   .mb-\[1px\] {
     margin-bottom: 1px;
+  }
+  .mb-\[2px\] {
+    margin-bottom: 2px;
   }
   .mb-px {
     margin-bottom: 1px;
@@ -618,6 +619,12 @@
   }
   .justify-end {
     justify-content: flex-end;
+  }
+  .gap-0 {
+    gap: calc(var(--spacing) * 0);
+  }
+  .gap-0\.5 {
+    gap: calc(var(--spacing) * 0.5);
   }
   .gap-1 {
     gap: calc(var(--spacing) * 1);
