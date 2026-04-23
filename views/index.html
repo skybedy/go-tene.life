@@ -59,22 +59,22 @@
 
                             <!-- Teplota -->
                             <div class="glass-tile row-span-2 col-start-1 row-start-2 text-center">
-                                <div class="text-[0.45rem] font-bold text-white/90 uppercase mb-1.5">VZDUCH</div>
+                                <div class="text-[0.45rem] min-[390px]:text-[0.55rem] font-bold text-white/90 uppercase mb-1.5">VZDUCH</div>
                                 <div class="text-cyan-300 font-semibold text-[0.7rem] mb-0.5">{{ if .Weather }}{{ printf "%.1f" .Weather.Temperature }}{{ else }}--{{ end }}</div>
                                 <div class="text-white/70 font-light text-[0.7rem]">°C</div>
                             </div>
 
-                        
+                         
                             <!-- Tlak -->
-                            <div class="glass-tile col-start-2 row-start-2 flex flex-col justify-center items-center">
-                                <div class="text-[0.45rem] font-bold text-white/90 mb-0.5">TLAK</div>
-                                <div class="text-cyan-300 text-[0.45rem] font-semibold">{{ if .Weather }}{{ printf "%.0f" .Weather.Pressure }}hPa{{ else }}--{{ end }}</div>
+                            <div class="glass-tile text-[0.45rem] min-[390px]:text-[0.55rem]  col-start-2 row-start-2 flex flex-col justify-center items-center">
+                                <div class="font-bold text-white/90 mb-0.5">TLAK</div>
+                                <div class="text-cyan-300 font-semibold">{{ if .Weather }}{{ printf "%.0f" .Weather.Pressure }}hPa{{ else }}--{{ end }}</div>
                             </div>
 
                              <!-- Vlhkost -->
-                            <div class="glass-tile col-start-2 row-start-3 flex flex-col justify-center items-center">
-                                <div class="text-[0.45rem] font-bold text-white/90 mb-0.5">VLHKOST</div>
-                                <div class="text-cyan-300 text-[0.45rem] font-semibold">{{ if .Weather }}{{ printf "%.0f" .Weather.Humidity }}%{{ else }}--{{ end }}</div>
+                            <div class="glass-tile text-[0.45rem] min-[390px]:text-[0.55rem] col-start-2 row-start-3 flex flex-col justify-center items-center">
+                                <div class="font-bold text-white/90 mb-0.5">VLHKOST</div>
+                                <div class="text-cyan-300 font-semibold">{{ if .Weather }}{{ printf "%.0f" .Weather.Humidity }}%{{ else }}--{{ end }}</div>
                             </div>
 
  

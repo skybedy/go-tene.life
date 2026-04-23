@@ -1484,6 +1484,11 @@
       --tw-ring-color: var(--color-blue-500);
     }
   }
+  .min-\[390px\]\:text-\[0\.55rem\] {
+    @media (width >= 390px) {
+      font-size: 0.55rem;
+    }
+  }
   .sm\:top-2\.5 {
     @media (width >= 40rem) {
       top: calc(var(--spacing) * 2.5);
