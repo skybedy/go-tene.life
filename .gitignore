@@ -17,6 +17,7 @@ data/
 # IDEs
 .vscode/
 .idea/
+.codex
 
 # Root Go/Laravel junk
 vendor/
@@ -33,4 +34,3 @@ _laravel_reference/storage/
 _laravel_reference/public/build/
 _laravel_reference/public/storage
 _laravel_reference/bootstrap/cache/
-
