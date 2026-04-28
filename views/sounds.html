@@ -1,0 +1,233 @@
+{{ template "header.html" . }}
+{{ template "nav.html" . }}
+
+<main>
+    <div class="mx-auto w-full sm:w-3/4 p-3 sm:p-4 md:p-6 lg:p-8">
+        <section class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-4 sm:p-5 md:p-6 lg:p-7">
+            <div class="mb-5 sm:mb-6">
+                <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">{{ index .I18n "sounds_title" }}</h1>
+                <p class="mt-2 text-sm sm:text-base text-gray-600">{{ index .I18n "sounds_subtitle" }}</p>
+            </div>
+
+            <div class="space-y-5">
+                <section class="bg-white/55 rounded-xl border border-gray-200 p-4 sm:p-5 shadow-sm">
+                    <p class="text-xs font-semibold uppercase text-gray-500">{{ index .I18n "sounds_player_label" }}</p>
+                    <h2 id="currentSoundTitle" class="mt-2 min-h-8 text-lg sm:text-xl font-semibold text-gray-800">
+                        {{ index .I18n "sounds_selected" }}
+                    </h2>
+                    <audio id="soundsPlayer" class="mt-4 w-full" controls preload="metadata"></audio>
+                    <div class="mt-4">
+                        <p class="text-xs font-semibold uppercase text-gray-500">{{ index .I18n "sounds_speed_label" }}</p>
+                        <div class="mt-2 flex flex-wrap gap-2" aria-label="{{ index .I18n "sounds_speed_label" }}">
+                            <button type="button"
+                                class="sound-speed rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                data-rate="0.75">0.75x</button>
+                            <button type="button"
+                                class="sound-speed rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                data-rate="1">1x</button>
+                            <button type="button"
+                                class="sound-speed rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                data-rate="1.25">1.25x</button>
+                            <button type="button"
+                                class="sound-speed rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                data-rate="1.5">1.5x</button>
+                        </div>
+                    </div>
+                </section>
+
+                {{ if .Tracks }}
+                <section>
+                    <h2 class="px-1 text-sm sm:text-base font-semibold text-gray-700 mb-3">{{ index .I18n "sounds_main_choices_label" }}</h2>
+                    <div class="grid gap-2 sm:grid-cols-2">
+                        <button type="button"
+                            class="sound-playlist rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left text-sm font-semibold text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            data-playlist="all">{{ index .I18n "sounds_play_all" }}</button>
+                        <button type="button"
+                            class="sound-playlist rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left text-sm font-semibold text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            data-playlist="random">{{ index .I18n "sounds_play_random" }}</button>
+                        <button type="button"
+                            class="sound-playlist rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left text-sm font-semibold text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            data-playlist="single"
+                            data-src="/sounds/files/spanelsko_ceska_slovicka_1_250.mp3"
+                            data-title="{{ index .I18n "sounds_play_1_250" }}">{{ index .I18n "sounds_play_1_250" }}</button>
+                        <button type="button"
+                            class="sound-playlist rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left text-sm font-semibold text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            data-playlist="single"
+                            data-src="/sounds/files/spanelsko_ceska_slovicka_251_500.mp3"
+                            data-title="{{ index .I18n "sounds_play_251_500" }}">{{ index .I18n "sounds_play_251_500" }}</button>
+                    </div>
+                </section>
+                {{ end }}
+
+                <section>
+                    <h2 class="px-1 text-sm sm:text-base font-semibold text-gray-700 mb-3">{{ index .I18n "sounds_playlist_label" }}</h2>
+                    {{ if .Tracks }}
+                    <div class="grid gap-2">
+                        {{ range .Tracks }}
+                        {{ if and (ne .FileName "spanelsko_ceska_slovicka_1_250.mp3") (ne .FileName "spanelsko_ceska_slovicka_251_500.mp3") }}
+                        <div class="sound-track flex min-h-16 w-full flex-col gap-3 rounded-xl border border-gray-200 bg-white/65 px-3 py-2.5 text-left shadow-sm transition hover:border-blue-300 hover:bg-white sm:flex-row sm:items-center sm:justify-between sm:px-4 sm:py-3"
+                            data-src="{{ .URL }}"
+                            data-title="{{ .Title }}"
+                            data-file="{{ .FileName }}">
+                            <span class="min-w-0">
+                                <span class="block truncate text-sm sm:text-base font-semibold text-gray-800">{{ .Title }}</span>
+                                <span class="block truncate text-xs text-gray-500">{{ .FileName }}</span>
+                            </span>
+                            <span class="flex shrink-0 flex-wrap gap-2">
+                                <button type="button"
+                                    class="sound-play inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                    {{ index $.I18n "sounds_play_once" }}
+                                </button>
+                                <button type="button"
+                                    class="sound-play-loop inline-flex items-center justify-center rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-xs font-semibold text-blue-700 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                    {{ index $.I18n "sounds_play_loop" }}
+                                </button>
+                            </span>
+                        </div>
+                        {{ end }}
+                        {{ end }}
+                    </div>
+                    {{ else }}
+                    <p class="rounded-xl border border-gray-200 bg-white/65 p-4 text-sm text-gray-600">{{ index .I18n "sounds_no_tracks" }}</p>
+                    {{ end }}
+                </section>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script>
+    (() => {
+        const player = document.getElementById('soundsPlayer');
+        const title = document.getElementById('currentSoundTitle');
+        const tracks = Array.from(document.querySelectorAll('.sound-track'));
+        const playButtons = document.querySelectorAll('.sound-play, .sound-play-loop');
+        const playlistButtons = document.querySelectorAll('.sound-playlist');
+        const speedButtons = document.querySelectorAll('.sound-speed');
+        let selectedRate = 1;
+        let activeQueue = [];
+        let activeQueueIndex = -1;
+
+        if (!player || !title || playButtons.length === 0) {
+            return;
+        }
+
+        const trackData = tracks.map((track) => ({
+            src: track.dataset.src || '',
+            title: track.dataset.title || '',
+            file: track.dataset.file || ''
+        })).filter((track) => track.src);
+
+        const setActiveSpeed = (activeButton) => {
+            speedButtons.forEach((button) => {
+                const isActive = button === activeButton;
+                button.classList.toggle('border-blue-600', isActive);
+                button.classList.toggle('bg-blue-600', isActive);
+                button.classList.toggle('text-white', isActive);
+                button.classList.toggle('border-gray-300', !isActive);
+                button.classList.toggle('bg-white', !isActive);
+                button.classList.toggle('text-gray-700', !isActive);
+            });
+        };
+
+        const shuffleTracks = (items) => {
+            const shuffled = [...items];
+            for (let i = shuffled.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        };
+
+        const playItem = (item, loop) => {
+            if (!item || !item.src) {
+                return;
+            }
+
+            title.textContent = item.title;
+            player.src = item.src;
+            player.playbackRate = selectedRate;
+            player.loop = loop;
+            player.play().catch(() => {});
+        };
+
+        const playQueue = (items) => {
+            if (items.length === 0) {
+                return;
+            }
+
+            activeQueue = items;
+            activeQueueIndex = 0;
+            playItem(activeQueue[activeQueueIndex], false);
+        };
+
+        const playTrack = (button) => {
+            const track = button.closest('.sound-track');
+            if (!track) {
+                return;
+            }
+
+            activeQueue = [];
+            activeQueueIndex = -1;
+            playItem({
+                src: track.dataset.src || '',
+                title: track.dataset.title || ''
+            }, button.classList.contains('sound-play-loop'));
+        };
+
+        playButtons.forEach((button) => {
+            button.addEventListener('click', () => playTrack(button));
+        });
+
+        playlistButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const mode = button.dataset.playlist || '';
+                if (mode === 'all') {
+                    playQueue(trackData);
+                    return;
+                }
+                if (mode === 'random') {
+                    playQueue(shuffleTracks(trackData));
+                    return;
+                }
+
+                activeQueue = [];
+                activeQueueIndex = -1;
+                playItem({
+                    src: button.dataset.src || '',
+                    title: button.dataset.title || ''
+                }, false);
+            });
+        });
+
+        player.addEventListener('ended', () => {
+            if (activeQueue.length === 0 || activeQueueIndex < 0) {
+                return;
+            }
+
+            activeQueueIndex += 1;
+            if (activeQueueIndex >= activeQueue.length) {
+                activeQueue = [];
+                activeQueueIndex = -1;
+                return;
+            }
+
+            playItem(activeQueue[activeQueueIndex], false);
+        });
+
+        speedButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const nextRate = Number.parseFloat(button.dataset.rate || '1');
+                if (!Number.isFinite(nextRate) || nextRate <= 0) {
+                    return;
+                }
+
+                selectedRate = nextRate;
+                player.playbackRate = selectedRate;
+                setActiveSpeed(button);
+            });
+        });
+    })();
+</script>
+
+{{ template "footer.html" . }}

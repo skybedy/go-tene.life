@@ -11,6 +11,7 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -565,6 +566,104 @@ func (h *Handler) WebcamBigHandler(c echo.Context) error {
 		GAMeasurementID: gaMeasurementID,
 	}
 	return c.Render(http.StatusOK, "webcam-big.html", data)
+}
+
+func (h *Handler) SoundsHandler(c echo.Context) error {
+	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
+	tracks, err := loadSoundTracks("public/sounds")
+	if err != nil {
+		log.Printf("Error loading sound tracks: %v", err)
+		tracks = nil
+	}
+
+	data := models.SoundsPageData{
+		Tracks:          tracks,
+		PageTitle:       i18n.T(locale, "sounds_title"),
+		Locale:          locale,
+		LocalePrefix:    i18n.LocalePrefix(locale),
+		CurrentPath:     currentPath,
+		CurrentSection:  "sounds",
+		Languages:       languages,
+		I18n:            messages,
+		GAEnabled:       gaEnabled,
+		GAMeasurementID: gaMeasurementID,
+	}
+
+	return c.Render(http.StatusOK, "sounds.html", data)
+}
+
+func loadSoundTracks(root string) ([]models.SoundTrack, error) {
+	entries, err := os.ReadDir(root)
+	if err != nil {
+		return nil, err
+	}
+
+	tracks := make([]models.SoundTrack, 0, len(entries))
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		if strings.ToLower(filepath.Ext(name)) != ".mp3" {
+			continue
+		}
+		tracks = append(tracks, models.SoundTrack{
+			Title:    soundTrackTitle(name),
+			FileName: name,
+			URL:      "/sounds/files/" + name,
+		})
+	}
+
+	return tracks, nil
+}
+
+func soundTrackTitle(fileName string) string {
+	base := strings.TrimSuffix(fileName, filepath.Ext(fileName))
+	if title, ok := soundTrackTitles[base]; ok {
+		return title
+	}
+
+	parts := strings.Split(base, "_")
+	for i, part := range parts {
+		if part == "" {
+			continue
+		}
+		if i > 0 && (part == "a" || part == "i" || part == "v" || part == "ve") {
+			continue
+		}
+		parts[i] = strings.ToUpper(part[:1]) + part[1:]
+	}
+	return strings.Join(parts, " ")
+}
+
+var soundTrackTitles = map[string]string{
+	"01_nakupovani_a_jidlo":              "Nakupování a jídlo",
+	"02_domacnost_a_sousedi":             "Domácnost a sousedé",
+	"03_opravy_a_sluzby":                 "Opravy a služby",
+	"04_doprava_a_orientace":             "Doprava a orientace",
+	"05_lekar_a_zdravi":                  "Lékař a zdraví",
+	"06_urady_a_administrativa":          "Úřady a administrativa",
+	"07_konverzace_a_spolecnost":         "Konverzace a společnost",
+	"09_restaurace_a_jidlo_venku":        "Restaurace a jídlo venku",
+	"10_bydleni_a_domacnost_pokracovani": "Bydlení a domácnost, pokračování",
+	"11_uklid_a_prani":                   "Úklid a praní",
+	"12_technologie_a_komunikace":        "Technologie a komunikace",
+	"13_nakupovani_online_a_zasilky":     "Nakupování online a zásilky",
+	"14_uceni_a_prace":                   "Učení a práce",
+	"15_cas_a_datum":                     "Čas a datum",
+	"16_pocasi_a_priroda":                "Počasí a příroda",
+	"17_volny_cas_a_sport":               "Volný čas a sport",
+	"18_jidlo_a_piti_pokracovani":        "Jídlo a pití, pokračování",
+	"19_cestovani_a_ubytovani":           "Cestování a ubytování",
+	"20_zdravotni_situace_pokracovani":   "Zdravotní situace, pokračování",
+	"21_finance_a_penize":                "Finance a peníze",
+	"22_bezpecnost_a_nouzove_situace":    "Bezpečnost a nouzové situace",
+	"23_spolecensky_zivot_a_zabava":      "Společenský život a zábava",
+	"24_zeme_a_cestovani":                "Země a cestování",
+	"25_zakladni_prislovce_a_spojky":     "Základní příslovce a spojky",
+	"26_lide_a_vztahy":                   "Lidé a vztahy",
+	"spanelsko_ceska_slovicka_1_250":     "Španělsko-česká slovíčka 1-250",
+	"spanelsko_ceska_slovicka_251_500":   "Španělsko-česká slovíčka 251-500",
 }
 
 func (h *Handler) WebcamImageHandler(c echo.Context) error {

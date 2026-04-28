@@ -15,6 +15,10 @@
                     class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "home" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                     {{ index .I18n "home" }}
                 </a>
+                <a href="{{ localeURL .Locale "/sounds" }}"
+                    class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sounds" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                    {{ index .I18n "sounds_nav" }}
+                </a>
 
                 <div class="relative group">
                     <button
@@ -100,6 +104,10 @@
                 <a href="{{ localeURL .Locale "/" }}"
                     class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "home" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
                     {{ index .I18n "home" }}
+                </a>
+                <a href="{{ localeURL .Locale "/sounds" }}"
+                    class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "sounds" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
+                    {{ index .I18n "sounds_nav" }}
                 </a>
                 <a href="{{ localeURL .Locale "/statistics/daily" }}"
                     class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
