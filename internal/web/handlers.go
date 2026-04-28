@@ -610,7 +610,7 @@ func loadSoundTracks(root string) ([]models.SoundTrack, error) {
 		tracks = append(tracks, models.SoundTrack{
 			Title:    soundTrackTitle(name),
 			FileName: name,
-			URL:      "/sounds/files/" + name,
+			URL:      "/spanelsko-ceska-slovicka/files/" + name,
 		})
 	}
 

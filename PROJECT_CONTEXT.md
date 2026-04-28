@@ -13,8 +13,8 @@
 - V repozitari nejsou nalezeny `Dockerfile` ani `docker-compose.yml`.
 - Pri vytvoreni tohoto kontextu byl `git status --short` cisty.
 - Dne 2026-04-28 byly overeny prikazy `go test ./...`, `GOCACHE=/tmp/go-build go build ./...` a `npm run build`.
-- Dne 2026-04-28 byla v nove vetvi `feature/spanish-czech-sounds` rozpracovana samostatna stranka `/sounds` pro spanelsko-ceske zvukove lekce.
-- Zvukove soubory jsou ulozene v `public/sounds/`; web je servíruje pod URL prefixem `/sounds/files/`.
+- Dne 2026-04-28 byla v nove vetvi `feature/spanish-czech-sounds` rozpracovana samostatna stranka `/spanelsko-ceska-slovicka` pro spanelsko-ceske zvukove lekce.
+- Zvukove soubory jsou ulozene v `public/sounds/`; web je serviruje pod URL prefixem `/spanelsko-ceska-slovicka/files/`.
 
 ## Pouzivany stack
 
@@ -131,6 +131,6 @@ npm run dev
 - Kazdy novy Codex chat ma nejdriv precist `AGENTS.md`, tento soubor, `TODO.md` a `DECISIONS.md`.
 - Pred kazdou praci over `git status --short`.
 - Pri zmene UI/CSS upravuj primarne `resources/css/app.css`, sablony ve `views/` a JS v `public/js/`; pak spust `npm run build`.
-- Stranka se zvukovymi slovicky je na `/sounds`; handler nacita `.mp3` soubory z `public/sounds/` pri renderovani stranky.
+- Stranka se zvukovymi slovicky je na `/spanelsko-ceska-slovicka`; stara URL `/sounds` presmerovava na novou adresu a handler nacita `.mp3` soubory z `public/sounds/` pri renderovani stranky.
 - Pri zmene backendu spust `go test ./...` a podle potreby `go build ./...`.
 - Pri databazovych zmenach pridej migraci a aktualizuj `db/schema.sql`.

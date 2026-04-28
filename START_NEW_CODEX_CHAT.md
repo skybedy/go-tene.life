@@ -29,7 +29,7 @@ Aktualni vetev: `feature/spanish-czech-sounds`
 
 Cil aktualni prace:
 
-Doplnujeme stranku `/sounds` pro prehravani spanelsko-ceskych audio slovicek.
+Doplnujeme stranku `/spanelsko-ceska-slovicka` pro prehravani spanelsko-ceskych audio slovicek.
 
 Dulezite zmenene/pridane soubory:
 
@@ -44,11 +44,12 @@ Dulezite zmenene/pridane soubory:
 
 Aktualni stav funkcnosti:
 
-- Existuje route `/sounds`.
-- Menu obsahuje odkaz na `Slovicka`.
+- Existuje route `/spanelsko-ceska-slovicka`.
+- Stara route `/sounds` presmerovava na novou adresu.
+- Menu obsahuje odkaz `Spanelsko-ceska slovicka` jako posledni odkaz.
 - MP3 jsou v `public/sounds`.
-- Audio soubory se serviruji pres `/sounds/files/...`.
-- Stranka `/sounds` ma prehravac, volbu rychlosti `0.75x`, `1x`, `1.25x`, `1.5x`.
+- Audio soubory se serviruji pres `/spanelsko-ceska-slovicka/files/...`.
+- Stranka `/spanelsko-ceska-slovicka` ma prehravac, volbu rychlosti `0.75x`, `1x`, `1.25x`, `1.5x`.
 - Nahore jsou 4 zakladni volby: `Prehrat vsechno za sebou`, `Prehrat nahodne`, `Prehrat 1-250`, `Prehrat 251-500`.
 - Pod tim jsou jednotlive soubory k rucnimu prehrani.
 - Jednotlive soubory maji tlacitka `Prehrat` a `Prehrat ve smycce`.
@@ -73,7 +74,7 @@ GOCACHE=/tmp/go-build go run /tmp/check_templates.go
 
 Nejblizsi mozne dalsi kroky:
 
-- Projit `/sounds` vizualne v prohlizeci.
+- Projit `/spanelsko-ceska-slovicka` vizualne v prohlizeci.
 - Doladit texty a vzhled tlacitek.
 - Pripadne zvazit, jestli se pro zvuky pozdeji vyplati manifest misto generovani z nazvu souboru.
 

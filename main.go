@@ -163,7 +163,7 @@ func main() {
 	// We still need to serve local images for other files
 	e.Static("/images", "public/images")
 	e.Static("/files", "public/files")
-	e.Static("/sounds/files", "public/sounds")
+	e.Static("/spanelsko-ceska-slovicka/files", "public/sounds")
 
 	// Template Renderer using Embed
 	renderer := &web.TemplateRenderer{
@@ -224,7 +224,10 @@ func main() {
 	// Routes (default locale: cs)
 	e.GET("/", handler.IndexHandler)
 	e.GET("/webcam/big", handler.WebcamBigHandler)
-	e.GET("/sounds", handler.SoundsHandler)
+	e.GET("/sounds", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/spanelsko-ceska-slovicka")
+	})
+	e.GET("/spanelsko-ceska-slovicka", handler.SoundsHandler)
 	e.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/statistics/daily")
 	})
@@ -247,7 +250,10 @@ func main() {
 	localized.GET("", handler.IndexHandler)
 	localized.GET("/", handler.IndexHandler)
 	localized.GET("/webcam/big", handler.WebcamBigHandler)
-	localized.GET("/sounds", handler.SoundsHandler)
+	localized.GET("/sounds", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/spanelsko-ceska-slovicka"))
+	})
+	localized.GET("/spanelsko-ceska-slovicka", handler.SoundsHandler)
 	localized.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/statistics/daily"))
 	})

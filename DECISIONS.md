@@ -28,9 +28,10 @@
 
 ### 2026-04-28: Stranka se zvukovymi slovicky
 
-- Pro spanelsko-ceske zvukove lekce vznikla samostatna stranka `/sounds`.
+- Pro spanelsko-ceske zvukove lekce vznikla samostatna stranka `/spanelsko-ceska-slovicka`.
 - MP3 soubory zustavaji v `public/sounds/`, aby byly soucasti verejnych statickych souboru projektu.
-- Verejne URL pro samotne audio soubory pouziva prefix `/sounds/files/`, aby se nekrizila routa stranky `/sounds` se statickym adresarem.
+- Verejne URL pro samotne audio soubory pouziva prefix `/spanelsko-ceska-slovicka/files/`, aby URL odpovidala obsahu stranky.
+- Stara routa `/sounds` zustava jako presmerovani na novou adresu.
 - Playlist se zatim generuje z dostupnych `.mp3` souboru podle nazvu souboru bez databaze; to je jednoduche a vhodne pro prvni iteraci.
 
 ### Otevrene otazky

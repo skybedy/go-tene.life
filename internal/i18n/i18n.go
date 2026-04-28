@@ -33,7 +33,7 @@ var dictionary = map[string]map[string]string{
 	"cs": {
 		"home":                        "Webkamera",
 		"statistics":                  "Rozšířené statistiky",
-		"sounds_nav":                  "Slovíčka",
+		"sounds_nav":                  "Španělsko-česká slovíčka",
 		"sounds_title":                "Španělsko-česká slovíčka",
 		"sounds_subtitle":             "Zvukové lekce pro poslech a opakování slovní zásoby, celkem 500 slovíček.",
 		"sounds_player_label":         "Přehrávač",
@@ -138,7 +138,7 @@ var dictionary = map[string]map[string]string{
 	"en": {
 		"home":                        "Webcam",
 		"statistics":                  "Extended Statistics",
-		"sounds_nav":                  "Vocabulary",
+		"sounds_nav":                  "Spanish-Czech Vocabulary",
 		"sounds_title":                "Spanish-Czech Vocabulary",
 		"sounds_subtitle":             "Audio lessons for listening and vocabulary practice.",
 		"sounds_player_label":         "Player",
