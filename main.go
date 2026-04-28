@@ -251,9 +251,11 @@ func main() {
 	localized.GET("/", handler.IndexHandler)
 	localized.GET("/webcam/big", handler.WebcamBigHandler)
 	localized.GET("/sounds", func(c echo.Context) error {
-		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/spanelsko-ceska-slovicka"))
+		return c.Redirect(http.StatusMovedPermanently, "/spanelsko-ceska-slovicka")
 	})
-	localized.GET("/spanelsko-ceska-slovicka", handler.SoundsHandler)
+	localized.GET("/spanelsko-ceska-slovicka", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/spanelsko-ceska-slovicka")
+	})
 	localized.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/statistics/daily"))
 	})

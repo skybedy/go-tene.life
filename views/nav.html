@@ -38,13 +38,14 @@
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "recent_statistics" }}</a>
          </div>
                 </div>
-                <a href="{{ localeURL .Locale "/spanelsko-ceska-slovicka" }}"
+                <a href="/spanelsko-ceska-slovicka"
                     class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sounds" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                     {{ index .I18n "sounds_nav" }}
                 </a>
             </div>
 
             <div class="ml-auto flex items-center gap-1.5 lg:hidden">
+                {{ if ne .CurrentSection "sounds" }}
                 <div class="relative">
                     <button id="mobileLangToggle" type="button"
                         class="flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-gray-700 hover:bg-white/50 rounded-lg transition whitespace-nowrap"
@@ -63,6 +64,7 @@
                         {{ end }}
                     </div>
                 </div>
+                {{ end }}
 
                 <button id="mobileMenuToggle" type="button"
                     class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-300 bg-white/70 text-gray-700 hover:bg-white transition"
@@ -78,6 +80,7 @@
                 </button>
             </div>
 
+            {{ if ne .CurrentSection "sounds" }}
             <div class="relative group ml-auto hidden lg:block">
                 <button
                     class="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-sm font-medium text-gray-700 hover:bg-white/50 rounded-lg transition whitespace-nowrap">
@@ -97,6 +100,7 @@
                     {{ end }}
                 </div>
             </div>
+            {{ end }}
         </div>
 
         <div id="mobileMainMenu" class="lg:hidden hidden pb-3">
@@ -121,7 +125,7 @@
                     class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                     {{ index .I18n "monthly_statistics" }}
                 </a>
-                <a href="{{ localeURL .Locale "/spanelsko-ceska-slovicka" }}"
+                <a href="/spanelsko-ceska-slovicka"
                     class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "sounds" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
                     {{ index .I18n "sounds_nav" }}
                 </a>

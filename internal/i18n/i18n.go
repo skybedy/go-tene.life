@@ -32,7 +32,7 @@ var supportedLocales = func() map[string]struct{} {
 var dictionary = map[string]map[string]string{
 	"cs": {
 		"home":                        "Webkamera",
-		"statistics":                  "Rozšířené statistiky",
+		"statistics":                  "Rozšířené statistiky počasí",
 		"sounds_nav":                  "Španělsko-česká slovíčka",
 		"sounds_title":                "Španělsko-česká slovíčka",
 		"sounds_subtitle":             "Zvukové lekce pro poslech a opakování slovní zásoby, celkem 500 slovíček.",
