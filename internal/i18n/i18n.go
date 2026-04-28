@@ -35,7 +35,7 @@ var dictionary = map[string]map[string]string{
 		"statistics":                  "Rozšířené statistiky",
 		"sounds_nav":                  "Slovíčka",
 		"sounds_title":                "Španělsko-česká slovíčka",
-		"sounds_subtitle":             "Zvukové lekce pro poslech a opakování slovní zásoby.",
+		"sounds_subtitle":             "Zvukové lekce pro poslech a opakování slovní zásoby, celkem 500 slovíček.",
 		"sounds_player_label":         "Přehrávač",
 		"sounds_playlist_label":       "Jednotlivé soubory",
 		"sounds_main_choices_label":   "Základní volby",
