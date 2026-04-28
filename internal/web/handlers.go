@@ -611,6 +611,7 @@ func loadSoundTracks(root string) ([]models.SoundTrack, error) {
 			Title:    soundTrackTitle(name),
 			FileName: name,
 			URL:      "/spanelsko-ceska-slovicka/files/" + name,
+			Icon:     soundTrackIcon(name),
 		})
 	}
 
@@ -655,7 +656,7 @@ var soundTrackTitles = map[string]string{
 	"17_volny_cas_a_sport":               "Volný čas a sport",
 	"18_jidlo_a_piti_pokracovani":        "Jídlo a pití, pokračování",
 	"19_cestovani_a_ubytovani":           "Cestování a ubytování",
-	"20_zdravotni_situace_pokracovani":   "Zdravotní situace, pokračování",
+	"20_zdravotni_situace_pokracovani":   "Zdravotnictví",
 	"21_finance_a_penize":                "Finance a peníze",
 	"22_bezpecnost_a_nouzove_situace":    "Bezpečnost a nouzové situace",
 	"23_spolecensky_zivot_a_zabava":      "Společenský život a zábava",
@@ -664,6 +665,44 @@ var soundTrackTitles = map[string]string{
 	"26_lide_a_vztahy":                   "Lidé a vztahy",
 	"spanelsko_ceska_slovicka_1_250":     "Španělsko-česká slovíčka 1-250",
 	"spanelsko_ceska_slovicka_251_500":   "Španělsko-česká slovíčka 251-500",
+}
+
+func soundTrackIcon(fileName string) string {
+	base := strings.TrimSuffix(fileName, filepath.Ext(fileName))
+	if icon, ok := soundTrackIcons[base]; ok {
+		return icon
+	}
+	return "🎧" // Default icon
+}
+
+var soundTrackIcons = map[string]string{
+	"01_nakupovani_a_jidlo":              "🛒",
+	"02_domacnost_a_sousedi":             "🏠",
+	"03_opravy_a_sluzby":                 "🔧",
+	"04_doprava_a_orientace":             "🚌",
+	"05_lekar_a_zdravi":                  "⚕️",
+	"06_urady_a_administrativa":          "🏢",
+	"07_konverzace_a_spolecnost":         "💬",
+	"09_restaurace_a_jidlo_venku":        "🍽️",
+	"10_bydleni_a_domacnost_pokracovani": "🛋️",
+	"11_uklid_a_prani":                   "🧼",
+	"12_technologie_a_komunikace":        "📱",
+	"13_nakupovani_online_a_zasilky":     "📦",
+	"14_uceni_a_prace":                   "💼",
+	"15_cas_a_datum":                     "📅",
+	"16_pocasi_a_priroda":                "☀️",
+	"17_volny_cas_a_sport":               "⚽",
+	"18_jidlo_a_piti_pokracovani":        "🍷",
+	"19_cestovani_a_ubytovani":           "✈️",
+	"20_zdravotni_situace_pokracovani":   "💊",
+	"21_finance_a_penize":                "💰",
+	"22_bezpecnost_a_nouzove_situace":    "🚨",
+	"23_spolecensky_zivot_a_zabava":      "🎉",
+	"24_zeme_a_cestovani":                "🌍",
+	"25_zakladni_prislovce_a_spojky":     "🔗",
+	"26_lide_a_vztahy":                   "🤝",
+	"spanelsko_ceska_slovicka_1_250":     "📚",
+	"spanelsko_ceska_slovicka_251_500":   "📚",
 }
 
 func (h *Handler) WebcamImageHandler(c echo.Context) error {

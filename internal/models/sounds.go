@@ -4,6 +4,7 @@ type SoundTrack struct {
 	Title    string
 	FileName string
 	URL      string
+	Icon     string
 }
 
 type SoundsPageData struct {
