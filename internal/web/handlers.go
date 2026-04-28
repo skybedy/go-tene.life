@@ -344,7 +344,7 @@ func (h *Handler) getCachedTideData(reference time.Time) ([]models.TideEventView
 
 	var fetchedAtStr string
 	if len(selected) > 0 {
-		fetchedAtStr = selected[0].FetchedAt.Local().Format("2.1.") + " " + strings.TrimPrefix(selected[0].FetchedAt.Local().Format("15:04"), "0")
+		fetchedAtStr = selected[0].FetchedAt.Local().Format("2.1.")
 	}
 
 	high := make([]models.TideEventView, 0, 2)

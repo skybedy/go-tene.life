@@ -475,9 +475,6 @@
   .h-full {
     height: 100%;
   }
-  .h-screen {
-    height: 100vh;
-  }
   .max-h-\[calc\(100\%-0\.5rem\)\] {
     max-height: calc(100% - 0.5rem);
   }
@@ -526,9 +523,6 @@
   .w-full {
     width: 100%;
   }
-  .w-screen {
-    width: 100vw;
-  }
   .max-w-\[14rem\] {
     max-width: 14rem;
   }
@@ -568,14 +562,17 @@
   .grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .grid-rows-\[auto_1fr_1fr\] {
-    grid-template-rows: auto 1fr 1fr;
+  .grid-rows-\[1\.05rem_1fr_1fr\] {
+    grid-template-rows: 1.05rem 1fr 1fr;
   }
   .flex-col {
     flex-direction: column;
   }
   .flex-wrap {
     flex-wrap: wrap;
+  }
+  .place-items-center {
+    place-items: center;
   }
   .items-center {
     align-items: center;
@@ -787,9 +784,6 @@
     @supports (color: color-mix(in lab, red, red)) {
       border-color: color-mix(in oklab, var(--color-white) 70%, transparent);
     }
-  }
-  .bg-black {
-    background-color: var(--color-black);
   }
   .bg-black\/10 {
     background-color: color-mix(in srgb, #000 10%, transparent);
@@ -1488,6 +1482,11 @@
   .focus\:ring-blue-500 {
     &:focus {
       --tw-ring-color: var(--color-blue-500);
+    }
+  }
+  .min-\[390px\]\:grid-rows-\[1\.15rem_1fr_1fr\] {
+    @media (width >= 390px) {
+      grid-template-rows: 1.15rem 1fr 1fr;
     }
   }
   .min-\[390px\]\:text-\[0\.55rem\] {
@@ -2437,6 +2436,11 @@
     --tw-shadow: inset 0 1px 0 var(--tw-shadow-color, rgba(255,255,255,0.04));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
+  .weather-first-row-text {
+    font-size: 0.5rem;
+    line-height: 1;
+    letter-spacing: 0.04em;
+  }
   .weather-overlay-shell::before {
     content: "";
     position: absolute;
@@ -2485,6 +2489,11 @@
   }
   .weather-right-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 390px) {
+    .weather-first-row-text {
+      font-size: 0.6rem;
+    }
   }
   @media (min-width: 640px) {
     .weather-right-grid {

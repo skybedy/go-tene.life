@@ -15,6 +15,12 @@
         @apply flex flex-col bg-linear-to-b from-[#12677e]/38 to-[#1f304a]/46 px-1 py-0.5 rounded-md border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)];
     }
 
+    .weather-first-row-text {
+        font-size: 0.5rem;
+        line-height: 1;
+        letter-spacing: 0.04em;
+    }
+
     .weather-overlay-shell::before {
         content: "";
         position: absolute;
@@ -72,6 +78,12 @@
 
     .weather-right-grid {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    @media (min-width: 390px) {
+        .weather-first-row-text {
+            font-size: 0.6rem;
+        }
     }
 
     @media (min-width: 640px) {
