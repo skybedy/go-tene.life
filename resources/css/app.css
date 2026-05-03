@@ -198,25 +198,25 @@
         }
 
         .weather-first-row-text {
-            font-size: 0.792rem;
+            font-size: 0.8712rem;
         }
 
         .weather-tile-label,
         .weather-small-tile,
         .weather-small-label,
         .weather-tide-label {
-            font-size: 0.672rem;
+            font-size: 0.7392rem;
         }
 
         .weather-tile-value,
         .weather-tile-unit {
-            font-size: 0.984rem;
+            font-size: 1.0824rem;
         }
 
         .weather-small-value,
         .weather-tide-time,
         .weather-tide-height {
-            font-size: 0.648rem;
+            font-size: 0.7128rem;
         }
     }
 
@@ -224,6 +224,14 @@
         .homepage-weather-strip {
             min-width: min(33rem, 100%);
             grid-template-rows: 1.25rem minmax(2.35rem, 1fr) minmax(2.35rem, 1fr);
+        }
+
+        .weather-box-heading {
+            margin-top: 0.18rem;
+        }
+
+        .weather-box-secondary {
+            margin-bottom: 0.18rem;
         }
 
         .weather-first-row-text {
