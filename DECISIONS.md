@@ -33,6 +33,8 @@
 - Verejne URL pro samotne audio soubory pouziva prefix `/spanelsko-ceska-slovicka/files/`, aby URL odpovidala obsahu stranky.
 - Stara routa `/sounds` zustava jako presmerovani na novou adresu.
 - Playlist se zatim generuje z dostupnych `.mp3` souboru podle nazvu souboru bez databaze; to je jednoduche a vhodne pro prvni iteraci.
+- Souhrnne soubory `spanelsko_ceska_slovicka_1_250.mp3` a `spanelsko_ceska_slovicka_251_500.mp3` zustavaji jako horni prehledove volby; nezobrazuji se dole mezi jednotlivymi lekcemi.
+- Horni volby nemaji mit modre primarni zvyrazneni; pouziva se neutralni vzhled a modra zustava jen jako hover/focus signal.
 
 ### Otevrene otazky
 

@@ -15,6 +15,7 @@
 - Dne 2026-04-28 byly overeny prikazy `go test ./...`, `GOCACHE=/tmp/go-build go build ./...` a `npm run build`.
 - Dne 2026-04-28 byla v nove vetvi `feature/spanish-czech-sounds` rozpracovana samostatna stranka `/spanelsko-ceska-slovicka` pro spanelsko-ceske zvukove lekce.
 - Zvukove soubory jsou ulozene v `public/sounds/`; web je serviruje pod URL prefixem `/spanelsko-ceska-slovicka/files/`.
+- Dne 2026-04-29 byly doladeny horni volby na strance `/spanelsko-ceska-slovicka`: texty odpovidaji prehravani, souhrnne soubory 1-250 a 251-500 jsou prehratelne z hornich voleb a vizualni zvyrazneni ikon je neutralnejsi.
 
 ## Pouzivany stack
 
@@ -132,5 +133,6 @@ npm run dev
 - Pred kazdou praci over `git status --short`.
 - Pri zmene UI/CSS upravuj primarne `resources/css/app.css`, sablony ve `views/` a JS v `public/js/`; pak spust `npm run build`.
 - Stranka se zvukovymi slovicky je na `/spanelsko-ceska-slovicka`; stara URL `/sounds` presmerovava na novou adresu a handler nacita `.mp3` soubory z `public/sounds/` pri renderovani stranky.
+- Horni volby na strance se zvuky obsluhuje Vanilla JS v `views/sounds.html`; souhrnne MP3 soubory zustavaji jen mezi hornimi volbami a dole v seznamu jednotlivych lekci se nezobrazuji.
 - Pri zmene backendu spust `go test ./...` a podle potreby `go build ./...`.
 - Pri databazovych zmenach pridej migraci a aktualizuj `db/schema.sql`.

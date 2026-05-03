@@ -2,7 +2,7 @@
 
 ## Teď
 
-- [ ] Projit prvni verzi stranky `/spanelsko-ceska-slovicka` v prohlizeci a doladit nazvy lekci / poradi.
+- [ ] Projit stranku `/spanelsko-ceska-slovicka` v prohlizeci a vizualne overit prehravani hornich voleb i jednotlivych lekci.
 - [ ] Zkontrolovat, jestli README obsahuje kompletni prikazy pro spusteni aplikace od nuly.
 - [ ] Rozhodnout, jestli maji byt runtime ukazkova data v `data/` dokumentovana jako potrebna seed/cache data.
 

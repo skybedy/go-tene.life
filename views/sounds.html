@@ -42,21 +42,24 @@
                         <button type="button"
                             class="sound-playlist rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left text-sm font-semibold text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center gap-3"
                             data-playlist="all">
-                            <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-blue-50/50 text-xl shadow-sm border border-blue-100/50">🎶</span>
+                            <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">🎶</span>
                             {{ index .I18n "sounds_play_all" }}
                         </button>
                         <button type="button"
                             class="sound-playlist rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left text-sm font-semibold text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center gap-3"
                             data-playlist="random">
-                            <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-blue-50/50 text-xl shadow-sm border border-blue-100/50">🔀</span>
+                            <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">🔀</span>
                             {{ index .I18n "sounds_play_random" }}
                         </button>
                         <div class="rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white">
                             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                <div class="flex items-center gap-3 text-left text-sm font-semibold min-w-0">
-                                    <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-blue-50/50 text-xl shadow-sm border border-blue-100/50">📘</span>
+                                <button type="button"
+                                    class="sound-playlist flex min-w-0 items-center gap-3 text-left text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg"
+                                    data-src="/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_1_250.mp3"
+                                    data-title="{{ index .I18n "sounds_play_1_250" }}">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">📘</span>
                                     <span class="min-w-0">{{ index .I18n "sounds_play_1_250" }}</span>
-                                </div>
+                                </button>
                                 <a href="/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_1_250.mp3" download="spanelsko_ceska_slovicka_1_250.mp3"
                                     class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400 sm:flex-shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -68,10 +71,13 @@
                         </div>
                         <div class="rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white">
                             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                <div class="flex items-center gap-3 text-left text-sm font-semibold min-w-0">
-                                    <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-blue-50/50 text-xl shadow-sm border border-blue-100/50">📙</span>
+                                <button type="button"
+                                    class="sound-playlist flex min-w-0 items-center gap-3 text-left text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg"
+                                    data-src="/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_251_500.mp3"
+                                    data-title="{{ index .I18n "sounds_play_251_500" }}">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">📙</span>
                                     <span class="min-w-0">{{ index .I18n "sounds_play_251_500" }}</span>
-                                </div>
+                                </button>
                                 <a href="/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_251_500.mp3" download="spanelsko_ceska_slovicka_251_500.mp3"
                                     class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400 sm:flex-shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -96,7 +102,7 @@
                             data-title="{{ .Title }}"
                             data-file="{{ .FileName }}">
                             <div class="flex items-center gap-3 min-w-0 w-full sm:w-auto">
-                                <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-blue-50/50 text-xl shadow-sm border border-blue-100/50">
+                                <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">
                                     {{ .Icon }}
                                 </div>
                                 <div class="min-w-0 flex-1">
