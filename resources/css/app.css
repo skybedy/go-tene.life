@@ -22,11 +22,13 @@
     }
 
     .homepage-weather-strip-wrap {
-        width: 100%;
+        width: auto;
+        max-width: 100%;
     }
 
     .homepage-weather-strip {
-        width: 100%;
+        width: max-content;
+        max-width: 100%;
         grid-template-columns: repeat(6, minmax(0, 1fr));
         grid-template-rows: 1rem minmax(1.65rem, 1fr) minmax(1.65rem, 1fr);
     }
@@ -196,37 +198,30 @@
         }
 
         .weather-first-row-text {
-            font-size: 0.66rem;
+            font-size: 0.792rem;
         }
 
         .weather-tile-label,
         .weather-small-tile,
         .weather-small-label,
         .weather-tide-label {
-            font-size: 0.56rem;
+            font-size: 0.672rem;
         }
 
         .weather-tile-value,
         .weather-tile-unit {
-            font-size: 0.82rem;
+            font-size: 0.984rem;
         }
 
         .weather-small-value,
         .weather-tide-time,
         .weather-tide-height {
-            font-size: 0.54rem;
+            font-size: 0.648rem;
         }
     }
 
     @media (min-width: 640px) {
-        .homepage-weather-strip-wrap {
-            width: auto;
-            max-width: 100%;
-        }
-
         .homepage-weather-strip {
-            width: max-content;
-            max-width: 100%;
             min-width: min(33rem, 100%);
             grid-template-rows: 1.25rem minmax(2.35rem, 1fr) minmax(2.35rem, 1fr);
         }
