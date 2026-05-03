@@ -154,6 +154,42 @@
         }
     }
 
+    @media (min-width: 390px) and (max-width: 479px) {
+        .weather-first-row-text {
+            font-size: 0.6625rem;
+        }
+
+        .weather-tile-label,
+        .weather-small-tile,
+        .weather-small-label,
+        .weather-tide-label {
+            font-size: 0.5625rem;
+        }
+
+        .weather-tile-value,
+        .weather-tile-unit {
+            font-size: 0.7825rem;
+        }
+
+        .weather-small-value,
+        .weather-tide-time,
+        .weather-tide-height {
+            font-size: 0.5425rem;
+        }
+
+        .weather-wave-label {
+            font-size: 0.5625rem;
+        }
+
+        .weather-wave-detail-label {
+            font-size: 0.4625rem;
+        }
+
+        .weather-wave-detail-value {
+            font-size: 0.6125rem;
+        }
+    }
+
     @media (min-width: 480px) and (max-width: 639px) {
         .homepage-weather-strip {
             grid-template-rows: 1.25rem minmax(2.2rem, 1fr) minmax(2.2rem, 1fr);
