@@ -40,8 +40,9 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 type Handler struct {
 	WeatherStore  *store.WeatherStore
 	TideCollector *tides.Collector
-	weatherCache  *models.WeatherData
-	seaTempCache  *float64
+	weatherCache     *models.WeatherData
+	seaTempCache     *float64
+	seaTempCacheDate string
 	cacheMu       sync.RWMutex
 	lastCache     time.Time
 	cacheTimeout  time.Duration
@@ -106,7 +107,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 	webcamImageURL := h.webcamImageURL()
 
 	// 1. Get Weather Data (with improved caching)
-	weather, seaTemp, err := h.getCachedWeatherData()
+	weather, seaTemp, seaTempDate, err := h.getCachedWeatherData()
 	if err != nil {
 		log.Printf("Error getting weather data: %v", err)
 		// Continue with cached data if available, or empty data
@@ -114,8 +115,9 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 			loc, _ := time.LoadLocation("Atlantic/Canary")
 			now := time.Now().In(loc)
 			return c.Render(http.StatusOK, "index.html", models.PageData{
-				FormattedDate:   now.Format("2. 1. 2006"),
-				FormattedTime:   now.Format("15:04"),
+				FormattedDate:      now.Format("2. 1. 2006"),
+				FormattedDateSmall: now.Format("2.1."),
+				FormattedTime:      strings.TrimPrefix(now.Format("15:04"), "0"),
 				WebcamImageURL:  webcamImageURL,
 				Locale:          locale,
 				LocalePrefix:    i18n.LocalePrefix(locale),
@@ -166,14 +168,29 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		seaTempVal = *seaTemp
 	}
 
-	tideHighEvents, tideLowEvents := h.getCachedTideData(ts)
+	var seaTempDateFormatted string
+	if seaTempDate != "" && len(seaTempDate) >= 10 {
+		if t, err := time.Parse("2006-01-02", seaTempDate[:10]); err == nil {
+			seaTempDateFormatted = t.Format("2.1.")
+		}
+	}
+
+	tideHighEvents, tideLowEvents, tideUpdated := h.getCachedTideData(ts)
 	nextHighTide := ""
 	nextLowTide := ""
 	if len(tideHighEvents) > 0 {
-		nextHighTide = strings.Join(tideHighEvents, ", ")
+		highStrs := make([]string, len(tideHighEvents))
+		for i, ev := range tideHighEvents {
+			highStrs[i] = ev.Time + " (" + ev.Height + ")"
+		}
+		nextHighTide = strings.Join(highStrs, ", ")
 	}
 	if len(tideLowEvents) > 0 {
-		nextLowTide = strings.Join(tideLowEvents, ", ")
+		lowStrs := make([]string, len(tideLowEvents))
+		for i, ev := range tideLowEvents {
+			lowStrs[i] = ev.Time + " (" + ev.Height + ")"
+		}
+		nextLowTide = strings.Join(lowStrs, ", ")
 	}
 	var waveData *models.WavesLatest
 	var waterData *models.WaterQualityLatest
@@ -200,11 +217,13 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		Weather:           weather,
 		WebcamImageURL:    webcamImageURL,
 		SeaTemperature:    seaTemp,
+		SeaTemperatureDate: seaTempDateFormatted,
 		SeaTemperatureVal: seaTempVal,
 		NextHighTide:      nextHighTide,
 		NextLowTide:       nextLowTide,
 		TideHighEvents:    tideHighEvents,
 		TideLowEvents:     tideLowEvents,
+		TideUpdatedAt:     tideUpdated,
 		Waves:             waveData,
 		WaterQuality:      waterData,
 		DayMaxTemperature: dayMaxTemperature,
@@ -213,8 +232,9 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		DayMinTempText:    dayMinTempText,
 		DayMaxTime:        dayMaxTime,
 		DayMinTime:        dayMinTime,
-		FormattedDate:     ts.Format("2. 1. 2006"),
-		FormattedTime:     ts.Format("15:04"),
+		FormattedDate:      ts.Format("2. 1. 2006"),
+		FormattedDateSmall: ts.Format("2.1."),
+		FormattedTime:      strings.TrimPrefix(ts.Format("15:04"), "0"),
 		PageTitle:         "",
 		Locale:            locale,
 		LocalePrefix:      i18n.LocalePrefix(locale),
@@ -230,7 +250,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 }
 
 // getCachedWeatherData gets weather data with improved caching and error handling
-func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) {
+func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, string, error) {
 	h.cacheMu.RLock()
 	weather := h.weatherCache
 	seaTemp := h.seaTempCache
@@ -251,7 +271,7 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) 
 
 			file, err := os.Open(weatherPath)
 			if err != nil {
-				return h.weatherCache, h.seaTempCache, utils.NewInternalServerError(
+				return h.weatherCache, h.seaTempCache, h.seaTempCacheDate, utils.NewInternalServerError(
 					"Failed to open weather file", err)
 			}
 			defer file.Close()
@@ -259,7 +279,7 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) 
 			decoder := json.NewDecoder(file)
 			newWeather := &models.WeatherData{}
 			if err := decoder.Decode(newWeather); err != nil {
-				return h.weatherCache, h.seaTempCache, utils.NewInternalServerError(
+				return h.weatherCache, h.seaTempCache, h.seaTempCacheDate, utils.NewInternalServerError(
 					"Failed to decode weather data", err)
 			}
 			h.weatherCache = newWeather
@@ -270,12 +290,13 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) 
 			if newWeather.Timestamp > 0 {
 				refDate = time.Unix(newWeather.Timestamp, 0).Format("2006-01-02")
 			}
-			newSeaTemp, err := h.WeatherStore.GetLatestSeaTemperature(refDate)
+			newSeaTemp, newSeaDate, err := h.WeatherStore.GetLatestSeaTemperature(refDate)
 			if err != nil {
-				return weather, h.seaTempCache, utils.NewInternalServerError(
+				return weather, h.seaTempCache, h.seaTempCacheDate, utils.NewInternalServerError(
 					"Failed to get sea temperature", err)
 			}
 			h.seaTempCache = newSeaTemp
+			h.seaTempCacheDate = newSeaDate
 			seaTemp = newSeaTemp
 
 			h.lastCache = time.Now()
@@ -285,19 +306,19 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, error) 
 		}
 	}
 
-	return weather, seaTemp, nil
+	return weather, seaTemp, h.seaTempCacheDate, nil
 }
 
-func (h *Handler) getCachedTideData(reference time.Time) ([]string, []string) {
+func (h *Handler) getCachedTideData(reference time.Time) ([]models.TideEventView, []models.TideEventView, string) {
 	_ = reference
 	locCfg, ok := tides.ResolveLocation("los_cristianos")
 	if !ok {
-		return nil, nil
+		return nil, nil, ""
 	}
 
 	tz, err := time.LoadLocation(locCfg.Timezone)
 	if err != nil {
-		return nil, nil
+		return nil, nil, ""
 	}
 	// Tide events are expected for today's local day, independent of weather feed timestamp freshness.
 	dateLocal := time.Now().In(tz).Format("2006-01-02")
@@ -307,7 +328,7 @@ func (h *Handler) getCachedTideData(reference time.Time) ([]string, []string) {
 	events, err := h.WeatherStore.GetTideEvents(ctx, dateLocal, locCfg.Key)
 	cancel()
 	if err != nil {
-		return nil, nil
+		return nil, nil, ""
 	}
 
 	selected := selectTideEventsBySource(events, preferredSource)
@@ -320,20 +341,29 @@ func (h *Handler) getCachedTideData(reference time.Time) ([]string, []string) {
 		events, err = h.WeatherStore.GetTideEvents(refetchCtx, dateLocal, locCfg.Key)
 		refetchCancel()
 		if err != nil {
-			return nil, nil
+			return nil, nil, ""
 		}
 		selected = selectTideEventsBySource(events, preferredSource)
 	}
 
 	if len(selected) == 0 {
-		return nil, nil
+		return nil, nil, ""
 	}
 
-	high := make([]string, 0, 2)
-	low := make([]string, 0, 2)
+	var fetchedAtStr string
+	if len(selected) > 0 {
+		fetchedAtStr = selected[0].FetchedAt.Local().Format("2.1.")
+	}
+
+	high := make([]models.TideEventView, 0, 2)
+	low := make([]models.TideEventView, 0, 2)
 	for _, ev := range selected {
-		timeLabel := strings.TrimPrefix(ev.EventTimeLocal.Format("15:04"), "0")
-		item := fmt.Sprintf("%5s (%s m)", timeLabel, formatTideHeightSigned(ev.HeightM))
+		timeLabel := strings.TrimSpace(strings.TrimPrefix(ev.EventTimeLocal.Format("15:04"), "0"))
+		heightLabel := formatTideHeightSigned(ev.HeightM) + " m"
+		item := models.TideEventView{
+			Time:   timeLabel,
+			Height: heightLabel,
+		}
 		switch ev.EventType {
 		case "HIGH":
 			high = append(high, item)
@@ -342,7 +372,7 @@ func (h *Handler) getCachedTideData(reference time.Time) ([]string, []string) {
 		}
 	}
 
-	return high, low
+	return high, low, fetchedAtStr
 }
 
 func formatTideHeightSigned(v float64) string {
@@ -386,7 +416,7 @@ func (h *Handler) GetHourlyDataHandler(c echo.Context) error {
 }
 
 func (h *Handler) GetHomeDataHandler(c echo.Context) error {
-	weather, seaTemp, err := h.getCachedWeatherData()
+	weather, seaTemp, _, err := h.getCachedWeatherData()
 	if err != nil {
 		log.Printf("Error getting weather data for /api/home: %v", err)
 	}

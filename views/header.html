@@ -68,7 +68,13 @@
         .water-quality-help::-webkit-details-marker {
             display: none;
         }
+
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+
+
+
     {{ if .GAEnabled }}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ .GAMeasurementID }}"></script>
     <script>

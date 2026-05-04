@@ -51,6 +51,8 @@ This exports structure-only SQL for app tables (`weather*`, `tide_events`, `pws_
 
 Measured wave data is collected from Puertos del Estado (PORTUS), station `2446` (Tenerife Sur), and cached to JSON.
 
+- In `APP_ENV=local` / `dev` / `development`, startup collectors are disabled by default to avoid hitting external APIs on each local restart.
+- To force them on locally, set `ENABLE_EXTERNAL_COLLECTORS=1`.
 - Collector runs automatically inside the app (immediately on startup, then periodically).
 - Default interval: every 15 minutes
 - Optional env override: `WAVES_COLLECT_INTERVAL_MINUTES=15`

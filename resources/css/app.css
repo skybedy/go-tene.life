@@ -1,6 +1,540 @@
 @import "tailwindcss";
 
 @layer components {
+    .weather-overlay-shell {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background:
+            radial-gradient(circle at top right, rgba(110, 231, 255, 0.18), transparent 34%),
+            linear-gradient(135deg, rgba(8, 15, 29, 0.95), rgba(17, 35, 52, 0.92) 52%, rgba(8, 20, 34, 0.95));
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+    }
+
+    .glass-tile {
+        @apply flex flex-col bg-linear-to-b from-[#12677e]/38 to-[#1f304a]/46 px-1 py-0.5 rounded-md border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)];
+    }
+
+    .glass-button {
+        @apply flex items-center gap-2 bg-linear-to-b from-[#12677e]/60 to-[#1f304a]/70 px-3 py-1.5 rounded-md border border-cyan-200/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all hover:bg-white/10 active:scale-95 text-white font-bold;
+    }
+
+    .weather-first-row-text {
+        font-size: 0.5rem;
+        line-height: 1;
+        letter-spacing: 0.04em;
+    }
+
+    .weather-box-heading {
+        font-size: 0.495rem;
+    }
+
+    .weather-card-copy {
+        font-size: 0.45rem;
+    }
+
+    .weather-main-value {
+        font-size: 0.908rem;
+    }
+
+    .weather-wave-title {
+        font-size: 0.6rem;
+    }
+
+    .weather-wave-value {
+        font-size: 0.9rem;
+    }
+
+    .weather-wave-unit {
+        font-size: 0.65rem;
+    }
+
+    .weather-wave-detail-label {
+        font-size: 0.4rem;
+    }
+
+    .weather-wave-detail-value {
+        font-size: 0.792rem;
+    }
+
+    .weather-tide-value {
+        font-size: 0.45rem;
+    }
+
+    .homepage-weather-strip-wrap {
+        width: auto;
+        max-width: 100%;
+    }
+
+    .homepage-weather-strip {
+        width: max-content;
+        max-width: 100%;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-template-rows: 1.05rem 1fr 1fr;
+    }
+
+    .weather-tile-label,
+    .weather-small-tile,
+    .weather-small-label,
+    .weather-tide-label {
+        font-size: 0.42rem;
+        line-height: 1;
+    }
+
+    .weather-tile-value,
+    .weather-tile-unit {
+        font-size: 0.62rem;
+        line-height: 1;
+    }
+
+    .weather-small-value,
+    .weather-tide-time,
+    .weather-tide-height {
+        font-size: 0.42rem;
+        line-height: 1;
+    }
+
+    .weather-wave-label {
+        font-size: 0.5rem;
+        line-height: 1;
+    }
+
+    .weather-wave-detail-label {
+        font-size: 0.4rem;
+        line-height: 1;
+    }
+
+    .weather-wave-detail-value {
+        font-size: 0.792rem;
+        line-height: 1;
+    }
+
+    .weather-overlay-shell::before {
+        content: "";
+        position: absolute;
+        inset: auto -12% -28% auto;
+        width: 15rem;
+        height: 15rem;
+        border-radius: 9999px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.28), transparent 70%);
+        pointer-events: none;
+    }
+
+    .weather-kpi-card {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.04));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .weather-signal-chip {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(8px);
+    }
+
+    .weather-mini-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .weather-mini-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 3px;
+        opacity: 0.9;
+    }
+
+    .weather-mini-card--sea::before {
+        background: linear-gradient(180deg, #7dd3fc, #38bdf8);
+    }
+
+    .weather-mini-card--wave::before {
+        background: linear-gradient(180deg, #67e8f9, #06b6d4);
+    }
+
+    .weather-mini-card--tide::before {
+        background: linear-gradient(180deg, #5eead4, #14b8a6);
+    }
+
+    .weather-overlay-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .weather-right-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    @media (min-width: 390px) {
+        .homepage-weather-strip {
+            grid-template-rows: 1.15rem 1fr 1fr;
+        }
+
+        .weather-first-row-text {
+            font-size: 0.6rem;
+        }
+
+        .weather-box-heading {
+            font-size: 0.605rem;
+        }
+
+        .weather-card-copy,
+        .weather-tide-value {
+            font-size: 0.55rem;
+        }
+
+        .weather-tile-label,
+        .weather-small-tile,
+        .weather-small-label,
+        .weather-tide-label {
+            font-size: 0.5rem;
+        }
+
+        .weather-tile-value,
+        .weather-tile-unit {
+            font-size: 0.72rem;
+        }
+
+        .weather-small-value,
+        .weather-tide-time,
+        .weather-tide-height {
+            font-size: 0.48rem;
+        }
+    }
+
+    @media (min-width: 390px) and (max-width: 479px) {
+        .weather-first-row-text {
+            font-size: 0.6625rem;
+        }
+
+        .weather-box-heading {
+            font-size: 0.66rem;
+        }
+
+        .weather-tile-label,
+        .weather-small-tile,
+        .weather-small-label,
+        .weather-tide-label {
+            font-size: 0.5625rem;
+        }
+
+        .weather-tile-value,
+        .weather-tile-unit {
+            font-size: 0.7825rem;
+        }
+
+        .weather-small-value,
+        .weather-tide-time,
+        .weather-tide-height {
+            font-size: 0.5425rem;
+        }
+
+        .weather-wave-label {
+            font-size: 0.5625rem;
+        }
+
+        .weather-wave-detail-label {
+            font-size: 0.4625rem;
+        }
+
+        .weather-wave-detail-value {
+            font-size: 0.6125rem;
+        }
+    }
+
+    @media (min-width: 480px) and (max-width: 639px) {
+        .homepage-weather-strip {
+            grid-template-rows: 1.15rem 1fr 1fr;
+        }
+
+        .weather-first-row-text {
+            font-size: 0.72rem;
+        }
+
+        .weather-box-heading {
+            font-size: 0.78rem;
+        }
+
+        .weather-card-copy,
+        .weather-tide-value {
+            font-size: 0.7rem;
+        }
+
+        .weather-main-value {
+            font-size: 1.08rem;
+        }
+
+        .weather-tile-label,
+        .weather-small-tile,
+        .weather-small-label,
+        .weather-tide-label {
+            font-size: 0.62rem;
+        }
+
+        .weather-tile-value,
+        .weather-tile-unit {
+            font-size: 0.88rem;
+        }
+
+        .weather-small-value,
+        .weather-tide-time,
+        .weather-tide-height {
+            font-size: 0.58rem;
+        }
+    }
+
+    @media (min-width: 640px) {
+        .homepage-weather-strip {
+            min-width: min(33rem, 100%);
+            grid-template-rows: 1.3rem 1fr 1fr;
+        }
+
+        .weather-box-heading {
+            margin-top: 0.18rem;
+        }
+
+        .weather-box-secondary {
+            margin-bottom: 0.18rem;
+        }
+
+        .weather-first-row-text {
+            font-size: 0.64rem;
+        }
+
+        .weather-tile-label,
+        .weather-small-tile,
+        .weather-small-label,
+        .weather-tide-label {
+            font-size: 0.55rem;
+        }
+
+        .weather-tile-value,
+        .weather-tile-unit {
+            font-size: 0.82rem;
+        }
+
+        .weather-small-value,
+        .weather-tide-time,
+        .weather-tide-height {
+            font-size: 0.52rem;
+        }
+
+        .weather-right-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .weather-sea-card {
+            grid-column: span 2 / span 2;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .homepage-weather-strip {
+            min-width: min(42rem, 100%);
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            grid-template-rows: 1.35rem minmax(2.7rem, 1fr) minmax(2.7rem, 1fr);
+        }
+
+        .weather-first-row-text {
+            font-size: 0.778rem;
+        }
+
+        .weather-box-heading {
+            font-size: 0.816rem;
+        }
+
+        .weather-card-copy,
+        .weather-tide-value {
+            font-size: 0.742rem;
+        }
+
+        .weather-main-value {
+            font-size: 1.498rem;
+        }
+
+        .weather-overlay-shell {
+            padding: 0.9rem;
+            border-radius: 1.6rem;
+        }
+
+        .weather-overlay-shell::before {
+            inset: auto -16% -32% auto;
+            width: 13rem;
+            height: 13rem;
+        }
+
+        .weather-overlay-grid {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+            gap: 0.75rem;
+        }
+
+        .weather-primary-card {
+            padding: 1rem;
+            border-radius: 1.35rem;
+        }
+
+        .weather-primary-temp-value {
+            font-size: clamp(3.2rem, 7vw, 4.8rem);
+        }
+
+        .weather-primary-unit {
+            font-size: 1.5rem;
+        }
+
+        .weather-stat-pill {
+            padding: 0.7rem 0.85rem;
+        }
+
+        .weather-sea-values {
+            gap: 0.8rem 1.25rem;
+        }
+
+        .weather-mini-card {
+            padding: 0.9rem;
+            border-radius: 1.2rem;
+        }
+
+        .weather-kpi-headline {
+            font-size: 1.15rem;
+        }
+
+        .weather-kpi-subline {
+            font-size: 0.68rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .weather-overlay-shell {
+            padding: 1.15rem;
+        }
+
+        .weather-overlay-grid {
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.22fr);
+        }
+
+        .weather-primary-card {
+            padding: 1.15rem;
+        }
+
+        .weather-primary-temp-value {
+            font-size: clamp(4.2rem, 5vw, 5.4rem);
+        }
+
+        .weather-mini-card {
+            padding: 1rem;
+        }
+
+        .homepage-weather-strip .weather-box-secondary,
+        .weather-card-copy,
+        .weather-tide-value {
+            font-size: 0.928rem;
+        }
+
+        .weather-first-row-text {
+            font-size: 0.972rem;
+        }
+
+        .weather-box-heading {
+            font-size: 1.02rem;
+        }
+
+        .weather-main-value {
+            font-size: 1.872rem;
+        }
+    }
+
+    @media (min-width: 1536px) {
+        /* +20% font scale for Weather Info Box, including first row */
+        .homepage-weather-strip-wrap {
+            min-width: 50%;
+        }
+
+        .homepage-weather-strip {
+            grid-template-rows: 2.1rem minmax(3rem, 1fr) minmax(3rem, 1fr) !important;
+        }
+
+        .homepage-weather-strip .weather-first-row-text {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .homepage-weather-strip .weather-box-heading {
+            font-size: 1.084rem !important;
+        }
+
+        .homepage-weather-strip .weather-card-copy,
+        .homepage-weather-strip .weather-tide-value,
+        .homepage-weather-strip .weather-box-secondary {
+            font-size: 0.985rem !important;
+        }
+
+        .homepage-weather-strip .weather-main-value {
+            font-size: 1.628rem !important;
+        }
+    }
+
+    @media (max-width: 420px) {
+        .weather-overlay-shell {
+            padding: 0.55rem;
+            border-radius: 1.15rem;
+            max-width: min(58vw, 14rem);
+        }
+
+        .weather-overlay-shell::before {
+            inset: auto -26% -42% auto;
+            width: 8.5rem;
+            height: 8.5rem;
+        }
+
+        .weather-primary-temp-value {
+            font-size: clamp(2.7rem, 13vw, 3.4rem);
+        }
+
+        .weather-meta-chip,
+        .weather-location-chip,
+        .weather-mini-copy {
+            font-size: 0.52rem;
+        }
+
+        .weather-mini-title {
+            font-size: 0.56rem;
+        }
+
+        .weather-mini-value {
+            font-size: 0.82rem;
+        }
+
+        .weather-mini-value-lg {
+            font-size: 1.25rem;
+        }
+    }
+
+    @media (max-width: 639px) {
+        .homepage-weather-strip-wrap,
+        .homepage-weather-strip {
+            width: 100%;
+        }
+
+        .weather-primary-card {
+            gap: 0.75rem;
+        }
+
+        .weather-primary-temp-value {
+            font-size: clamp(2.8rem, 12vw, 3.9rem);
+        }
+
+        .weather-primary-unit {
+            font-size: 1.1rem;
+        }
+
+        .weather-stat-pill {
+            padding: 0.5rem 0.65rem;
+        }
+    }
+
     .pws-temp-dot {
         width: 34px;
         height: 34px;

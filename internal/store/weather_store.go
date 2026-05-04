@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"database/sql"
+	"strings"
 	"time"
 
 	"github.com/skybedy/laravel-tene.life/internal/models"
@@ -16,28 +17,29 @@ func NewWeatherStore(db *sql.DB) *WeatherStore {
 	return &WeatherStore{DB: db}
 }
 
-func (s *WeatherStore) GetLatestSeaTemperature(referenceDate string) (*float64, error) {
+func (s *WeatherStore) GetLatestSeaTemperature(referenceDate string) (*float64, string, error) {
 	var seaTemp *float64
 	var temp float64
+	var recDate string
 
 	// Prefer the latest value on or before the provided reference date.
 	// This avoids relying on DB server timezone for CURRENT_DATE.
-	query := "SELECT sea_temperature FROM weather_daily WHERE date <= ? AND sea_temperature IS NOT NULL ORDER BY date DESC LIMIT 1"
-	err := s.DB.QueryRow(query, referenceDate).Scan(&temp)
+	query := "SELECT sea_temperature, date FROM weather_daily WHERE date <= ? AND sea_temperature IS NOT NULL ORDER BY date DESC LIMIT 1"
+	err := s.DB.QueryRow(query, referenceDate).Scan(&temp, &recDate)
 	if err == nil {
 		seaTemp = &temp
-		return seaTemp, nil
+		return seaTemp, recDate, nil
 	}
 
 	// Final fallback to latest available from any date
-	query = "SELECT sea_temperature FROM weather_daily WHERE sea_temperature IS NOT NULL ORDER BY date DESC LIMIT 1"
-	err = s.DB.QueryRow(query).Scan(&temp)
+	query = "SELECT sea_temperature, date FROM weather_daily WHERE sea_temperature IS NOT NULL ORDER BY date DESC LIMIT 1"
+	err = s.DB.QueryRow(query).Scan(&temp, &recDate)
 	if err == nil {
 		seaTemp = &temp
-		return seaTemp, nil
+		return seaTemp, recDate, nil
 	}
 
-	return nil, nil // Return nil if no temperature found, not strictly an error for the view
+	return nil, "", nil // Return nil if no temperature found, not strictly an error for the view
 }
 
 func (s *WeatherStore) GetHourlyData(date string) ([]models.WeatherHourly, error) {
@@ -245,7 +247,7 @@ func (s *WeatherStore) GetDailyTemperatureExtremes(date string) (*float64, *time
 }
 
 func formatTimeHM(ts time.Time) string {
-	return ts.Format("15:04")
+	return strings.TrimPrefix(ts.Format("15:04"), "0")
 }
 
 func (s *WeatherStore) GetTideEvents(ctx context.Context, dateLocal, locationKey string) ([]models.TideEvent, error) {

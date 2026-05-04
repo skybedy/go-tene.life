@@ -8,7 +8,7 @@
 - Frontend zustava jednoduchy: HTML sablony, Vanilla JavaScript a Tailwind CSS.
 - Databazove zmeny se maji delat pres verzovane SQL migrace v `migrations/`.
 - `.env` a jine citlive soubory se necommituji.
-- Kontext pro dalsi Codex chaty se udrzuje primo v repozitari v souborech `AGENTS.md`, `PROJECT_CONTEXT.md`, `TODO.md` a `DECISIONS.md`.
+- Kontext pro další chaty asistentů se udržuje přímo v repozitáři v souborech `AGENTS.md`, `PROJECT_CONTEXT.md`, `TODO.md` a `DECISIONS.md`.
 
 ### Pouzite technologie
 
@@ -24,7 +24,7 @@
 - Vanilla JavaScript a server-side sablony udrzuji frontend jednoduchy bez zbytecnych frameworku.
 - Tailwind je uz v projektu zavedeny a je vhodny pro rychle prakticke UI upravy.
 - Migrace a schema snapshot zlepsuji opakovatelnost databazovych zmen.
-- Repo-local kontext brani zavislosti projektu na historii jednoho dlouheho Codex chatu.
+- Repo-local kontext brání závislosti projektu na historii jednoho dlouhého chatu s asistentem.
 
 ### 2026-04-28: Stranka se zvukovymi slovicky
 
@@ -43,3 +43,12 @@
 - Neni zatim rozhodnuto, jestli `data/` ma zustat ciste runtime cache, nebo zda nektera ukazkova data patri do repozitare.
 - Neni zatim rozhodnuto, zda ma byt `public/css/app.css` v repozitari udrzovany minifikovany pres `npm run build`, nebo citelny neminifikovany.
 - Neni zatim rozhodnuto, jestli budou zvukove lekce pozdeji potrebovat metadata v databazi nebo rucne udrzovany manifest.
+
+## 2026-05-04
+
+### Responzivita uvodni stranky a webkamera
+
+- Na mobilnich zarizenich (pod 640px) byl weather strip roztazen na celou sirku.
+- Velikosti pisma ve weather stripu byly jemne zmenseny pro stredni velikosti displeju (480-639px), aby se predislo pretekani.
+- Tlacitko pro velkou webkameru bylo na vetsich displejich (sm+) presunuto z praveho dolniho rohu k horni hrane, aby neprekryvalo dulezite casti nahledu a bylo lepe pristupne.
+- Puvodni plovouci kulate tlacitko s lupou bylo nahrazeno sklenenym boxem (v designu weather stripu), ktery obsahuje tlacitko ve stylu "glass-tile" (trida `.glass-button`) s ikonou a textem "Zvětšit fotku". Tim se vizualne 1:1 sjednotilo s weather boxem (shodny background, transparency i transition).
