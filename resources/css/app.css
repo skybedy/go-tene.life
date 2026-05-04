@@ -347,6 +347,20 @@
         .weather-mini-card {
             padding: 1rem;
         }
+
+        .homepage-weather-strip .weather-box-heading {
+            font-size: 1.02rem;
+        }
+
+        .homepage-weather-strip [class*="text-[0.908rem]"],
+        .homepage-weather-strip [class*="text-[1.872rem]"] {
+            font-size: 1.872rem !important;
+        }
+
+        .homepage-weather-strip [class*="text-[0.45rem]"],
+        .homepage-weather-strip [class*="text-[0.928rem]"] {
+            font-size: 0.928rem !important;
+        }
     }
 
     @media (min-width: 1536px) {
