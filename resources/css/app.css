@@ -16,7 +16,7 @@
     }
 
     .glass-button {
-        @apply inline-flex items-center gap-2 bg-linear-to-b from-[#12677e]/60 to-[#1f304a]/70 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg border border-white/15 shadow-lg backdrop-blur-md transition-all hover:bg-white/10 active:scale-95 text-white font-bold;
+        @apply flex items-center gap-2 bg-linear-to-b from-[#12677e]/38 to-[#1f304a]/46 px-3 py-1.5 rounded-md border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-all hover:bg-white/10 active:scale-95 text-white font-bold;
     }
 
     .weather-first-row-text {
