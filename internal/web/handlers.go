@@ -154,10 +154,10 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 			dayMinTempText = fmt.Sprintf("%.1f", *minTemp)
 		}
 		if maxAt != nil {
-			dayMaxTime = maxAt.In(loc).Format("15:04")
+			dayMaxTime = strings.TrimPrefix(maxAt.In(loc).Format("15:04"), "0")
 		}
 		if minAt != nil {
-			dayMinTime = minAt.In(loc).Format("15:04")
+			dayMinTime = strings.TrimPrefix(minAt.In(loc).Format("15:04"), "0")
 		}
 	} else {
 		log.Printf("Error fetching daily temperature extremes: %v", extErr)
