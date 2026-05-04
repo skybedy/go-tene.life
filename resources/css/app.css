@@ -66,7 +66,7 @@
         width: max-content;
         max-width: 100%;
         grid-template-columns: repeat(6, minmax(0, 1fr));
-        grid-template-rows: 1rem minmax(1.65rem, 1fr) minmax(1.65rem, 1fr);
+        grid-template-rows: 1.05rem 1fr 1fr;
     }
 
     .weather-tile-label,
@@ -166,7 +166,7 @@
 
     @media (min-width: 390px) {
         .homepage-weather-strip {
-            grid-template-rows: 1.15rem minmax(1.9rem, 1fr) minmax(1.9rem, 1fr);
+            grid-template-rows: 1.15rem 1fr 1fr;
         }
 
         .weather-first-row-text {
@@ -243,49 +243,49 @@
 
     @media (min-width: 480px) and (max-width: 639px) {
         .homepage-weather-strip {
-            grid-template-rows: 1.25rem minmax(2.2rem, 1fr) minmax(2.2rem, 1fr);
+            grid-template-rows: 1.15rem 1fr 1fr;
         }
 
         .weather-first-row-text {
-            font-size: 0.8712rem;
+            font-size: 0.72rem;
         }
 
         .weather-box-heading {
-            font-size: 1.016rem;
+            font-size: 0.78rem;
         }
 
         .weather-card-copy,
         .weather-tide-value {
-            font-size: 0.924rem;
+            font-size: 0.7rem;
         }
 
         .weather-main-value {
-            font-size: 1.416rem;
+            font-size: 1.08rem;
         }
 
         .weather-tile-label,
         .weather-small-tile,
         .weather-small-label,
         .weather-tide-label {
-            font-size: 0.7392rem;
+            font-size: 0.62rem;
         }
 
         .weather-tile-value,
         .weather-tile-unit {
-            font-size: 1.0824rem;
+            font-size: 0.88rem;
         }
 
         .weather-small-value,
         .weather-tide-time,
         .weather-tide-height {
-            font-size: 0.7128rem;
+            font-size: 0.58rem;
         }
     }
 
     @media (min-width: 640px) {
         .homepage-weather-strip {
             min-width: min(33rem, 100%);
-            grid-template-rows: 1.25rem minmax(2.35rem, 1fr) minmax(2.35rem, 1fr);
+            grid-template-rows: 1.3rem 1fr 1fr;
         }
 
         .weather-box-heading {
@@ -495,6 +495,11 @@
     }
 
     @media (max-width: 639px) {
+        .homepage-weather-strip-wrap,
+        .homepage-weather-strip {
+            width: 100%;
+        }
+
         .weather-primary-card {
             gap: 0.75rem;
         }
