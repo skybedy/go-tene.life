@@ -349,7 +349,11 @@
         }
 
         .homepage-weather-strip .weather-box-heading {
-            font-size: 1.02rem;
+            font-size: 1.02rem !important;
+        }
+
+        .homepage-weather-strip .weather-box-secondary {
+            font-size: 0.928rem !important;
         }
 
         .homepage-weather-strip [class*="text-[0.908rem]"],
@@ -378,14 +382,17 @@
             line-height: 1;
         }
 
+        .homepage-weather-strip [class*="text-[0.605rem]"],
         .homepage-weather-strip [class*="text-[0.871rem]"] {
             font-size: 1.084rem !important;
         }
 
+        .homepage-weather-strip [class*="text-[0.55rem]"],
         .homepage-weather-strip [class*="text-[0.792rem]"] {
             font-size: 0.985rem !important;
         }
 
+        .homepage-weather-strip [class*="text-[0.908rem]"],
         .homepage-weather-strip [class*="text-[1.308rem]"] {
             font-size: 1.628rem !important;
         }
