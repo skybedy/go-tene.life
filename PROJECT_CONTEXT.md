@@ -16,6 +16,7 @@
 - Dne 2026-04-28 byla v nove vetvi `feature/spanish-czech-sounds` rozpracovana samostatna stranka `/spanelsko-ceska-slovicka` pro spanelsko-ceske zvukove lekce.
 - Zvukove soubory jsou ulozene v `public/sounds/`; web je serviruje pod URL prefixem `/spanelsko-ceska-slovicka/files/`.
 - Dne 2026-04-29 byly doladeny horni volby na strance `/spanelsko-ceska-slovicka`: texty odpovidaji prehravani, souhrnne soubory 1-250 a 251-500 jsou prehratelne z hornich voleb a vizualni zvyrazneni ikon je neutralnejsi.
+- Dne 2026-05-04 byla na vetvi `experiment/wider-homepage-breakpoints` upravena responzivita weather stripu na uvodni strance a pozice odkazu na webkameru (presunut na horni hranu na vetsich displejich).
 
 ## Pouzivany stack
 
