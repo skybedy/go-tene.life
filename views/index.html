@@ -24,7 +24,7 @@
                 <!-- Vnejsi poloha, odsazeni. atd -->
                 <div class="homepage-weather-strip-wrap col-start-1 row-start-1 self-start justify-self-start p-1 sm:p-2">
                     <!-- Barvy, fonty, atd -->
-                    <div class="homepage-weather-strip grid gap-px sm:gap-[3px] p-px sm:p-[3px] rounded-md border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60  text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm  leading-none">
+                    <div class="homepage-weather-strip grid gap-px sm:gap-[3px] p-px sm:p-[3px] rounded-md lg:rounded-xl border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60  text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm  leading-none">
                         
                             <!-- NOVÉ SLOUPCE (První řádek) -->
 
@@ -191,7 +191,7 @@
 
             </div>
 
-            <div class="absolute right-3 bottom-3 sm:right-6 sm:top-6 sm:bottom-auto md:right-5 md:top-5 xl:right-8 xl:top-8 2xl:right-10 2xl:top-10 z-20 rounded-md border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 p-0.5 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm transition-all duration-300">
+            <div class="absolute right-5 bottom-5 sm:right-6 sm:top-6 sm:bottom-auto md:right-7 md:top-7 lg:right-8 lg:top-8 z-20 rounded-md border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 p-0.5 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm transition-all duration-300">
                 <a href="{{ localeURL .Locale "/webcam/big" }}"
                     class="glass-button"
                     title="{{ index .I18n "webcam_big_title" }}">
@@ -200,7 +200,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <span class="hidden sm:inline text-[0.65rem] md:text-xs xl:text-sm uppercase tracking-wider">{{ index .I18n "enlarge_image" }}</span>
+                    <span class="text-[0.5rem] sm:text-[0.65rem] md:text-xs xl:text-sm uppercase tracking-wider">{{ index .I18n "enlarge_image" }}</span>
                 </a>
             </div>
 
