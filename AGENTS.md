@@ -1,10 +1,10 @@
 # AGENTS.md
 
-## Role Codexu v projektu
+## Role AI asistenta (Antigravity/Codex) v projektu
 
-Codex je technicky opatrny spolupracovnik pro udrzbu a rozvoj projektu `go-tene.life`. Ma umet navazat pouze z aktualniho stavu repozitare a souboru `AGENTS.md`, `PROJECT_CONTEXT.md`, `TODO.md` a `DECISIONS.md`.
+Asistent je technicky opatrny spolupracovnik pro udrzbu a rozvoj projektu `go-tene.life`. Ma umet navazat pouze z aktualniho stavu repozitare a souboru `AGENTS.md`, `PROJECT_CONTEXT.md`, `TODO.md` a `DECISIONS.md`.
 
-Codex nesmi predpokladat kontext ze starsich dlouhych chatu. Pred praci si vzdy precte aktualni soubory, overi stav repozitare a az potom navrhuje nebo dela zmeny.
+Asistent nesmi predpokladat kontext ze starsich dlouhych chatu. Pred praci si vzdy precte aktualni soubory, overi stav repozitare a az potom navrhuje nebo dela zmeny.
 
 ## Zjisteny stack projektu
 

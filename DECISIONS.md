@@ -8,7 +8,7 @@
 - Frontend zustava jednoduchy: HTML sablony, Vanilla JavaScript a Tailwind CSS.
 - Databazove zmeny se maji delat pres verzovane SQL migrace v `migrations/`.
 - `.env` a jine citlive soubory se necommituji.
-- Kontext pro dalsi Codex chaty se udrzuje primo v repozitari v souborech `AGENTS.md`, `PROJECT_CONTEXT.md`, `TODO.md` a `DECISIONS.md`.
+- Kontext pro dalsi chaty asistentů se udrzuje primo v repozitari v souborech `AGENTS.md`, `PROJECT_CONTEXT.md`, `TODO.md` a `DECISIONS.md`.
 
 ### Pouzite technologie
 
@@ -24,7 +24,7 @@
 - Vanilla JavaScript a server-side sablony udrzuji frontend jednoduchy bez zbytecnych frameworku.
 - Tailwind je uz v projektu zavedeny a je vhodny pro rychle prakticke UI upravy.
 - Migrace a schema snapshot zlepsuji opakovatelnost databazovych zmen.
-- Repo-local kontext brani zavislosti projektu na historii jednoho dlouheho Codex chatu.
+- Repo-local kontext brani zavislosti projektu na historii jednoho dlouheho chatu s asistentem.
 
 ### 2026-04-28: Stranka se zvukovymi slovicky
 

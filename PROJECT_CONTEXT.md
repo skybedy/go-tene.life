@@ -130,7 +130,7 @@ npm run dev
 
 ## Poznamky pro dalsi navazani
 
-- Kazdy novy Codex chat ma nejdriv precist `AGENTS.md`, tento soubor, `TODO.md` a `DECISIONS.md`.
+- Kazdy novy AI asistent (Antigravity/Codex) má nejdřív přečíst `AGENTS.md`, tento soubor, `TODO.md` a `DECISIONS.md`.
 - Pred kazdou praci over `git status --short`.
 - Pri zmene UI/CSS upravuj primarne `resources/css/app.css`, sablony ve `views/` a JS v `public/js/`; pak spust `npm run build`.
 - Stranka se zvukovymi slovicky je na `/spanelsko-ceska-slovicka`; stara URL `/sounds` presmerovava na novou adresu a handler nacita `.mp3` soubory z `public/sounds/` pri renderovani stranky.
