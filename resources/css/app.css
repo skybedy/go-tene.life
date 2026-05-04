@@ -268,7 +268,7 @@
     @media (min-width: 768px) {
         .homepage-weather-strip {
             min-width: min(42rem, 100%);
-            grid-template-columns: repeat(7, minmax(0, 1fr));
+            grid-template-columns: repeat(6, minmax(0, 1fr));
             grid-template-rows: 1.35rem minmax(2.7rem, 1fr) minmax(2.7rem, 1fr);
         }
 
@@ -346,6 +346,34 @@
 
         .weather-mini-card {
             padding: 1rem;
+        }
+    }
+
+    @media (min-width: 1536px) {
+        /* +20% font scale for Weather Info Box, including first row */
+        .homepage-weather-strip-wrap {
+            min-width: 50%;
+        }
+
+        .homepage-weather-strip {
+            grid-template-rows: 2.1rem minmax(3rem, 1fr) minmax(3rem, 1fr) !important;
+        }
+
+        .homepage-weather-strip .weather-first-row-text {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .homepage-weather-strip [class*="text-[0.871rem]"] {
+            font-size: 1.084rem !important;
+        }
+
+        .homepage-weather-strip [class*="text-[0.792rem]"] {
+            font-size: 0.985rem !important;
+        }
+
+        .homepage-weather-strip [class*="text-[1.308rem]"] {
+            font-size: 1.628rem !important;
         }
     }
 
