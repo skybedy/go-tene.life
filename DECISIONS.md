@@ -51,3 +51,4 @@
 - Na mobilnich zarizenich (pod 640px) byl weather strip roztazen na celou sirku.
 - Velikosti pisma ve weather stripu byly jemne zmenseny pro stredni velikosti displeju (480-639px), aby se predislo pretekani.
 - Tlacitko pro velkou webkameru bylo na vetsich displejich (sm+) presunuto z praveho dolniho rohu k horni hrane, aby neprekryvalo dulezite casti nahledu a bylo lepe pristupne.
+- Puvodni plovouci kulate tlacitko s lupou bylo nahrazeno obdelnikovym tlacitkem ve stylu "glassmorphism" (trida `.glass-button`), ktere obsahuje ikonu i text "Zvětšit fotku". Tim se vizualne sjednotilo s weather boxem.
