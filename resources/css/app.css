@@ -339,20 +339,20 @@
         }
 
         .weather-first-row-text {
-            font-size: 0.972rem;
+            font-size: 0.778rem;
         }
 
         .weather-box-heading {
-            font-size: 1.02rem;
+            font-size: 0.816rem;
         }
 
         .weather-card-copy,
         .weather-tide-value {
-            font-size: 0.928rem;
+            font-size: 0.742rem;
         }
 
         .weather-main-value {
-            font-size: 1.872rem;
+            font-size: 1.498rem;
         }
 
         .weather-overlay-shell {
@@ -427,8 +427,22 @@
             padding: 1rem;
         }
 
-        .homepage-weather-strip .weather-box-secondary {
+        .homepage-weather-strip .weather-box-secondary,
+        .weather-card-copy,
+        .weather-tide-value {
             font-size: 0.928rem;
+        }
+
+        .weather-first-row-text {
+            font-size: 0.972rem;
+        }
+
+        .weather-box-heading {
+            font-size: 1.02rem;
+        }
+
+        .weather-main-value {
+            font-size: 1.872rem;
         }
     }
 
