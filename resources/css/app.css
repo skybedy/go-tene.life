@@ -21,6 +21,42 @@
         letter-spacing: 0.04em;
     }
 
+    .weather-box-heading {
+        font-size: 0.495rem;
+    }
+
+    .weather-card-copy {
+        font-size: 0.45rem;
+    }
+
+    .weather-main-value {
+        font-size: 0.908rem;
+    }
+
+    .weather-wave-title {
+        font-size: 0.6rem;
+    }
+
+    .weather-wave-value {
+        font-size: 0.9rem;
+    }
+
+    .weather-wave-unit {
+        font-size: 0.65rem;
+    }
+
+    .weather-wave-detail-label {
+        font-size: 0.4rem;
+    }
+
+    .weather-wave-detail-value {
+        font-size: 0.792rem;
+    }
+
+    .weather-tide-value {
+        font-size: 0.45rem;
+    }
+
     .homepage-weather-strip-wrap {
         width: auto;
         max-width: 100%;
@@ -65,7 +101,7 @@
     }
 
     .weather-wave-detail-value {
-        font-size: 0.55rem;
+        font-size: 0.792rem;
         line-height: 1;
     }
 
@@ -137,6 +173,15 @@
             font-size: 0.6rem;
         }
 
+        .weather-box-heading {
+            font-size: 0.605rem;
+        }
+
+        .weather-card-copy,
+        .weather-tide-value {
+            font-size: 0.55rem;
+        }
+
         .weather-tile-label,
         .weather-small-tile,
         .weather-small-label,
@@ -159,6 +204,10 @@
     @media (min-width: 390px) and (max-width: 479px) {
         .weather-first-row-text {
             font-size: 0.6625rem;
+        }
+
+        .weather-box-heading {
+            font-size: 0.66rem;
         }
 
         .weather-tile-label,
@@ -199,6 +248,19 @@
 
         .weather-first-row-text {
             font-size: 0.8712rem;
+        }
+
+        .weather-box-heading {
+            font-size: 1.016rem;
+        }
+
+        .weather-card-copy,
+        .weather-tide-value {
+            font-size: 0.924rem;
+        }
+
+        .weather-main-value {
+            font-size: 1.416rem;
         }
 
         .weather-tile-label,
@@ -276,6 +338,19 @@
             font-size: 0.972rem;
         }
 
+        .weather-box-heading {
+            font-size: 1.02rem;
+        }
+
+        .weather-card-copy,
+        .weather-tide-value {
+            font-size: 0.928rem;
+        }
+
+        .weather-main-value {
+            font-size: 1.872rem;
+        }
+
         .weather-overlay-shell {
             padding: 0.9rem;
             border-radius: 1.6rem;
@@ -348,22 +423,8 @@
             padding: 1rem;
         }
 
-        .homepage-weather-strip .weather-box-heading {
-            font-size: 1.02rem !important;
-        }
-
         .homepage-weather-strip .weather-box-secondary {
-            font-size: 0.928rem !important;
-        }
-
-        .homepage-weather-strip [class*="text-[0.908rem]"],
-        .homepage-weather-strip [class*="text-[1.872rem]"] {
-            font-size: 1.872rem !important;
-        }
-
-        .homepage-weather-strip [class*="text-[0.45rem]"],
-        .homepage-weather-strip [class*="text-[0.928rem]"] {
-            font-size: 0.928rem !important;
+            font-size: 0.928rem;
         }
     }
 
@@ -382,18 +443,17 @@
             line-height: 1;
         }
 
-        .homepage-weather-strip [class*="text-[0.605rem]"],
-        .homepage-weather-strip [class*="text-[0.871rem]"] {
+        .homepage-weather-strip .weather-box-heading {
             font-size: 1.084rem !important;
         }
 
-        .homepage-weather-strip [class*="text-[0.55rem]"],
-        .homepage-weather-strip [class*="text-[0.792rem]"] {
+        .homepage-weather-strip .weather-card-copy,
+        .homepage-weather-strip .weather-tide-value,
+        .homepage-weather-strip .weather-box-secondary {
             font-size: 0.985rem !important;
         }
 
-        .homepage-weather-strip [class*="text-[0.908rem]"],
-        .homepage-weather-strip [class*="text-[1.308rem]"] {
+        .homepage-weather-strip .weather-main-value {
             font-size: 1.628rem !important;
         }
     }
