@@ -110,9 +110,23 @@ func (s *WeatherStore) GetHourlyData(date string) ([]models.WeatherHourly, error
 
 func (s *WeatherStore) GetDailyStats(limit int) ([]models.WeatherDaily, error) {
 	var results []models.WeatherDaily
-	query := `SELECT date, sea_temperature, avg_temperature, min_temperature, max_temperature, 
-	                 avg_pressure, min_pressure, max_pressure, avg_humidity, min_humidity, max_humidity, samples_count 
-	          FROM weather_daily ORDER BY date DESC LIMIT ?`
+	query := `SELECT wd.date,
+	                 wt.temperature AS sea_temperature,
+	                 wt.measured_at AS sea_measured_at,
+	                 wd.avg_temperature, wd.min_temperature, wd.max_temperature,
+	                 wd.avg_pressure, wd.min_pressure, wd.max_pressure,
+	                 wd.avg_humidity, wd.min_humidity, wd.max_humidity, wd.samples_count
+	          FROM weather_daily wd
+	          LEFT JOIN water_temperatures wt
+	            ON wt.id = (
+	              SELECT wtx.id
+	              FROM water_temperatures wtx
+	              WHERE DATE(wtx.measured_at) = wd.date
+	              ORDER BY wtx.measured_at DESC
+	              LIMIT 1
+	            )
+	          ORDER BY wd.date DESC
+	          LIMIT ?`
 	rows, err := s.DB.Query(query, limit)
 	if err != nil {
 		return nil, err
@@ -121,10 +135,15 @@ func (s *WeatherStore) GetDailyStats(limit int) ([]models.WeatherDaily, error) {
 
 	for rows.Next() {
 		var d models.WeatherDaily
-		err := rows.Scan(&d.Date, &d.SeaTemperature, &d.AvgTemperature, &d.MinTemperature, &d.MaxTemperature,
+		var seaMeasuredAt sql.NullTime
+		err := rows.Scan(&d.Date, &d.SeaTemperature, &seaMeasuredAt, &d.AvgTemperature, &d.MinTemperature, &d.MaxTemperature,
 			&d.AvgPressure, &d.MinPressure, &d.MaxPressure, &d.AvgHumidity, &d.MinHumidity, &d.MaxHumidity, &d.SamplesCount)
 		if err != nil {
 			return nil, err
+		}
+		if seaMeasuredAt.Valid {
+			formatted := seaMeasuredAt.Time.In(canaryLocation()).Format("2006-01-02 15:04:05")
+			d.SeaMeasuredAt = &formatted
 		}
 		results = append(results, d)
 	}
@@ -133,11 +152,23 @@ func (s *WeatherStore) GetDailyStats(limit int) ([]models.WeatherDaily, error) {
 
 func (s *WeatherStore) GetDailyStatsByRange(startDate, endDate string) ([]models.WeatherDaily, error) {
 	var results []models.WeatherDaily
-	query := `SELECT date, sea_temperature, avg_temperature, min_temperature, max_temperature, 
-	                 avg_pressure, min_pressure, max_pressure, avg_humidity, min_humidity, max_humidity, samples_count 
-	          FROM weather_daily 
-	          WHERE date BETWEEN ? AND ? 
-	          ORDER BY date ASC`
+	query := `SELECT wd.date,
+	                 wt.temperature AS sea_temperature,
+	                 wt.measured_at AS sea_measured_at,
+	                 wd.avg_temperature, wd.min_temperature, wd.max_temperature,
+	                 wd.avg_pressure, wd.min_pressure, wd.max_pressure,
+	                 wd.avg_humidity, wd.min_humidity, wd.max_humidity, wd.samples_count
+	          FROM weather_daily wd
+	          LEFT JOIN water_temperatures wt
+	            ON wt.id = (
+	              SELECT wtx.id
+	              FROM water_temperatures wtx
+	              WHERE DATE(wtx.measured_at) = wd.date
+	              ORDER BY wtx.measured_at DESC
+	              LIMIT 1
+	            )
+	          WHERE wd.date BETWEEN ? AND ?
+	          ORDER BY wd.date ASC`
 	rows, err := s.DB.Query(query, startDate, endDate)
 	if err != nil {
 		return nil, err
@@ -146,10 +177,15 @@ func (s *WeatherStore) GetDailyStatsByRange(startDate, endDate string) ([]models
 
 	for rows.Next() {
 		var d models.WeatherDaily
-		err := rows.Scan(&d.Date, &d.SeaTemperature, &d.AvgTemperature, &d.MinTemperature, &d.MaxTemperature,
+		var seaMeasuredAt sql.NullTime
+		err := rows.Scan(&d.Date, &d.SeaTemperature, &seaMeasuredAt, &d.AvgTemperature, &d.MinTemperature, &d.MaxTemperature,
 			&d.AvgPressure, &d.MinPressure, &d.MaxPressure, &d.AvgHumidity, &d.MinHumidity, &d.MaxHumidity, &d.SamplesCount)
 		if err != nil {
 			return nil, err
+		}
+		if seaMeasuredAt.Valid {
+			formatted := seaMeasuredAt.Time.In(canaryLocation()).Format("2006-01-02 15:04:05")
+			d.SeaMeasuredAt = &formatted
 		}
 		results = append(results, d)
 	}

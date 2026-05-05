@@ -19,8 +19,12 @@
 
         {{ template "stats_nav.html" . }}
 
+        <div id="futureDateNotice" class="hidden mb-6 bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-8 sm:p-10 text-center">
+            <p class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800" id="futureDateNoticeText">{{ index .I18n "future_date_not_reached" }}</p>
+        </div>
+
         <!-- Statistics Summary -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6" id="statsSummarySection">
             <!-- Temperature Stats -->
             <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-4 sm:p-5">
                 <h3 class="text-sm sm:text-base md:text-lg font-semibold text-gray-700 mb-3">{{ index .I18n "air_temperature" }}</h3>
@@ -37,7 +41,7 @@
                 <h3 class="text-sm sm:text-base md:text-lg font-semibold text-gray-700 mb-3">{{ index .I18n "sea_temperature" }}</h3>
                 <div class="space-y-2">
                     <div class="flex items-end justify-between gap-3">
-                        <span class="text-sm sm:text-base text-gray-600">&nbsp;</span>
+                        <span class="text-sm sm:text-base text-gray-600" id="stat-sea-temp-updated">-</span>
                         <span class="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 leading-none" id="stat-sea-temp">--</span>
                     </div>
                 </div>
@@ -66,7 +70,7 @@
             </div>
         </div>
 
-        <div class="mb-8">
+        <div class="mb-8" id="hourlyTableSection">
             <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">
                 {{ index .I18n "hourly_table_title" }}
                 <span id="hourlyTableDateLabel" class="text-gray-600 font-normal"></span>
@@ -99,21 +103,21 @@
             </h2>
             <p id="detailChartsError" class="hidden px-1 text-xs sm:text-sm text-red-600"></p>
 
-            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6" id="detailTemperatureCard">
                 <h3 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "temperature_chart" }}</h3>
                 <div class="relative h-32 sm:h-40 md:h-48">
                     <canvas id="detailTemperatureChart"></canvas>
                 </div>
             </div>
 
-            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6" id="detailPressureCard">
                 <h3 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "pressure_chart" }}</h3>
                 <div class="relative h-32 sm:h-40 md:h-48">
                     <canvas id="detailPressureChart"></canvas>
                 </div>
             </div>
 
-            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+            <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6" id="detailHumidityCard">
                 <h3 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "humidity_chart" }}</h3>
                 <div class="relative h-32 sm:h-40 md:h-48">
                     <canvas id="detailHumidityChart"></canvas>
@@ -134,13 +138,18 @@
         average: {{ printf "%q" (index .I18n "average") }},
         max: {{ printf "%q" (index .I18n "max") }},
         detailChartsLoadError: {{ printf "%q" (index .I18n "detail_charts_load_error") }},
-        noData: {{ printf "%q" (index .I18n "no_data") }}
+        noData: {{ printf "%q" (index .I18n "no_data") }},
+        futureDateNotReached: {{ printf "%q" (index .I18n "future_date_not_reached") }}
     };
 </script>
 <script src="/js/statistics-charts.js"></script>
 <script>
     (function () {
         const detailSection = document.getElementById('hourlyDetailSection');
+        const hourlyTableSection = document.getElementById('hourlyTableSection');
+        const statsSummarySection = document.getElementById('statsSummarySection');
+        const futureDateNotice = document.getElementById('futureDateNotice');
+        const futureDateNoticeText = document.getElementById('futureDateNoticeText');
         const dateInput = document.getElementById('selectedDate');
         const dateLabel = document.getElementById('detailDateLabel');
         const tableDateLabel = document.getElementById('hourlyTableDateLabel');
@@ -151,6 +160,12 @@
             {{- range $index, $stat := .DailyStats }}
             {{- if $index }},{{ end }}
             "{{ dateOnly $stat.Date }}": {{ if $stat.SeaTemperature }}"{{ f1 $stat.SeaTemperature }}"{{ else }}null{{ end }}
+            {{- end }}
+        };
+        const seaMeasuredAtByDate = {
+            {{- range $index, $stat := .DailyStats }}
+            {{- if $index }},{{ end }}
+            "{{ dateOnly $stat.Date }}": {{ if $stat.SeaMeasuredAt }}"{{ $stat.SeaMeasuredAt }}"{{ else }}null{{ end }}
             {{- end }}
         };
 
@@ -210,15 +225,38 @@
 
         function updateSeaTemperatureSummary(date) {
             const seaTempEl = document.getElementById('stat-sea-temp');
-            if (!seaTempEl) return;
+            const seaTempUpdatedEl = document.getElementById('stat-sea-temp-updated');
+            if (!seaTempEl || !seaTempUpdatedEl) return;
 
             const normalizedDate = typeof date === 'string' ? date.slice(0, 10) : '';
             const seaTempRaw = seaTemperatureByDate[normalizedDate];
             const seaTemp = typeof seaTempRaw === 'string' ? Number.parseFloat(seaTempRaw) : seaTempRaw;
+            const measuredAtRaw = seaMeasuredAtByDate[normalizedDate];
 
             seaTempEl.textContent = typeof seaTemp === 'number' && Number.isFinite(seaTemp)
                 ? seaTemp.toFixed(1) + ' °C'
                 : '--';
+
+            seaTempUpdatedEl.textContent = formatSeaMeasuredAtLabel(measuredAtRaw, normalizedDate);
+        }
+
+        function formatSeaMeasuredAtLabel(measuredAtRaw, selectedDate) {
+            if (typeof measuredAtRaw !== 'string' || !measuredAtRaw) return '-';
+
+            const m = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/.exec(measuredAtRaw);
+            if (!m) return '-';
+
+            const measuredDate = m[1] + '-' + m[2] + '-' + m[3];
+            const day = String(Number.parseInt(m[3], 10));
+            const month = String(Number.parseInt(m[2], 10));
+            const hour = String(Number.parseInt(m[4], 10));
+            const minute = m[5];
+
+            if (measuredDate === selectedDate) {
+                return hour + ':' + minute;
+            }
+
+            return day + '.' + month + ' ' + hour + ':' + minute;
         }
 
         function setSummaryFromHourly(datasets) {
@@ -233,6 +271,57 @@
             if (tempEl) tempEl.textContent = tempAvg === null ? '--' : tempAvg.toFixed(1) + ' °C';
             if (pressEl) pressEl.textContent = pressAvg === null ? '--' : pressAvg.toFixed(1) + ' hPa';
             if (humEl) humEl.textContent = humAvg === null ? '--' : Math.round(humAvg) + ' %';
+        }
+
+        function clearDetailCharts() {
+            if (detailCharts.temperature) {
+                detailCharts.temperature.data.labels = [];
+                detailCharts.temperature.data.datasets[0].data = [];
+                detailCharts.temperature.update();
+            }
+            if (detailCharts.pressure) {
+                detailCharts.pressure.data.labels = [];
+                detailCharts.pressure.data.datasets[0].data = [];
+                detailCharts.pressure.update();
+            }
+            if (detailCharts.humidity) {
+                detailCharts.humidity.data.labels = [];
+                detailCharts.humidity.data.datasets[0].data = [];
+                detailCharts.humidity.update();
+            }
+        }
+
+        function setDetailsVisible(visible) {
+            const method = visible ? 'remove' : 'add';
+            if (statsSummarySection) statsSummarySection.classList[method]('hidden');
+            if (hourlyTableSection) hourlyTableSection.classList[method]('hidden');
+            if (detailSection) detailSection.classList[method]('hidden');
+        }
+
+        function setFutureNoticeVisible(visible) {
+            if (!futureDateNotice) return;
+            if (visible) {
+                if (futureDateNoticeText) {
+                    const raw = i18n.futureDateNotReached || 'This date has not occurred yet.';
+                    futureDateNoticeText.textContent = raw.replace(/^[\"'„“”]+|[\"'„“”]+$/g, '');
+                }
+                futureDateNotice.classList.remove('hidden');
+                return;
+            }
+            futureDateNotice.classList.add('hidden');
+        }
+
+        function isFutureDate(dateStr) {
+            const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr || '');
+            if (!m) return false;
+
+            const selectedKey = m[1] + m[2] + m[3];
+            const now = new Date();
+            const todayKey = String(now.getFullYear())
+                + String(now.getMonth() + 1).padStart(2, '0')
+                + String(now.getDate()).padStart(2, '0');
+
+            return selectedKey > todayKey;
         }
 
         function formatDateLabel(date) {
@@ -276,6 +365,19 @@
             dateLabel.textContent = formattedDate;
             if (tableDateLabel) tableDateLabel.textContent = formattedDate ? '(' + formattedDate + ')' : '';
             errorEl.classList.add('hidden');
+
+            if (isFutureDate(date)) {
+                setSummaryFromHourly(null);
+                clearDetailCharts();
+                renderHourlyTable([], null);
+                setDetailsVisible(false);
+                setFutureNoticeVisible(true);
+                errorEl.classList.add('hidden');
+                return;
+            }
+            setDetailsVisible(true);
+            setFutureNoticeVisible(false);
+
             try {
                 const response = await fetch('/api/weather/hourly?date=' + encodeURIComponent(date));
                 if (!response.ok) throw new Error('HTTP ' + response.status);
@@ -300,6 +402,8 @@
                 setSummaryFromHourly(data.datasets);
                 renderHourlyTable(data.labels, data.datasets);
             } catch (err) {
+                setSummaryFromHourly(null);
+                clearDetailCharts();
                 errorEl.textContent = i18n.detailChartsLoadError || 'Failed to load hourly charts for the selected date.';
                 errorEl.classList.remove('hidden');
                 renderHourlyTable([], null);

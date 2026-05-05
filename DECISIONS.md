@@ -28,3 +28,6 @@
 
 9. V homepage weather boxu byl použit konzistentní swap barev mezi `text-white/90` a `text-orange-300`.
 - Důvod: uživatelský požadavek na sjednocení vizuální hierarchie (co bylo bílé má být oranžové a naopak).
+
+10. Denní statistiky používají pro teplotu moře denní point-in-time hodnotu z `water_temperatures` místo `weather_daily.sea_temperature`.
+- Důvod: zdroj `water_temperatures` obsahuje přesné timestampy měření a umožňuje ve statistice zobrazit i datum+čas poslední aktualizace.

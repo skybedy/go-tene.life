@@ -105,6 +105,7 @@ var dictionary = map[string]map[string]string{
 		"go_to_detail_charts":         "Přejít na detailní grafy dne:",
 		"go_to_detail_charts_hint":    "Načte hodinové grafy pro vybraný den přímo níže na stránce.",
 		"detail_charts_load_error":    "Nepodařilo se načíst hodinové grafy pro vybrané datum.",
+		"future_date_not_reached":     "Toto datum ještě nenastalo.",
 		"show":                        "Zobrazit",
 		"hourly_values_for":           "Hodinové hodnoty pro",
 		"table_overview":              "Tabulkový přehled",
@@ -213,6 +214,7 @@ var dictionary = map[string]map[string]string{
 		"go_to_detail_charts":         "Go to detailed charts of day:",
 		"go_to_detail_charts_hint":    "Loads hourly charts for the selected day directly below on this page.",
 		"detail_charts_load_error":    "Failed to load hourly charts for the selected date.",
+		"future_date_not_reached":     "This date has not occurred yet.",
 		"show":                        "Show",
 		"hourly_values_for":           "Hourly values for",
 		"table_overview":              "Table Overview",
@@ -543,6 +545,7 @@ var recentLocaleMessages = map[string]map[string]string{
 		"recent_humidity_chart_title": "Humedad de los últimos 10 días (%)",
 		"detail_charts_load_error":    "No se pudieron cargar los gráficos horarios para la fecha seleccionada.",
 		"click_to_change_date":        "Haga clic para cambiar la fecha",
+		"future_date_not_reached":     "Esta fecha todavía no ha ocurrido.",
 	},
 	"pl": {
 		"recent_statistics":           "Ostatnie 10 dni",
@@ -553,6 +556,7 @@ var recentLocaleMessages = map[string]map[string]string{
 		"recent_humidity_chart_title": "Wilgotność z ostatnich 10 dni (%)",
 		"detail_charts_load_error":    "Nie udało się wczytać wykresów godzinowych dla wybranej daty.",
 		"click_to_change_date":        "Kliknij, aby zmienić datę",
+		"future_date_not_reached":     "Ta data jeszcze nie nastąpiła.",
 	},
 	"de": {
 		"recent_statistics":           "Letzte 10 Tage",
@@ -563,6 +567,7 @@ var recentLocaleMessages = map[string]map[string]string{
 		"recent_humidity_chart_title": "Luftfeuchtigkeit der letzten 10 Tage (%)",
 		"detail_charts_load_error":    "Die stündlichen Diagramme für das ausgewählte Datum konnten nicht geladen werden.",
 		"click_to_change_date":        "Klicken Sie, um das Datum zu ändern",
+		"future_date_not_reached":     "Dieses Datum ist noch nicht eingetreten.",
 	},
 	"fr": {
 		"recent_statistics":           "10 derniers jours",
@@ -573,6 +578,7 @@ var recentLocaleMessages = map[string]map[string]string{
 		"recent_humidity_chart_title": "Humidité des 10 derniers jours (%)",
 		"detail_charts_load_error":    "Impossible de charger les graphiques horaires pour la date sélectionnée.",
 		"click_to_change_date":        "Cliquez pour changer la date",
+		"future_date_not_reached":     "Cette date n'est pas encore arrivée.",
 	},
 	"it": {
 		"recent_statistics":           "Ultimi 10 giorni",
@@ -583,6 +589,7 @@ var recentLocaleMessages = map[string]map[string]string{
 		"recent_humidity_chart_title": "Umidità degli ultimi 10 giorni (%)",
 		"detail_charts_load_error":    "Impossibile caricare i grafici orari per la data selezionata.",
 		"click_to_change_date":        "Fai clic per cambiare la data",
+		"future_date_not_reached":     "Questa data non è ancora arrivata.",
 	},
 	"hu": {
 		"recent_statistics":           "Utolsó 10 nap",
@@ -593,6 +600,7 @@ var recentLocaleMessages = map[string]map[string]string{
 		"recent_humidity_chart_title": "Páratartalom az elmúlt 10 napban (%)",
 		"detail_charts_load_error":    "Nem sikerült betölteni az órás grafikonokat a kiválasztott dátumhoz.",
 		"click_to_change_date":        "Kattintson a dátum módosításához",
+		"future_date_not_reached":     "Ez a dátum még nem következett be.",
 	},
 }
 

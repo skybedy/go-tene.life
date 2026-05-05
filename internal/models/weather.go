@@ -95,6 +95,7 @@ type GenericChartResponse struct {
 type WeatherDaily struct {
 	Date           string   `db:"date"`
 	SeaTemperature *float64 `db:"sea_temperature"`
+	SeaMeasuredAt  *string  `db:"sea_measured_at"`
 	AvgTemperature *float64 `db:"avg_temperature"`
 	MinTemperature *float64 `db:"min_temperature"`
 	MaxTemperature *float64 `db:"max_temperature"`
