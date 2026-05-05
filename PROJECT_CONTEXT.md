@@ -8,8 +8,8 @@
 ## Aktuální stav
 
 - Typ: rozpracovaný existující projekt.
-- Git: aktuální větev `main`; feature větev `feature/water-temperature-refactor` byla úspěšně sloučena. Pracovní strom je čistý.
-- Migrace `0008`, `0009` a `0010` byly otestovány a aplikovány.
+- Git: aktuální větev `feature/sound-segments-lesson-02`.
+- Lekce 1 a 2 španělských slovíček mají vygenerované časované segmenty v `public/sounds/index.json`.
 
 ## Technologie
 
