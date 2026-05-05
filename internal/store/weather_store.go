@@ -48,22 +48,6 @@ func (s *WeatherStore) GetLatestSeaTemperature(referenceDate string) (*float64, 
 		return seaTemp, recDateTime.Format("2006-01-02 15:04:05"), nil
 	}
 
-	// Transitional fallback to legacy daily column while old data still exists there.
-	var recDate string
-	query = "SELECT sea_temperature, date FROM weather_daily WHERE date <= ? AND sea_temperature IS NOT NULL ORDER BY date DESC LIMIT 1"
-	err = s.DB.QueryRow(query, referenceDate).Scan(&temp, &recDate)
-	if err == nil {
-		seaTemp = &temp
-		return seaTemp, recDate + " 10:00:00", nil
-	}
-
-	query = "SELECT sea_temperature, date FROM weather_daily WHERE sea_temperature IS NOT NULL ORDER BY date DESC LIMIT 1"
-	err = s.DB.QueryRow(query).Scan(&temp, &recDate)
-	if err == nil {
-		seaTemp = &temp
-		return seaTemp, recDate + " 10:00:00", nil
-	}
-
 	return nil, "", nil // Return nil if no temperature found, not strictly an error for the view
 }
 
@@ -108,10 +92,36 @@ func (s *WeatherStore) GetHourlyData(date string) ([]models.WeatherHourly, error
 	return results, nil
 }
 
+func (s *WeatherStore) GetSeaTemperatureForDate(date string) (*float64, *time.Time, error) {
+	var temp sql.NullFloat64
+	var measuredAt sql.NullTime
+
+	query := `SELECT temperature, measured_at
+	          FROM water_temperatures
+	          WHERE measured_at >= CONCAT(?, ' 00:00:00')
+	            AND measured_at < DATE_ADD(?, INTERVAL 1 DAY)
+	          ORDER BY measured_at DESC
+	          LIMIT 1`
+	err := s.DB.QueryRow(query, date, date).Scan(&temp, &measuredAt)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, nil, err
+	}
+	if err == nil && temp.Valid {
+		v := temp.Float64
+		if measuredAt.Valid {
+			t := measuredAt.Time.In(canaryLocation())
+			return &v, &t, nil
+		}
+		return &v, nil, nil
+	}
+
+	return nil, nil, nil
+}
+
 func (s *WeatherStore) GetDailyStats(limit int) ([]models.WeatherDaily, error) {
 	var results []models.WeatherDaily
 	query := `SELECT wd.date,
-	                 COALESCE(wt.temperature, wd.sea_temperature) AS sea_temperature,
+	                 wt.temperature AS sea_temperature,
 	                 wt.measured_at AS sea_measured_at,
 	                 wd.avg_temperature, wd.min_temperature, wd.max_temperature,
 	                 wd.avg_pressure, wd.min_pressure, wd.max_pressure,
@@ -154,7 +164,7 @@ func (s *WeatherStore) GetDailyStats(limit int) ([]models.WeatherDaily, error) {
 func (s *WeatherStore) GetDailyStatsByRange(startDate, endDate string) ([]models.WeatherDaily, error) {
 	var results []models.WeatherDaily
 	query := `SELECT wd.date,
-	                 COALESCE(wt.temperature, wd.sea_temperature) AS sea_temperature,
+	                 wt.temperature AS sea_temperature,
 	                 wt.measured_at AS sea_measured_at,
 	                 wd.avg_temperature, wd.min_temperature, wd.max_temperature,
 	                 wd.avg_pressure, wd.min_pressure, wd.max_pressure,
@@ -263,14 +273,6 @@ func (s *WeatherStore) GetAnnualStats() ([]models.WeatherMonthly, error) {
 	return results, nil
 }
 
-func (s *WeatherStore) StoreSeaTemperature(date string, temp float64) error {
-	query := `INSERT INTO weather_daily (date, sea_temperature) 
-	          VALUES (?, ?) 
-	          ON DUPLICATE KEY UPDATE sea_temperature = VALUES(sea_temperature)`
-	_, err := s.DB.Exec(query, date, temp)
-	return err
-}
-
 func (s *WeatherStore) StoreWaterTemperatureMeasurement(measuredAt time.Time, temp float64, source string, note *string) error {
 	if strings.TrimSpace(source) == "" {
 		source = "manual"
@@ -335,11 +337,6 @@ func (s *WeatherStore) BuildWaterTemperatureHistory(start, end time.Time, limit 
 	}
 
 	return resp, nil
-}
-
-func (s *WeatherStore) UpsertLegacySeaTemperatureFromMeasurement(measuredAt time.Time, temp float64) error {
-	day := measuredAt.In(canaryLocation()).Format("2006-01-02")
-	return s.StoreSeaTemperature(day, temp)
 }
 
 func WaterMeasurementAtLegacyDefault(date string) (time.Time, error) {

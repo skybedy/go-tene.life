@@ -1,7 +1,9 @@
--- 1) Kolik historických hodnot teploty vody je v legacy weather_daily
-SELECT COUNT(*) AS legacy_non_null_count
-FROM weather_daily
-WHERE sea_temperature IS NOT NULL;
+-- 1) Ověření, že legacy sloupec už neexistuje
+SELECT COUNT(*) AS legacy_column_exists
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = DATABASE()
+  AND TABLE_NAME = 'weather_daily'
+  AND COLUMN_NAME = 'sea_temperature';
 
 -- 2) Kolik řádků je v nové tabulce celkem
 SELECT COUNT(*) AS water_temperatures_total
@@ -12,12 +14,11 @@ SELECT COUNT(*) AS backfilled_rows
 FROM water_temperatures
 WHERE source = 'legacy_backfill';
 
--- 4) Které legacy hodnoty chybí po backfillu
-SELECT wd.id, wd.date, wd.sea_temperature
+-- 4) Které legacy řádky (podle reference) chybí po backfillu
+SELECT wd.id, wd.date
 FROM weather_daily wd
 LEFT JOIN water_temperatures wt ON wt.legacy_weather_daily_id = wd.id
-WHERE wd.sea_temperature IS NOT NULL
-  AND wt.id IS NULL
+WHERE wt.id IS NULL
 ORDER BY wd.date ASC;
 
 -- 5) Duplicity (neměly by existovat)

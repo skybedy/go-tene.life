@@ -66,7 +66,6 @@ DROP TABLE IF EXISTS `weather_daily`;
 CREATE TABLE `weather_daily` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `date` date NOT NULL COMMENT 'Date of the measurement',
-  `sea_temperature` decimal(5,1) DEFAULT NULL COMMENT 'Sea water temperature in °C (manually measured)',
   `avg_temperature` decimal(5,1) DEFAULT NULL,
   `min_temperature` decimal(5,1) DEFAULT NULL,
   `max_temperature` decimal(5,1) DEFAULT NULL,

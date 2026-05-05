@@ -13,7 +13,7 @@
                 <input type="date" id="selectedDate"
                     name="date"
                     class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    value="{{ if .DailyStats }}{{ dateOnly ((index .DailyStats 0).Date) }}{{ end }}" min="2025-11-01">
+                    value="{{ .SelectedDate }}" min="2025-11-01">
             </div>
         </div>
 
@@ -96,7 +96,7 @@
             </div>
         </div>
 
-        <div class="space-y-4 mb-6" id="hourlyDetailSection" data-default-date="{{ if .DailyStats }}{{ dateOnly ((index .DailyStats 0).Date) }}{{ end }}">
+        <div class="space-y-4 mb-6" id="hourlyDetailSection" data-default-date="{{ .SelectedDate }}">
             <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">
                 Grafy
                 <span id="detailDateLabel" class="text-gray-600 font-normal"></span>
@@ -156,19 +156,6 @@
         const errorEl = document.getElementById('detailChartsError');
         const hourlyTableBody = document.getElementById('hourlyTableBody');
         const i18n = window.statsI18n || {};
-        const seaTemperatureByDate = {
-            {{- range $index, $stat := .DailyStats }}
-            {{- if $index }},{{ end }}
-            "{{ dateOnly $stat.Date }}": {{ if $stat.SeaTemperature }}"{{ f1 $stat.SeaTemperature }}"{{ else }}null{{ end }}
-            {{- end }}
-        };
-        const seaMeasuredAtByDate = {
-            {{- range $index, $stat := .DailyStats }}
-            {{- if $index }},{{ end }}
-            "{{ dateOnly $stat.Date }}": {{ if $stat.SeaMeasuredAt }}"{{ $stat.SeaMeasuredAt }}"{{ else }}null{{ end }}
-            {{- end }}
-        };
-
         if (!detailSection) return;
 
         function createDetailChart(canvasId, label, color, unit) {
@@ -223,15 +210,13 @@
             return total / values.length;
         }
 
-        function updateSeaTemperatureSummary(date) {
+        function updateSeaTemperatureSummary(date, seaTempRaw, measuredAtRaw) {
             const seaTempEl = document.getElementById('stat-sea-temp');
             const seaTempUpdatedEl = document.getElementById('stat-sea-temp-updated');
             if (!seaTempEl || !seaTempUpdatedEl) return;
 
             const normalizedDate = typeof date === 'string' ? date.slice(0, 10) : '';
-            const seaTempRaw = seaTemperatureByDate[normalizedDate];
             const seaTemp = typeof seaTempRaw === 'string' ? Number.parseFloat(seaTempRaw) : seaTempRaw;
-            const measuredAtRaw = seaMeasuredAtByDate[normalizedDate];
 
             seaTempEl.textContent = typeof seaTemp === 'number' && Number.isFinite(seaTemp)
                 ? seaTemp.toFixed(1) + ' °C'
@@ -360,7 +345,7 @@
 
         async function loadHourlyDetails(date) {
             if (!date) return;
-            updateSeaTemperatureSummary(date);
+            updateSeaTemperatureSummary(date, null, null);
             const formattedDate = formatDateLabel(date);
             dateLabel.textContent = formattedDate;
             if (tableDateLabel) tableDateLabel.textContent = formattedDate ? '(' + formattedDate + ')' : '';
@@ -383,6 +368,7 @@
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 const data = await response.json();
                 if (!data.labels || !data.datasets) throw new Error('Invalid response');
+                updateSeaTemperatureSummary(date, data.sea_temperature, data.sea_measured_at);
 
                 if (detailCharts.temperature) {
                     detailCharts.temperature.data.labels = data.labels;

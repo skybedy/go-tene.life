@@ -435,6 +435,15 @@ func (h *Handler) GetHourlyDataHandler(c echo.Context) error {
 	}
 
 	response := models.HourlyChartResponse{}
+	seaTemp, seaMeasuredAt, seaErr := h.WeatherStore.GetSeaTemperatureForDate(date)
+	if seaErr != nil {
+		log.Printf("warning: failed to load sea temperature for %s: %v", date, seaErr)
+	} else {
+		response.SeaTemperature = seaTemp
+		if seaMeasuredAt != nil {
+			response.SeaMeasuredAt = seaMeasuredAt.Format("2006-01-02 15:04:05")
+		}
+	}
 	for _, record := range data {
 		response.Labels = append(response.Labels, fmt.Sprintf("%02d:00", record.Hour))
 		response.Datasets.Temperature = append(response.Datasets.Temperature, record.AvgTemperature)
@@ -843,8 +852,13 @@ func (h *Handler) DailyStatisticsHandler(c echo.Context) error {
 	if err != nil {
 		log.Println("Error fetching daily stats:", err)
 	}
+	loc, locErr := time.LoadLocation("Atlantic/Canary")
+	if locErr != nil {
+		loc = time.UTC
+	}
 	data := models.StatsPageData{
 		DailyStats:      stats,
+		SelectedDate:    time.Now().In(loc).Format("2006-01-02"),
 		PageTitle:       i18n.T(locale, "daily_statistics"),
 		StatsSection:    "daily",
 		Locale:          locale,
@@ -1206,11 +1220,6 @@ func (h *Handler) StoreSeaTemperatureHandler(c echo.Context) error {
 			Error:   "internal_server_error",
 			Message: appErr.Message,
 		})
-	}
-
-	// Transitional compatibility: keep legacy daily column synced in phase 1 rollout.
-	if err := h.WeatherStore.UpsertLegacySeaTemperatureFromMeasurement(measuredAt, req.Temperature); err != nil {
-		log.Printf("warning: failed to sync legacy weather_daily.sea_temperature: %v", err)
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{

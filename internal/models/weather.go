@@ -67,8 +67,10 @@ type ChartResponse struct {
 
 // Or more specific for the hourly chart
 type HourlyChartResponse struct {
-	Labels   []string `json:"labels"`
-	Datasets struct {
+	Labels         []string `json:"labels"`
+	SeaTemperature *float64 `json:"sea_temperature,omitempty"`
+	SeaMeasuredAt  string   `json:"sea_measured_at,omitempty"`
+	Datasets       struct {
 		Temperature []*float64 `json:"temperature"`
 		Pressure    []*float64 `json:"pressure"`
 		Humidity    []*float64 `json:"humidity"`
@@ -147,6 +149,7 @@ type StatsPageData struct {
 	WeeklyStats     []WeatherWeekly
 	MonthlyStats    []WeatherMonthly
 	AnnualStats     []WeatherMonthly
+	SelectedDate    string
 	PageTitle       string
 	StatsSection    string
 	Locale          string

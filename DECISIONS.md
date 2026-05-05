@@ -31,3 +31,6 @@
 
 10. Denní statistiky používají pro teplotu moře denní point-in-time hodnotu z `water_temperatures` místo `weather_daily.sea_temperature`.
 - Důvod: zdroj `water_temperatures` obsahuje přesné timestampy měření a umožňuje ve statistice zobrazit i datum+čas poslední aktualizace.
+
+11. Legacy sloupec `weather_daily.sea_temperature` se odstraňuje migrací `0011_drop_weather_daily_sea_temperature`.
+- Důvod: po přepnutí čtení i zápisu na `water_temperatures` už sloupec způsoboval jen duplicitní stav a riziko nekonzistence.

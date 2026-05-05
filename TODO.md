@@ -23,4 +23,4 @@
 
 - Přidat stručný troubleshooting section pro lokální spuštění (DB, `.env`, migrace).
 - Přidat jednotné release/checklist instrukce před nasazením.
-- Po potvrzení kompletní migrace připravit ostrou cleanup migraci pro drop `weather_daily.sea_temperature` (zatím jen šablona v `migrations/cleanup_later_drop_weather_daily_sea_temperature.sql`).
+- Ověřit nasazení migrace `0011_drop_weather_daily_sea_temperature` na všech prostředích.
