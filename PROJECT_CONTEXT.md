@@ -8,8 +8,8 @@
 ## Aktuální stav
 
 - Typ: rozpracovaný existující projekt.
-- Git: aktuální větev `feature/water-temperature-refactor`; pracovní strom obsahuje lokální úpravu `views/index.html` (UI swap barev ve weather boxu, zatím bez commitu).
-- AI kontextové soubory byly vytvořeny v tomto kroku.
+- Git: aktuální větev `feature/water-temperature-refactor`; pracovní strom je čistý, UI swap barev a dokumentace byly commitnuty.
+- Migrace `0008`, `0009` a `0010` byly otestovány a aplikovány.
 
 ## Technologie
 
