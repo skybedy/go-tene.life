@@ -114,11 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 charts.temperature.data.datasets[2].data = data.datasets.max_temperature;
                 charts.temperature.update();
 
-                if (charts.seaTemperature && data.datasets.sea_temperature) {
-                    charts.seaTemperature.data.labels = data.labels;
-                    charts.seaTemperature.data.datasets[0].data = data.datasets.sea_temperature;
-                    charts.seaTemperature.update();
-                }
+                await loadSeaTemperatureHistoryForPath();
 
                 // Pressure
                 charts.pressure.data.labels = data.labels;
@@ -183,11 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 charts.temperature.data.datasets[isMultiChart('temperatureChart') ? 1 : 0].data = data.datasets.avg_temperature;
                 charts.temperature.update();
 
-                if (charts.seaTemperature && data.datasets.sea_temperature) {
-                    charts.seaTemperature.data.labels = data.labels;
-                    charts.seaTemperature.data.datasets[0].data = data.datasets.sea_temperature;
-                    charts.seaTemperature.update();
-                }
+                await loadSeaTemperatureHistoryForPath();
 
                 if (charts.pressure) {
                     charts.pressure.data.labels = data.labels;
@@ -211,5 +203,27 @@ document.addEventListener('DOMContentLoaded', function () {
     function isMultiChart(id) {
          // Helper to check if chart was initialized as multi
          return id === 'temperatureChart' && path.includes('/statistics/daily');
+    }
+
+    async function loadSeaTemperatureHistoryForPath() {
+        if (!charts.seaTemperature) return;
+
+        let days = 30;
+        if (path.includes('/statistics/recent')) days = 10;
+        if (path.includes('/statistics/weekly')) days = 140;
+        if (path.includes('/statistics/monthly')) days = 365;
+        if (path.includes('/statistics/annual')) days = 730;
+
+        try {
+            const response = await fetch(`/api/water-temperatures/history?days=${encodeURIComponent(days)}&limit=2000`);
+            const data = await response.json();
+            if (!data || !Array.isArray(data.labels) || !Array.isArray(data.temperatures)) return;
+
+            charts.seaTemperature.data.labels = data.labels;
+            charts.seaTemperature.data.datasets[0].data = data.temperatures;
+            charts.seaTemperature.update();
+        } catch (error) {
+            console.error('Error loading sea temperature history:', error);
+        }
     }
 });

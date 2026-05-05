@@ -38,14 +38,15 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 }
 
 type Handler struct {
-	WeatherStore  *store.WeatherStore
-	TideCollector *tides.Collector
+	WeatherStore     *store.WeatherStore
+	TideCollector    *tides.Collector
 	weatherCache     *models.WeatherData
 	seaTempCache     *float64
 	seaTempCacheDate string
-	cacheMu       sync.RWMutex
-	lastCache     time.Time
-	cacheTimeout  time.Duration
+	seaTempCacheTime string
+	cacheMu          sync.RWMutex
+	lastCache        time.Time
+	cacheTimeout     time.Duration
 }
 
 func NewHandler(ws *store.WeatherStore) *Handler {
@@ -118,15 +119,15 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 				FormattedDate:      now.Format("2. 1. 2006"),
 				FormattedDateSmall: now.Format("2.1."),
 				FormattedTime:      strings.TrimPrefix(now.Format("15:04"), "0"),
-				WebcamImageURL:  webcamImageURL,
-				Locale:          locale,
-				LocalePrefix:    i18n.LocalePrefix(locale),
-				CurrentPath:     currentPath,
-				CurrentSection:  "home",
-				Languages:       languages,
-				I18n:            messages,
-				GAEnabled:       gaEnabled,
-				GAMeasurementID: gaMeasurementID,
+				WebcamImageURL:     webcamImageURL,
+				Locale:             locale,
+				LocalePrefix:       i18n.LocalePrefix(locale),
+				CurrentPath:        currentPath,
+				CurrentSection:     "home",
+				Languages:          languages,
+				I18n:               messages,
+				GAEnabled:          gaEnabled,
+				GAMeasurementID:    gaMeasurementID,
 			})
 		}
 	}
@@ -169,9 +170,22 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 	}
 
 	var seaTempDateFormatted string
+	var seaTempTimeFormatted string
 	if seaTempDate != "" && len(seaTempDate) >= 10 {
-		if t, err := time.Parse("2006-01-02", seaTempDate[:10]); err == nil {
+		layouts := []string{"2006-01-02 15:04:05", time.RFC3339, "2006-01-02"}
+		var parsed time.Time
+		var parsedOK bool
+		for _, layout := range layouts {
+			if t, err := time.Parse(layout, seaTempDate); err == nil {
+				parsed = t
+				parsedOK = true
+				break
+			}
+		}
+		if parsedOK {
+			t := parsed.In(loc)
 			seaTempDateFormatted = t.Format("2.1.")
+			seaTempTimeFormatted = strings.TrimPrefix(t.Format("15:04"), "0")
 		}
 	}
 
@@ -214,36 +228,37 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 	}
 
 	data := models.PageData{
-		Weather:           weather,
-		WebcamImageURL:    webcamImageURL,
-		SeaTemperature:    seaTemp,
+		Weather:            weather,
+		WebcamImageURL:     webcamImageURL,
+		SeaTemperature:     seaTemp,
 		SeaTemperatureDate: seaTempDateFormatted,
-		SeaTemperatureVal: seaTempVal,
-		NextHighTide:      nextHighTide,
-		NextLowTide:       nextLowTide,
-		TideHighEvents:    tideHighEvents,
-		TideLowEvents:     tideLowEvents,
-		TideUpdatedAt:     tideUpdated,
-		Waves:             waveData,
-		WaterQuality:      waterData,
-		DayMaxTemperature: dayMaxTemperature,
-		DayMinTemperature: dayMinTemperature,
-		DayMaxTempText:    dayMaxTempText,
-		DayMinTempText:    dayMinTempText,
-		DayMaxTime:        dayMaxTime,
-		DayMinTime:        dayMinTime,
+		SeaTemperatureTime: seaTempTimeFormatted,
+		SeaTemperatureVal:  seaTempVal,
+		NextHighTide:       nextHighTide,
+		NextLowTide:        nextLowTide,
+		TideHighEvents:     tideHighEvents,
+		TideLowEvents:      tideLowEvents,
+		TideUpdatedAt:      tideUpdated,
+		Waves:              waveData,
+		WaterQuality:       waterData,
+		DayMaxTemperature:  dayMaxTemperature,
+		DayMinTemperature:  dayMinTemperature,
+		DayMaxTempText:     dayMaxTempText,
+		DayMinTempText:     dayMinTempText,
+		DayMaxTime:         dayMaxTime,
+		DayMinTime:         dayMinTime,
 		FormattedDate:      ts.Format("2. 1. 2006"),
 		FormattedDateSmall: ts.Format("2.1."),
 		FormattedTime:      strings.TrimPrefix(ts.Format("15:04"), "0"),
-		PageTitle:         "",
-		Locale:            locale,
-		LocalePrefix:      i18n.LocalePrefix(locale),
-		CurrentPath:       currentPath,
-		CurrentSection:    "home",
-		Languages:         languages,
-		I18n:              messages,
-		GAEnabled:         gaEnabled,
-		GAMeasurementID:   gaMeasurementID,
+		PageTitle:          "",
+		Locale:             locale,
+		LocalePrefix:       i18n.LocalePrefix(locale),
+		CurrentPath:        currentPath,
+		CurrentSection:     "home",
+		Languages:          languages,
+		I18n:               messages,
+		GAEnabled:          gaEnabled,
+		GAMeasurementID:    gaMeasurementID,
 	}
 
 	return c.Render(http.StatusOK, "index.html", data)
@@ -271,7 +286,7 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, string,
 
 			file, err := os.Open(weatherPath)
 			if err != nil {
-				return h.weatherCache, h.seaTempCache, h.seaTempCacheDate, utils.NewInternalServerError(
+				return h.weatherCache, h.seaTempCache, h.seaTempCacheTime, utils.NewInternalServerError(
 					"Failed to open weather file", err)
 			}
 			defer file.Close()
@@ -279,7 +294,7 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, string,
 			decoder := json.NewDecoder(file)
 			newWeather := &models.WeatherData{}
 			if err := decoder.Decode(newWeather); err != nil {
-				return h.weatherCache, h.seaTempCache, h.seaTempCacheDate, utils.NewInternalServerError(
+				return h.weatherCache, h.seaTempCache, h.seaTempCacheTime, utils.NewInternalServerError(
 					"Failed to decode weather data", err)
 			}
 			h.weatherCache = newWeather
@@ -292,11 +307,11 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, string,
 			}
 			newSeaTemp, newSeaDate, err := h.WeatherStore.GetLatestSeaTemperature(refDate)
 			if err != nil {
-				return weather, h.seaTempCache, h.seaTempCacheDate, utils.NewInternalServerError(
+				return weather, h.seaTempCache, h.seaTempCacheTime, utils.NewInternalServerError(
 					"Failed to get sea temperature", err)
 			}
 			h.seaTempCache = newSeaTemp
-			h.seaTempCacheDate = newSeaDate
+			h.seaTempCacheTime = newSeaDate
 			seaTemp = newSeaTemp
 
 			h.lastCache = time.Now()
@@ -306,7 +321,7 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, string,
 		}
 	}
 
-	return weather, seaTemp, h.seaTempCacheDate, nil
+	return weather, seaTemp, h.seaTempCacheTime, nil
 }
 
 func (h *Handler) getCachedTideData(reference time.Time) ([]models.TideEventView, []models.TideEventView, string) {
@@ -416,7 +431,7 @@ func (h *Handler) GetHourlyDataHandler(c echo.Context) error {
 }
 
 func (h *Handler) GetHomeDataHandler(c echo.Context) error {
-	weather, seaTemp, _, err := h.getCachedWeatherData()
+	weather, seaTemp, seaMeasuredAt, err := h.getCachedWeatherData()
 	if err != nil {
 		log.Printf("Error getting weather data for /api/home: %v", err)
 	}
@@ -445,6 +460,7 @@ func (h *Handler) GetHomeDataHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.HomeAPIResponse{
 		Weather:        weather,
 		SeaTemperature: seaTemp,
+		SeaMeasuredAt:  seaMeasuredAt,
 		Waves:          waveData,
 		WaterQuality:   waterData,
 	})
@@ -1123,7 +1139,10 @@ func (h *Handler) GetAnnualDataHandler(c echo.Context) error {
 func (h *Handler) StoreSeaTemperatureHandler(c echo.Context) error {
 	type SeaTempRequest struct {
 		Date        string  `json:"date"`
+		MeasuredAt  string  `json:"measured_at"`
 		Temperature float64 `json:"temperature"`
+		Source      string  `json:"source"`
+		Note        *string `json:"note"`
 	}
 
 	req := new(SeaTempRequest)
@@ -1135,22 +1154,37 @@ func (h *Handler) StoreSeaTemperatureHandler(c echo.Context) error {
 		})
 	}
 
-	if req.Date == "" || req.Temperature < -10 || req.Temperature > 50 {
+	if req.Temperature < -10 || req.Temperature > 50 {
 		appErr := utils.NewBadRequestError("Invalid date or temperature value", nil)
 		return c.JSON(appErr.Code, utils.ErrorResponse{
 			Error:   "bad_request",
 			Message: appErr.Message,
 		})
 	}
-	if _, err := time.Parse("2006-01-02", req.Date); err != nil {
-		appErr := utils.NewBadRequestError("Date must be in YYYY-MM-DD format", err)
+
+	if strings.TrimSpace(req.Date) == "" && strings.TrimSpace(req.MeasuredAt) == "" {
+		appErr := utils.NewBadRequestError("Either date or measured_at must be provided", nil)
 		return c.JSON(appErr.Code, utils.ErrorResponse{
 			Error:   "bad_request",
 			Message: appErr.Message,
 		})
 	}
 
-	err := h.WeatherStore.StoreSeaTemperature(req.Date, req.Temperature)
+	measuredAt, err := store.ParseMeasuredAtOrDate(req.MeasuredAt, req.Date)
+	if err != nil {
+		appErr := utils.NewBadRequestError("Invalid measured_at/date format", err)
+		return c.JSON(appErr.Code, utils.ErrorResponse{
+			Error:   "bad_request",
+			Message: appErr.Message,
+		})
+	}
+
+	source := strings.TrimSpace(req.Source)
+	if source == "" {
+		source = "manual"
+	}
+
+	err = h.WeatherStore.StoreWaterTemperatureMeasurement(measuredAt, req.Temperature, source, req.Note)
 	if err != nil {
 		appErr := utils.NewInternalServerError("Failed to store sea temperature", err)
 		return c.JSON(appErr.Code, utils.ErrorResponse{
@@ -1159,10 +1193,43 @@ func (h *Handler) StoreSeaTemperatureHandler(c echo.Context) error {
 		})
 	}
 
+	// Transitional compatibility: keep legacy daily column synced in phase 1 rollout.
+	if err := h.WeatherStore.UpsertLegacySeaTemperatureFromMeasurement(measuredAt, req.Temperature); err != nil {
+		log.Printf("warning: failed to sync legacy weather_daily.sea_temperature: %v", err)
+	}
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"success": true,
-		"message": "Sea temperature saved successfully",
+		"success":     true,
+		"message":     "Sea temperature measurement saved successfully",
+		"measured_at": measuredAt.UTC().Format(time.RFC3339),
 	})
+}
+
+func (h *Handler) GetWaterTemperatureHistoryHandler(c echo.Context) error {
+	days := 30
+	if raw := strings.TrimSpace(c.QueryParam("days")); raw != "" {
+		if parsed, err := strconv.Atoi(raw); err == nil && parsed > 0 && parsed <= 3650 {
+			days = parsed
+		}
+	}
+	limit := 0
+	if raw := strings.TrimSpace(c.QueryParam("limit")); raw != "" {
+		if parsed, err := strconv.Atoi(raw); err == nil && parsed > 0 && parsed <= 5000 {
+			limit = parsed
+		}
+	}
+
+	end := time.Now().UTC()
+	start := end.AddDate(0, 0, -(days - 1))
+	history, err := h.WeatherStore.BuildWaterTemperatureHistory(start, end, limit)
+	if err != nil {
+		appErr := utils.NewInternalServerError("Failed to get water temperature history", err)
+		return c.JSON(appErr.Code, utils.ErrorResponse{
+			Error:   "internal_server_error",
+			Message: appErr.Message,
+		})
+	}
+	return c.JSON(http.StatusOK, history)
 }
 
 func formatDayMonthLabel(raw string) string {

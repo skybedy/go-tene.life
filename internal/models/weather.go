@@ -18,36 +18,37 @@ type LanguageOption struct {
 }
 
 type PageData struct {
-	Weather           *WeatherData
-	WebcamImageURL    string
-	SeaTemperature    *float64
+	Weather            *WeatherData
+	WebcamImageURL     string
+	SeaTemperature     *float64
 	SeaTemperatureDate string
-	SeaTemperatureVal float64
-	NextHighTide      string
-	NextLowTide       string
-	TideHighEvents    []TideEventView
-	TideLowEvents     []TideEventView
-	TideUpdatedAt     string
-	Waves             *WavesLatest
-	WaterQuality      *WaterQualityLatest
-	DayMaxTemperature *float64
-	DayMinTemperature *float64
-	DayMaxTempText    string
-	DayMinTempText    string
-	DayMaxTime        string
-	DayMinTime        string
-	FormattedDate     string
+	SeaTemperatureTime string
+	SeaTemperatureVal  float64
+	NextHighTide       string
+	NextLowTide        string
+	TideHighEvents     []TideEventView
+	TideLowEvents      []TideEventView
+	TideUpdatedAt      string
+	Waves              *WavesLatest
+	WaterQuality       *WaterQualityLatest
+	DayMaxTemperature  *float64
+	DayMinTemperature  *float64
+	DayMaxTempText     string
+	DayMinTempText     string
+	DayMaxTime         string
+	DayMinTime         string
+	FormattedDate      string
 	FormattedDateSmall string
-	FormattedTime     string
-	PageTitle         string
-	Locale            string
-	LocalePrefix      string
-	CurrentPath       string
-	CurrentSection    string
-	Languages         []LanguageOption
-	I18n              map[string]string
-	GAEnabled         bool
-	GAMeasurementID   string
+	FormattedTime      string
+	PageTitle          string
+	Locale             string
+	LocalePrefix       string
+	CurrentPath        string
+	CurrentSection     string
+	Languages          []LanguageOption
+	I18n               map[string]string
+	GAEnabled          bool
+	GAMeasurementID    string
 }
 
 type WeatherHourly struct {
@@ -160,6 +161,22 @@ type StatsPageData struct {
 type HomeAPIResponse struct {
 	Weather        *WeatherData        `json:"weather,omitempty"`
 	SeaTemperature *float64            `json:"sea_temperature,omitempty"`
+	SeaMeasuredAt  string              `json:"sea_measured_at,omitempty"`
 	Waves          *WavesLatest        `json:"waves,omitempty"`
 	WaterQuality   *WaterQualityLatest `json:"water_quality,omitempty"`
+}
+
+type WaterTemperatureMeasurement struct {
+	ID                   uint64   `db:"id" json:"id"`
+	MeasuredAt           string   `db:"measured_at" json:"measured_at"`
+	Temperature          *float64 `db:"temperature" json:"temperature"`
+	Source               string   `db:"source" json:"source"`
+	Note                 *string  `db:"note" json:"note,omitempty"`
+	LegacyWeatherDailyID *uint64  `db:"legacy_weather_daily_id" json:"legacy_weather_daily_id,omitempty"`
+}
+
+type WaterTemperatureHistoryResponse struct {
+	Labels       []string   `json:"labels"`
+	Temperatures []*float64 `json:"temperatures"`
+	MeasuredAt   []string   `json:"measured_at"`
 }

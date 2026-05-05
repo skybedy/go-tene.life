@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"strings"
 	"time"
 
@@ -20,23 +21,39 @@ func NewWeatherStore(db *sql.DB) *WeatherStore {
 func (s *WeatherStore) GetLatestSeaTemperature(referenceDate string) (*float64, string, error) {
 	var seaTemp *float64
 	var temp float64
-	var recDate string
+	var recDateTime time.Time
 
-	// Prefer the latest value on or before the provided reference date.
-	// This avoids relying on DB server timezone for CURRENT_DATE.
-	query := "SELECT sea_temperature, date FROM weather_daily WHERE date <= ? AND sea_temperature IS NOT NULL ORDER BY date DESC LIMIT 1"
-	err := s.DB.QueryRow(query, referenceDate).Scan(&temp, &recDate)
+	// Prefer the latest point-in-time measurement from the dedicated table.
+	query := "SELECT temperature, measured_at FROM water_temperatures WHERE measured_at <= ? ORDER BY measured_at DESC LIMIT 1"
+	endOfDay := referenceDate + " 23:59:59"
+	err := s.DB.QueryRow(query, endOfDay).Scan(&temp, &recDateTime)
 	if err == nil {
 		seaTemp = &temp
-		return seaTemp, recDate, nil
+		return seaTemp, recDateTime.Format("2006-01-02 15:04:05"), nil
 	}
 
-	// Final fallback to latest available from any date
+	// Fallback to latest point-in-time measurement regardless of date.
+	query = "SELECT temperature, measured_at FROM water_temperatures ORDER BY measured_at DESC LIMIT 1"
+	err = s.DB.QueryRow(query).Scan(&temp, &recDateTime)
+	if err == nil {
+		seaTemp = &temp
+		return seaTemp, recDateTime.Format("2006-01-02 15:04:05"), nil
+	}
+
+	// Transitional fallback to legacy daily column while old data still exists there.
+	var recDate string
+	query = "SELECT sea_temperature, date FROM weather_daily WHERE date <= ? AND sea_temperature IS NOT NULL ORDER BY date DESC LIMIT 1"
+	err = s.DB.QueryRow(query, referenceDate).Scan(&temp, &recDate)
+	if err == nil {
+		seaTemp = &temp
+		return seaTemp, recDate + " 12:00:00", nil
+	}
+
 	query = "SELECT sea_temperature, date FROM weather_daily WHERE sea_temperature IS NOT NULL ORDER BY date DESC LIMIT 1"
 	err = s.DB.QueryRow(query).Scan(&temp, &recDate)
 	if err == nil {
 		seaTemp = &temp
-		return seaTemp, recDate, nil
+		return seaTemp, recDate + " 12:00:00", nil
 	}
 
 	return nil, "", nil // Return nil if no temperature found, not strictly an error for the view
@@ -187,6 +204,106 @@ func (s *WeatherStore) StoreSeaTemperature(date string, temp float64) error {
 	          ON DUPLICATE KEY UPDATE sea_temperature = VALUES(sea_temperature)`
 	_, err := s.DB.Exec(query, date, temp)
 	return err
+}
+
+func (s *WeatherStore) StoreWaterTemperatureMeasurement(measuredAt time.Time, temp float64, source string, note *string) error {
+	if strings.TrimSpace(source) == "" {
+		source = "manual"
+	}
+
+	query := `INSERT INTO water_temperatures (measured_at, temperature, source, note)
+	          VALUES (?, ?, ?, ?)`
+	_, err := s.DB.Exec(query, measuredAt.UTC(), temp, source, note)
+	return err
+}
+
+func (s *WeatherStore) GetWaterTemperaturesByRange(start, end time.Time, limit int) ([]models.WaterTemperatureMeasurement, error) {
+	query := `SELECT id, measured_at, temperature, source, note, legacy_weather_daily_id
+	          FROM water_temperatures
+	          WHERE measured_at BETWEEN ? AND ?
+	          ORDER BY measured_at ASC`
+	args := []interface{}{start.UTC(), end.UTC()}
+	if limit > 0 {
+		query += " LIMIT ?"
+		args = append(args, limit)
+	}
+
+	rows, err := s.DB.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	out := make([]models.WaterTemperatureMeasurement, 0)
+	for rows.Next() {
+		var rec models.WaterTemperatureMeasurement
+		var measuredAt time.Time
+		if err := rows.Scan(&rec.ID, &measuredAt, &rec.Temperature, &rec.Source, &rec.Note, &rec.LegacyWeatherDailyID); err != nil {
+			return nil, err
+		}
+		rec.MeasuredAt = measuredAt.UTC().Format(time.RFC3339)
+		out = append(out, rec)
+	}
+	return out, nil
+}
+
+func (s *WeatherStore) BuildWaterTemperatureHistory(start, end time.Time, limit int) (*models.WaterTemperatureHistoryResponse, error) {
+	records, err := s.GetWaterTemperaturesByRange(start, end, limit)
+	if err != nil {
+		return nil, err
+	}
+	resp := &models.WaterTemperatureHistoryResponse{
+		Labels:       make([]string, 0, len(records)),
+		Temperatures: make([]*float64, 0, len(records)),
+		MeasuredAt:   make([]string, 0, len(records)),
+	}
+
+	for _, rec := range records {
+		resp.MeasuredAt = append(resp.MeasuredAt, rec.MeasuredAt)
+		resp.Temperatures = append(resp.Temperatures, rec.Temperature)
+
+		if ts, err := time.Parse(time.RFC3339, rec.MeasuredAt); err == nil {
+			resp.Labels = append(resp.Labels, ts.In(time.Local).Format("2.1. 15:04"))
+		} else {
+			resp.Labels = append(resp.Labels, rec.MeasuredAt)
+		}
+	}
+
+	return resp, nil
+}
+
+func (s *WeatherStore) UpsertLegacySeaTemperatureFromMeasurement(measuredAt time.Time, temp float64) error {
+	day := measuredAt.In(time.UTC).Format("2006-01-02")
+	return s.StoreSeaTemperature(day, temp)
+}
+
+func WaterMeasurementAtNoon(date string) (time.Time, error) {
+	t, err := time.Parse("2006-01-02", strings.TrimSpace(date))
+	if err != nil {
+		return time.Time{}, err
+	}
+	return time.Date(t.Year(), t.Month(), t.Day(), 12, 0, 0, 0, time.UTC), nil
+}
+
+func ParseMeasuredAtOrDate(measuredAtRaw, dateRaw string) (time.Time, error) {
+	measuredAtRaw = strings.TrimSpace(measuredAtRaw)
+	if measuredAtRaw != "" {
+		layouts := []string{
+			time.RFC3339,
+			"2006-01-02 15:04:05",
+			"2006-01-02 15:04",
+			"2006-01-02T15:04:05",
+			"2006-01-02T15:04",
+		}
+		for _, layout := range layouts {
+			if t, err := time.Parse(layout, measuredAtRaw); err == nil {
+				return t.UTC(), nil
+			}
+		}
+		return time.Time{}, fmt.Errorf("invalid measured_at format")
+	}
+
+	return WaterMeasurementAtNoon(dateRaw)
 }
 
 func (s *WeatherStore) GetDailyTemperatureExtremes(date string) (*float64, *time.Time, *float64, *time.Time, error) {

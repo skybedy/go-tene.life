@@ -288,6 +288,7 @@ func main() {
 	e.GET("/api/weather/weekly", handler.GetWeeklyDataHandler)
 	e.GET("/api/weather/monthly", handler.GetMonthlyDataHandler)
 	e.GET("/api/weather/annual", handler.GetAnnualDataHandler)
+	e.GET("/api/water-temperatures/history", handler.GetWaterTemperatureHistoryHandler)
 
 	// API Data Ingestion
 	e.POST("/api/weather/sea-temperature", handler.StoreSeaTemperatureHandler)
