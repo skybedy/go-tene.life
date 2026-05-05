@@ -44,8 +44,8 @@
                             <!-- 2. sloupec: pod Moře (1 sloupec na všech velikostech) -->
                             <div class="glass-tile col-start-4 col-span-1 row-start-1 h-full grid place-items-center p-0.5 rounded-sm text-center">
                                 <div class="weather-first-row-text text-cyan-300 font-bold uppercase">
-                                    {{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}
-                                    {{ if .SeaTemperatureTime }} {{ .SeaTemperatureTime }}{{ end }}
+                                    <span class="text-cyan-300">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</span>
+                                    <span class="text-orange-300"> | {{ if .SeaTemperatureTime }}{{ .SeaTemperatureTime }}{{ else }}--{{ end }}</span>
                                 </div>
                             </div>
 

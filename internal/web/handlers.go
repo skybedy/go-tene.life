@@ -172,20 +172,26 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 	var seaTempDateFormatted string
 	var seaTempTimeFormatted string
 	if seaTempDate != "" && len(seaTempDate) >= 10 {
-		layouts := []string{"2006-01-02 15:04:05", time.RFC3339, "2006-01-02"}
+		layouts := []string{"2006-01-02 15:04:05", "2006-01-02"}
 		var parsed time.Time
 		var parsedOK bool
+		if t, err := time.Parse(time.RFC3339, seaTempDate); err == nil {
+			parsed = t.In(loc)
+			parsedOK = true
+		}
 		for _, layout := range layouts {
-			if t, err := time.Parse(layout, seaTempDate); err == nil {
+			if parsedOK {
+				break
+			}
+			if t, err := time.ParseInLocation(layout, seaTempDate, loc); err == nil {
 				parsed = t
 				parsedOK = true
 				break
 			}
 		}
 		if parsedOK {
-			t := parsed.In(loc)
-			seaTempDateFormatted = t.Format("2.1.")
-			seaTempTimeFormatted = strings.TrimPrefix(t.Format("15:04"), "0")
+			seaTempDateFormatted = parsed.Format("2.1.")
+			seaTempTimeFormatted = strings.TrimPrefix(parsed.Format("15:04"), "0")
 		}
 	}
 
@@ -281,30 +287,22 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, string,
 
 		// Double check after acquiring lock
 		if h.weatherCache == nil || h.seaTempCache == nil || time.Since(h.lastCache) > h.cacheTimeout {
-			// Update Weather JSON
-			weatherPath := utils.EnvPathOrDefault("WEATHER_JSON_PATH", "public/files/weather.json")
-
-			file, err := os.Open(weatherPath)
+			newWeather, err := h.WeatherStore.GetLatestWeather()
 			if err != nil {
-				return h.weatherCache, h.seaTempCache, h.seaTempCacheTime, utils.NewInternalServerError(
-					"Failed to open weather file", err)
+				log.Printf("Failed to get latest weather from DB, falling back to JSON: %v", err)
 			}
-			defer file.Close()
-
-			decoder := json.NewDecoder(file)
-			newWeather := &models.WeatherData{}
-			if err := decoder.Decode(newWeather); err != nil {
-				return h.weatherCache, h.seaTempCache, h.seaTempCacheTime, utils.NewInternalServerError(
-					"Failed to decode weather data", err)
+			if newWeather == nil {
+				newWeather, err = h.loadWeatherDataFromJSON()
+				if err != nil {
+					return h.weatherCache, h.seaTempCache, h.seaTempCacheTime, err
+				}
 			}
 			h.weatherCache = newWeather
 			weather = newWeather
 
-			// Update Sea Temp from DB based on weather timestamp date.
+			// Homepage sea temperature should always reflect the latest available
+			// measurement, independent of the freshness of weather.json.
 			refDate := time.Now().Format("2006-01-02")
-			if newWeather.Timestamp > 0 {
-				refDate = time.Unix(newWeather.Timestamp, 0).Format("2006-01-02")
-			}
 			newSeaTemp, newSeaDate, err := h.WeatherStore.GetLatestSeaTemperature(refDate)
 			if err != nil {
 				return weather, h.seaTempCache, h.seaTempCacheTime, utils.NewInternalServerError(
@@ -322,6 +320,23 @@ func (h *Handler) getCachedWeatherData() (*models.WeatherData, *float64, string,
 	}
 
 	return weather, seaTemp, h.seaTempCacheTime, nil
+}
+
+func (h *Handler) loadWeatherDataFromJSON() (*models.WeatherData, error) {
+	weatherPath := utils.EnvPathOrDefault("WEATHER_JSON_PATH", "public/files/weather.json")
+
+	file, err := os.Open(weatherPath)
+	if err != nil {
+		return nil, utils.NewInternalServerError("Failed to open weather file", err)
+	}
+	defer file.Close()
+
+	decoder := json.NewDecoder(file)
+	weather := &models.WeatherData{}
+	if err := decoder.Decode(weather); err != nil {
+		return nil, utils.NewInternalServerError("Failed to decode weather data", err)
+	}
+	return weather, nil
 }
 
 func (h *Handler) getCachedTideData(reference time.Time) ([]models.TideEventView, []models.TideEventView, string) {

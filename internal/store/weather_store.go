@@ -18,6 +18,14 @@ func NewWeatherStore(db *sql.DB) *WeatherStore {
 	return &WeatherStore{DB: db}
 }
 
+func canaryLocation() *time.Location {
+	loc, err := time.LoadLocation("Atlantic/Canary")
+	if err != nil {
+		return time.UTC
+	}
+	return loc
+}
+
 func (s *WeatherStore) GetLatestSeaTemperature(referenceDate string) (*float64, string, error) {
 	var seaTemp *float64
 	var temp float64
@@ -46,17 +54,36 @@ func (s *WeatherStore) GetLatestSeaTemperature(referenceDate string) (*float64, 
 	err = s.DB.QueryRow(query, referenceDate).Scan(&temp, &recDate)
 	if err == nil {
 		seaTemp = &temp
-		return seaTemp, recDate + " 12:00:00", nil
+		return seaTemp, recDate + " 10:00:00", nil
 	}
 
 	query = "SELECT sea_temperature, date FROM weather_daily WHERE sea_temperature IS NOT NULL ORDER BY date DESC LIMIT 1"
 	err = s.DB.QueryRow(query).Scan(&temp, &recDate)
 	if err == nil {
 		seaTemp = &temp
-		return seaTemp, recDate + " 12:00:00", nil
+		return seaTemp, recDate + " 10:00:00", nil
 	}
 
 	return nil, "", nil // Return nil if no temperature found, not strictly an error for the view
+}
+
+func (s *WeatherStore) GetLatestWeather() (*models.WeatherData, error) {
+	query := `SELECT measured_at, temperature, pressure, humidity
+	          FROM weather
+	          ORDER BY measured_at DESC
+	          LIMIT 1`
+
+	var measuredAt time.Time
+	var weather models.WeatherData
+	if err := s.DB.QueryRow(query).Scan(&measuredAt, &weather.Temperature, &weather.Pressure, &weather.Humidity); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	weather.Timestamp = measuredAt.In(canaryLocation()).Unix()
+	return &weather, nil
 }
 
 func (s *WeatherStore) GetHourlyData(date string) ([]models.WeatherHourly, error) {
@@ -213,7 +240,7 @@ func (s *WeatherStore) StoreWaterTemperatureMeasurement(measuredAt time.Time, te
 
 	query := `INSERT INTO water_temperatures (measured_at, temperature, source, note)
 	          VALUES (?, ?, ?, ?)`
-	_, err := s.DB.Exec(query, measuredAt.UTC(), temp, source, note)
+	_, err := s.DB.Exec(query, measuredAt.In(canaryLocation()), temp, source, note)
 	return err
 }
 
@@ -222,7 +249,7 @@ func (s *WeatherStore) GetWaterTemperaturesByRange(start, end time.Time, limit i
 	          FROM water_temperatures
 	          WHERE measured_at BETWEEN ? AND ?
 	          ORDER BY measured_at ASC`
-	args := []interface{}{start.UTC(), end.UTC()}
+	args := []interface{}{start.In(canaryLocation()), end.In(canaryLocation())}
 	if limit > 0 {
 		query += " LIMIT ?"
 		args = append(args, limit)
@@ -241,7 +268,7 @@ func (s *WeatherStore) GetWaterTemperaturesByRange(start, end time.Time, limit i
 		if err := rows.Scan(&rec.ID, &measuredAt, &rec.Temperature, &rec.Source, &rec.Note, &rec.LegacyWeatherDailyID); err != nil {
 			return nil, err
 		}
-		rec.MeasuredAt = measuredAt.UTC().Format(time.RFC3339)
+		rec.MeasuredAt = measuredAt.In(canaryLocation()).Format("2006-01-02 15:04:05")
 		out = append(out, rec)
 	}
 	return out, nil
@@ -262,8 +289,8 @@ func (s *WeatherStore) BuildWaterTemperatureHistory(start, end time.Time, limit 
 		resp.MeasuredAt = append(resp.MeasuredAt, rec.MeasuredAt)
 		resp.Temperatures = append(resp.Temperatures, rec.Temperature)
 
-		if ts, err := time.Parse(time.RFC3339, rec.MeasuredAt); err == nil {
-			resp.Labels = append(resp.Labels, ts.In(time.Local).Format("2.1. 15:04"))
+		if ts, err := time.ParseInLocation("2006-01-02 15:04:05", rec.MeasuredAt, canaryLocation()); err == nil {
+			resp.Labels = append(resp.Labels, ts.Format("2.1. 15:04"))
 		} else {
 			resp.Labels = append(resp.Labels, rec.MeasuredAt)
 		}
@@ -273,37 +300,40 @@ func (s *WeatherStore) BuildWaterTemperatureHistory(start, end time.Time, limit 
 }
 
 func (s *WeatherStore) UpsertLegacySeaTemperatureFromMeasurement(measuredAt time.Time, temp float64) error {
-	day := measuredAt.In(time.UTC).Format("2006-01-02")
+	day := measuredAt.In(canaryLocation()).Format("2006-01-02")
 	return s.StoreSeaTemperature(day, temp)
 }
 
-func WaterMeasurementAtNoon(date string) (time.Time, error) {
+func WaterMeasurementAtLegacyDefault(date string) (time.Time, error) {
 	t, err := time.Parse("2006-01-02", strings.TrimSpace(date))
 	if err != nil {
 		return time.Time{}, err
 	}
-	return time.Date(t.Year(), t.Month(), t.Day(), 12, 0, 0, 0, time.UTC), nil
+	return time.Date(t.Year(), t.Month(), t.Day(), 10, 0, 0, 0, canaryLocation()), nil
 }
 
 func ParseMeasuredAtOrDate(measuredAtRaw, dateRaw string) (time.Time, error) {
 	measuredAtRaw = strings.TrimSpace(measuredAtRaw)
 	if measuredAtRaw != "" {
+		if t, err := time.Parse(time.RFC3339, measuredAtRaw); err == nil {
+			return t.In(canaryLocation()), nil
+		}
+
 		layouts := []string{
-			time.RFC3339,
 			"2006-01-02 15:04:05",
 			"2006-01-02 15:04",
 			"2006-01-02T15:04:05",
 			"2006-01-02T15:04",
 		}
 		for _, layout := range layouts {
-			if t, err := time.Parse(layout, measuredAtRaw); err == nil {
-				return t.UTC(), nil
+			if t, err := time.ParseInLocation(layout, measuredAtRaw, canaryLocation()); err == nil {
+				return t, nil
 			}
 		}
 		return time.Time{}, fmt.Errorf("invalid measured_at format")
 	}
 
-	return WaterMeasurementAtNoon(dateRaw)
+	return WaterMeasurementAtLegacyDefault(dateRaw)
 }
 
 func (s *WeatherStore) GetDailyTemperatureExtremes(date string) (*float64, *time.Time, *float64, *time.Time, error) {
