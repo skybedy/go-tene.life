@@ -111,7 +111,7 @@ func (s *WeatherStore) GetHourlyData(date string) ([]models.WeatherHourly, error
 func (s *WeatherStore) GetDailyStats(limit int) ([]models.WeatherDaily, error) {
 	var results []models.WeatherDaily
 	query := `SELECT wd.date,
-	                 wt.temperature AS sea_temperature,
+	                 COALESCE(wt.temperature, wd.sea_temperature) AS sea_temperature,
 	                 wt.measured_at AS sea_measured_at,
 	                 wd.avg_temperature, wd.min_temperature, wd.max_temperature,
 	                 wd.avg_pressure, wd.min_pressure, wd.max_pressure,
@@ -121,7 +121,8 @@ func (s *WeatherStore) GetDailyStats(limit int) ([]models.WeatherDaily, error) {
 	            ON wt.id = (
 	              SELECT wtx.id
 	              FROM water_temperatures wtx
-	              WHERE DATE(wtx.measured_at) = wd.date
+	              WHERE wtx.measured_at >= CONCAT(wd.date, ' 00:00:00')
+	                AND wtx.measured_at < DATE_ADD(wd.date, INTERVAL 1 DAY)
 	              ORDER BY wtx.measured_at DESC
 	              LIMIT 1
 	            )
@@ -153,7 +154,7 @@ func (s *WeatherStore) GetDailyStats(limit int) ([]models.WeatherDaily, error) {
 func (s *WeatherStore) GetDailyStatsByRange(startDate, endDate string) ([]models.WeatherDaily, error) {
 	var results []models.WeatherDaily
 	query := `SELECT wd.date,
-	                 wt.temperature AS sea_temperature,
+	                 COALESCE(wt.temperature, wd.sea_temperature) AS sea_temperature,
 	                 wt.measured_at AS sea_measured_at,
 	                 wd.avg_temperature, wd.min_temperature, wd.max_temperature,
 	                 wd.avg_pressure, wd.min_pressure, wd.max_pressure,
@@ -163,7 +164,8 @@ func (s *WeatherStore) GetDailyStatsByRange(startDate, endDate string) ([]models
 	            ON wt.id = (
 	              SELECT wtx.id
 	              FROM water_temperatures wtx
-	              WHERE DATE(wtx.measured_at) = wd.date
+	              WHERE wtx.measured_at >= CONCAT(wd.date, ' 00:00:00')
+	                AND wtx.measured_at < DATE_ADD(wd.date, INTERVAL 1 DAY)
 	              ORDER BY wtx.measured_at DESC
 	              LIMIT 1
 	            )
