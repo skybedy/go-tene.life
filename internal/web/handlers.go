@@ -667,6 +667,7 @@ func loadSoundTracks(root string) ([]models.SoundTrack, error) {
 	if err != nil {
 		return nil, err
 	}
+	metadata := loadSoundTrackMetadata(filepath.Join(root, "index.json"))
 
 	tracks := make([]models.SoundTrack, 0, len(entries))
 	for _, entry := range entries {
@@ -677,15 +678,61 @@ func loadSoundTracks(root string) ([]models.SoundTrack, error) {
 		if strings.ToLower(filepath.Ext(name)) != ".mp3" {
 			continue
 		}
-		tracks = append(tracks, models.SoundTrack{
+		track := models.SoundTrack{
 			Title:    soundTrackTitle(name),
 			FileName: name,
 			URL:      "/spanelsko-ceska-slovicka/files/" + name,
 			Icon:     soundTrackIcon(name),
-		})
+		}
+		if meta, ok := metadata[name]; ok {
+			if strings.TrimSpace(meta.Title) != "" {
+				track.Title = meta.Title
+			}
+			track.Lesson = meta.Lesson
+			track.Spanish = meta.Spanish
+			track.Czech = meta.Czech
+		}
+		if strings.TrimSpace(track.Lesson) == "" {
+			track.Lesson = track.Title
+		}
+		tracks = append(tracks, track)
 	}
 
 	return tracks, nil
+}
+
+type soundTrackMetadata struct {
+	File    string `json:"file"`
+	Title   string `json:"title"`
+	Lesson  string `json:"lesson"`
+	Spanish string `json:"spanish"`
+	Czech   string `json:"czech"`
+}
+
+func loadSoundTrackMetadata(path string) map[string]soundTrackMetadata {
+	out := make(map[string]soundTrackMetadata)
+	f, err := os.Open(path)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			log.Printf("Error loading sound metadata: %v", err)
+		}
+		return out
+	}
+	defer f.Close()
+
+	var records []soundTrackMetadata
+	if err := json.NewDecoder(f).Decode(&records); err != nil {
+		log.Printf("Error decoding sound metadata: %v", err)
+		return out
+	}
+	for _, rec := range records {
+		file := strings.TrimSpace(rec.File)
+		if file == "" {
+			continue
+		}
+		out[file] = rec
+	}
+	return out
 }
 
 func soundTrackTitle(fileName string) string {

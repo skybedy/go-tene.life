@@ -5,6 +5,9 @@ type SoundTrack struct {
 	FileName string
 	URL      string
 	Icon     string
+	Lesson   string
+	Spanish  string
+	Czech    string
 }
 
 type SoundsPageData struct {

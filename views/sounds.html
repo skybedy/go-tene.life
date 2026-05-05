@@ -16,6 +16,16 @@
                         {{ index .I18n "sounds_selected" }}
                     </h2>
                     <audio id="soundsPlayer" class="mt-4 w-full" controls preload="metadata"></audio>
+                    <div id="soundVocabularyPanel" class="mt-4 rounded-xl border border-gray-200 bg-white/70 p-4 shadow-sm">
+                        <p class="text-xs font-semibold uppercase text-gray-500">{{ index .I18n "sounds_now_playing" }}</p>
+                        <p id="soundSpanishText" class="mt-2 text-xl sm:text-2xl font-bold text-gray-900">{{ index .I18n "sounds_selected" }}</p>
+                        <p id="soundCzechText" class="mt-1 text-sm sm:text-base text-gray-700"></p>
+                        <p id="soundLessonText" class="mt-3 text-xs text-gray-500"></p>
+                        <button type="button" id="soundToggleCzech"
+                            class="hidden mt-3 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            {{ index .I18n "sounds_hide_czech" }}
+                        </button>
+                    </div>
                     <div class="mt-4">
                         <p class="text-xs font-semibold uppercase text-gray-500">{{ index .I18n "sounds_speed_label" }}</p>
                         <div class="mt-2 flex flex-wrap gap-2" aria-label="{{ index .I18n "sounds_speed_label" }}">
@@ -100,7 +110,10 @@
                         <div class="sound-track flex min-h-16 flex-col gap-3 rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left shadow-sm transition hover:border-blue-300 hover:bg-white sm:flex-row sm:items-center sm:justify-between overflow-hidden"
                             data-src="{{ .URL }}"
                             data-title="{{ .Title }}"
-                            data-file="{{ .FileName }}">
+                            data-file="{{ .FileName }}"
+                            data-lesson="{{ .Lesson }}"
+                            data-spanish="{{ .Spanish }}"
+                            data-czech="{{ .Czech }}">
                             <div class="flex items-center gap-3 min-w-0 w-full sm:w-auto">
                                 <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">
                                     {{ .Icon }}
@@ -153,19 +166,58 @@
         const playButtons = document.querySelectorAll('.sound-play, .sound-play-loop');
         const playlistButtons = document.querySelectorAll('.sound-playlist');
         const speedButtons = document.querySelectorAll('.sound-speed');
+        const panel = document.getElementById('soundVocabularyPanel');
+        const spanishText = document.getElementById('soundSpanishText');
+        const czechText = document.getElementById('soundCzechText');
+        const lessonText = document.getElementById('soundLessonText');
+        const toggleCzechButton = document.getElementById('soundToggleCzech');
         let selectedRate = 1;
         let activeQueue = [];
         let activeQueueIndex = -1;
+        let czechHidden = false;
 
-        if (!player || !title || playButtons.length === 0) {
+        console.debug('[sounds] init');
+        if (!player || !title) {
+            console.warn('[sounds] player/title not found');
             return;
+        }
+        if (!panel || !spanishText || !czechText || !lessonText) {
+            console.warn('[sounds] vocabulary panel elements missing');
+        } else {
+            console.debug('[sounds] vocabulary panel ready');
         }
 
         const trackData = tracks.map((track) => ({
             src: track.dataset.src || '',
             title: track.dataset.title || '',
-            file: track.dataset.file || ''
+            file: track.dataset.file || '',
+            lesson: track.dataset.lesson || '',
+            spanish: track.dataset.spanish || '',
+            czech: track.dataset.czech || ''
         })).filter((track) => track.src);
+
+        const updateVocabularyPanel = (item) => {
+            if (!spanishText || !czechText || !lessonText) {
+                return;
+            }
+
+            const primaryText = item.spanish || item.title || item.file || '';
+            const fallbackText = {{ printf "%q" (index .I18n "sounds_selected") }};
+            spanishText.textContent = primaryText;
+            czechText.textContent = item.czech || '';
+            czechText.classList.toggle('hidden', czechHidden || !item.czech);
+            lessonText.textContent = item.lesson || item.title || item.file || '';
+            if (!item.spanish && !item.czech) {
+                console.debug('[sounds] metadata missing, using fallback', item);
+            }
+            if (!primaryText) {
+                spanishText.textContent = fallbackText;
+            }
+            if (toggleCzechButton) {
+                toggleCzechButton.classList.toggle('hidden', !item.czech);
+            }
+            console.debug('[sounds] panel updated', item);
+        };
 
         const setActiveSpeed = (activeButton) => {
             speedButtons.forEach((button) => {
@@ -190,10 +242,13 @@
 
         const playItem = (item, loop) => {
             if (!item || !item.src) {
+                console.warn('[sounds] invalid track item', item);
                 return;
             }
 
+            console.debug('[sounds] current track', item);
             title.textContent = item.title;
+            updateVocabularyPanel(item);
             player.src = item.src;
             player.playbackRate = selectedRate;
             player.loop = loop;
@@ -202,6 +257,7 @@
 
         const playQueue = (items) => {
             if (items.length === 0) {
+                console.warn('[sounds] empty queue');
                 return;
             }
 
@@ -213,6 +269,7 @@
         const playTrack = (button) => {
             const track = button.closest('.sound-track');
             if (!track) {
+                console.warn('[sounds] track element not found');
                 return;
             }
 
@@ -220,7 +277,11 @@
             activeQueueIndex = -1;
             playItem({
                 src: track.dataset.src || '',
-                title: track.dataset.title || ''
+                title: track.dataset.title || '',
+                file: track.dataset.file || '',
+                lesson: track.dataset.lesson || '',
+                spanish: track.dataset.spanish || '',
+                czech: track.dataset.czech || ''
             }, button.classList.contains('sound-play-loop'));
         };
 
@@ -231,6 +292,7 @@
         playlistButtons.forEach((button) => {
             button.addEventListener('click', () => {
                 const mode = button.dataset.playlist || '';
+                console.debug('[sounds] playlist action', mode || 'single');
                 if (mode === 'all') {
                     playQueue(trackData);
                     return;
@@ -244,7 +306,11 @@
                 activeQueueIndex = -1;
                 playItem({
                     src: button.dataset.src || '',
-                    title: button.dataset.title || ''
+                    title: button.dataset.title || '',
+                    file: '',
+                    lesson: button.dataset.title || '',
+                    spanish: button.dataset.title || '',
+                    czech: ''
                 }, false);
             });
         });
@@ -275,6 +341,25 @@
                 player.playbackRate = selectedRate;
                 setActiveSpeed(button);
             });
+        });
+
+        if (toggleCzechButton) {
+            toggleCzechButton.addEventListener('click', () => {
+                czechHidden = !czechHidden;
+                czechText.classList.toggle('hidden', czechHidden);
+                toggleCzechButton.textContent = czechHidden
+                    ? {{ printf "%q" (index .I18n "sounds_show_czech") }}
+                    : {{ printf "%q" (index .I18n "sounds_hide_czech") }};
+            });
+        }
+
+        updateVocabularyPanel({
+            src: '',
+            title: {{ printf "%q" (index .I18n "sounds_selected") }},
+            file: '',
+            lesson: '',
+            spanish: '',
+            czech: ''
         });
     })();
 </script>
