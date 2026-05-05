@@ -101,6 +101,25 @@ CREATE TABLE `weather_hourly` (
   KEY `weather_hourly_date_index` (`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `water_temperatures`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `water_temperatures` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `measured_at` datetime NOT NULL COMMENT 'Exact sea temperature measurement timestamp (UTC)',
+  `temperature` decimal(5,1) NOT NULL COMMENT 'Sea water temperature in °C',
+  `source` varchar(32) NOT NULL DEFAULT 'manual' COMMENT 'Measurement source (e.g. manual)',
+  `note` varchar(255) DEFAULT NULL,
+  `legacy_weather_daily_id` bigint(20) unsigned DEFAULT NULL COMMENT 'Optional link to migrated weather_daily row',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `water_temperatures_legacy_daily_unique` (`legacy_weather_daily_id`),
+  KEY `water_temperatures_measured_at_idx` (`measured_at`),
+  KEY `water_temperatures_source_measured_at_idx` (`source`,`measured_at`),
+  CONSTRAINT `water_temperatures_legacy_daily_fk` FOREIGN KEY (`legacy_weather_daily_id`) REFERENCES `weather_daily` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `weather_monthly`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;

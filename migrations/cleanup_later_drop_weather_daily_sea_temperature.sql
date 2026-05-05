@@ -1,0 +1,4 @@
+-- LATER CLEANUP (do not run in phase 1)
+-- Run only after verifying the application uses water_temperatures exclusively.
+-- Example SQL:
+-- ALTER TABLE weather_daily DROP COLUMN sea_temperature;
