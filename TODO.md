@@ -3,7 +3,7 @@
 ## Aktuální úkoly
 
 - Udržovat AI kontextové soubory (`AGENTS.md`, `PROJECT_CONTEXT.md`, `TODO.md`, `DECISIONS.md`) aktuální při každé významné změně.
-- Zpracovat zbývající lekce slovíček (3-26) do časovaných segmentů.
+- Dokončeno: Zpracování všech lekcí slovíček (1–26) do časovaných segmentů.
 - Po ověření přepnout klienty ingestu na posílání `measured_at` (datum+čas) pro ruční teplotu moře.
 - Připravit obdobný přechod statistik s agregacemi moře (`weekly/monthly`) na zdroj z `water_temperatures` (zatím běží z agregačních tabulek).
 

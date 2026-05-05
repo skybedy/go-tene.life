@@ -1,0 +1,127 @@
+{
+  "file": "05_lekar_a_zdravi.mp3",
+  "title": "Lékař a zdraví",
+  "lesson": "Lekce 5",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.221,
+      "spanish": "el médico",
+      "czech": "lékař"
+    },
+    {
+      "start": 3.481,
+      "end": 5.751,
+      "spanish": "el hospital",
+      "czech": "nemocnice"
+    },
+    {
+      "start": 7.007,
+      "end": 9.163,
+      "spanish": "la clínica",
+      "czech": "klinika"
+    },
+    {
+      "start": 10.419,
+      "end": 12.786,
+      "spanish": "la farmacia",
+      "czech": "lékárna"
+    },
+    {
+      "start": 14.046,
+      "end": 16.295,
+      "spanish": "la cita",
+      "czech": "objednání"
+    },
+    {
+      "start": 17.555,
+      "end": 19.775,
+      "spanish": "el paciente",
+      "czech": "pacient"
+    },
+    {
+      "start": 21.035,
+      "end": 23.34,
+      "spanish": "la consulta",
+      "czech": "ordinace"
+    },
+    {
+      "start": 24.601,
+      "end": 26.839,
+      "spanish": "el síntoma",
+      "czech": "příznak"
+    },
+    {
+      "start": 28.099,
+      "end": 29.957,
+      "spanish": "el dolor",
+      "czech": "bolest"
+    },
+    {
+      "start": 31.217,
+      "end": 33.169,
+      "spanish": "la cabeza",
+      "czech": "hlava"
+    },
+    {
+      "start": 34.429,
+      "end": 36.662,
+      "spanish": "el estómago",
+      "czech": "žaludek"
+    },
+    {
+      "start": 37.923,
+      "end": 39.789,
+      "spanish": "la garganta",
+      "czech": "krk"
+    },
+    {
+      "start": 41.049,
+      "end": 43.122,
+      "spanish": "la fiebre",
+      "czech": "horečka"
+    },
+    {
+      "start": 44.381,
+      "end": 46.358,
+      "spanish": "la tos",
+      "czech": "kašel"
+    },
+    {
+      "start": 47.619,
+      "end": 50.145,
+      "spanish": "el resfriado",
+      "czech": "nachlazení"
+    },
+    {
+      "start": 51.412,
+      "end": 53.378,
+      "spanish": "la gripe",
+      "czech": "chřipka"
+    },
+    {
+      "start": 54.637,
+      "end": 56.885,
+      "spanish": "la alergia",
+      "czech": "alergie"
+    },
+    {
+      "start": 58.144,
+      "end": 60.357,
+      "spanish": "el seguro",
+      "czech": "pojištění"
+    },
+    {
+      "start": 61.61,
+      "end": 63.729,
+      "spanish": "la receta",
+      "czech": "recept"
+    },
+    {
+      "start": 64.988,
+      "end": 67.37,
+      "spanish": "el medicamento",
+      "czech": "lék"
+    }
+  ]
+}

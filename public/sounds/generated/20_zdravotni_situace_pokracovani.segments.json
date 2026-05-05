@@ -1,0 +1,127 @@
+{
+  "file": "20_zdravotni_situace_pokracovani.mp3",
+  "title": "Zdravotnictví",
+  "lesson": "Lekce 20",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.561,
+      "spanish": "la ambulancia",
+      "czech": "sanitka"
+    },
+    {
+      "start": 3.821,
+      "end": 6.153,
+      "spanish": "la urgencia",
+      "czech": "pohotovost"
+    },
+    {
+      "start": 7.413,
+      "end": 9.67,
+      "spanish": "la operación",
+      "czech": "operace"
+    },
+    {
+      "start": 10.931,
+      "end": 13.075,
+      "spanish": "el cirujano",
+      "czech": "chirurg"
+    },
+    {
+      "start": 14.331,
+      "end": 17.381,
+      "spanish": "el análisis de sangre",
+      "czech": "krevní test"
+    },
+    {
+      "start": 18.641,
+      "end": 21.181,
+      "spanish": "la radiografía",
+      "czech": "rentgen"
+    },
+    {
+      "start": 22.441,
+      "end": 24.489,
+      "spanish": "el vendaje",
+      "czech": "obvaz"
+    },
+    {
+      "start": 25.749,
+      "end": 27.938,
+      "spanish": "la escayola",
+      "czech": "sádra"
+    },
+    {
+      "start": 29.197,
+      "end": 31.561,
+      "spanish": "el termómetro",
+      "czech": "teploměr"
+    },
+    {
+      "start": 32.821,
+      "end": 35.92,
+      "spanish": "la tensión arterial",
+      "czech": "krevní tlak"
+    },
+    {
+      "start": 37.181,
+      "end": 38.799,
+      "spanish": "el latido",
+      "czech": "tep"
+    },
+    {
+      "start": 40.059,
+      "end": 42.04,
+      "spanish": "el corazón",
+      "czech": "srdce"
+    },
+    {
+      "start": 43.3,
+      "end": 45.283,
+      "spanish": "el pulmón",
+      "czech": "plíce"
+    },
+    {
+      "start": 46.542,
+      "end": 48.366,
+      "spanish": "el hígado",
+      "czech": "játra"
+    },
+    {
+      "start": 49.637,
+      "end": 51.69,
+      "spanish": "el riñón",
+      "czech": "ledvina"
+    },
+    {
+      "start": 52.95,
+      "end": 54.706,
+      "spanish": "la piel",
+      "czech": "kůže"
+    },
+    {
+      "start": 55.966,
+      "end": 57.785,
+      "spanish": "el hueso",
+      "czech": "kost"
+    },
+    {
+      "start": 59.044,
+      "end": 61.077,
+      "spanish": "el músculo",
+      "czech": "sval"
+    },
+    {
+      "start": 62.336,
+      "end": 64.659,
+      "spanish": "la vacuna",
+      "czech": "očkování"
+    },
+    {
+      "start": 65.919,
+      "end": 68.44,
+      "spanish": "la infección",
+      "czech": "infekce"
+    }
+  ]
+}

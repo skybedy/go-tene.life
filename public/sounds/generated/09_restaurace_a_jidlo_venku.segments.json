@@ -1,0 +1,127 @@
+{
+  "file": "09_restaurace_a_jidlo_venku.mp3",
+  "title": "Restaurace a jídlo venku",
+  "lesson": "Lekce 9",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.75,
+      "spanish": "el restaurante",
+      "czech": "restaurace"
+    },
+    {
+      "start": 4.02,
+      "end": 5.462,
+      "spanish": "el bar",
+      "czech": "bar"
+    },
+    {
+      "start": 6.723,
+      "end": 9.092,
+      "spanish": "la cafetería",
+      "czech": "kavárna"
+    },
+    {
+      "start": 10.351,
+      "end": 12.275,
+      "spanish": "la mesa",
+      "czech": "stůl"
+    },
+    {
+      "start": 13.535,
+      "end": 15.886,
+      "spanish": "el camarero",
+      "czech": "číšník"
+    },
+    {
+      "start": 17.146,
+      "end": 19.79,
+      "spanish": "la carta",
+      "czech": "jídelní lístek"
+    },
+    {
+      "start": 21.05,
+      "end": 22.766,
+      "spanish": "el menú",
+      "czech": "menu"
+    },
+    {
+      "start": 24.026,
+      "end": 26.014,
+      "spanish": "la cuenta",
+      "czech": "účet"
+    },
+    {
+      "start": 27.273,
+      "end": 29.526,
+      "spanish": "la reserva",
+      "czech": "rezervace"
+    },
+    {
+      "start": 30.792,
+      "end": 32.538,
+      "spanish": "pedir",
+      "czech": "objednat"
+    },
+    {
+      "start": 33.798,
+      "end": 35.515,
+      "spanish": "traer",
+      "czech": "přinést"
+    },
+    {
+      "start": 36.775,
+      "end": 38.605,
+      "spanish": "pagar",
+      "czech": "zaplatit"
+    },
+    {
+      "start": 39.865,
+      "end": 42.226,
+      "spanish": "la propina",
+      "czech": "spropitné"
+    },
+    {
+      "start": 43.486,
+      "end": 45.762,
+      "spanish": "el desayuno",
+      "czech": "snídaně"
+    },
+    {
+      "start": 47.022,
+      "end": 48.991,
+      "spanish": "la comida",
+      "czech": "oběd"
+    },
+    {
+      "start": 50.251,
+      "end": 52.166,
+      "spanish": "la cena",
+      "czech": "večeře"
+    },
+    {
+      "start": 53.427,
+      "end": 55.499,
+      "spanish": "el postre",
+      "czech": "dezert"
+    },
+    {
+      "start": 56.759,
+      "end": 58.836,
+      "spanish": "la bebida",
+      "czech": "nápoj"
+    },
+    {
+      "start": 60.096,
+      "end": 61.831,
+      "spanish": "el café",
+      "czech": "káva"
+    },
+    {
+      "start": 63.091,
+      "end": 64.78,
+      "spanish": "el té",
+      "czech": "čaj"
+    }
+  ]
+}

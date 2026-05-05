@@ -1,0 +1,127 @@
+{
+  "file": "21_finance_a_penize.mp3",
+  "title": "Finance a peníze",
+  "lesson": "Lekce 21",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.085,
+      "spanish": "el banco",
+      "czech": "banka"
+    },
+    {
+      "start": 3.345,
+      "end": 6.353,
+      "spanish": "el cajero automático",
+      "czech": "bankomat"
+    },
+    {
+      "start": 7.613,
+      "end": 10.903,
+      "spanish": "la cuenta bancaria",
+      "czech": "bankovní účet"
+    },
+    {
+      "start": 12.164,
+      "end": 14.638,
+      "spanish": "la transferencia",
+      "czech": "převod"
+    },
+    {
+      "start": 15.898,
+      "end": 18.056,
+      "spanish": "el ingreso",
+      "czech": "příjem"
+    },
+    {
+      "start": 19.317,
+      "end": 21.331,
+      "spanish": "el gasto",
+      "czech": "výdaj"
+    },
+    {
+      "start": 22.587,
+      "end": 24.565,
+      "spanish": "el ahorro",
+      "czech": "úspora"
+    },
+    {
+      "start": 25.825,
+      "end": 27.912,
+      "spanish": "el préstamo",
+      "czech": "půjčka"
+    },
+    {
+      "start": 29.172,
+      "end": 31.509,
+      "spanish": "la hipoteca",
+      "czech": "hypotéka"
+    },
+    {
+      "start": 32.771,
+      "end": 34.834,
+      "spanish": "el interés",
+      "czech": "úrok"
+    },
+    {
+      "start": 36.093,
+      "end": 39.345,
+      "spanish": "la tarjeta de crédito",
+      "czech": "kreditní karta"
+    },
+    {
+      "start": 40.623,
+      "end": 43.892,
+      "spanish": "la tarjeta de débito",
+      "czech": "debetní karta"
+    },
+    {
+      "start": 45.151,
+      "end": 47.357,
+      "spanish": "el saldo",
+      "czech": "zůstatek"
+    },
+    {
+      "start": 48.617,
+      "end": 51.506,
+      "spanish": "retirar dinero",
+      "czech": "vybrat peníze"
+    },
+    {
+      "start": 52.766,
+      "end": 55.728,
+      "spanish": "ingresar dinero",
+      "czech": "vložit peníze"
+    },
+    {
+      "start": 56.988,
+      "end": 59.844,
+      "spanish": "cambiar divisas",
+      "czech": "směnit měnu"
+    },
+    {
+      "start": 61.103,
+      "end": 63.095,
+      "spanish": "la moneda",
+      "czech": "mince"
+    },
+    {
+      "start": 64.35,
+      "end": 66.52,
+      "spanish": "el billete",
+      "czech": "bankovka"
+    },
+    {
+      "start": 67.78,
+      "end": 69.98,
+      "spanish": "el recibo",
+      "czech": "účtenka"
+    },
+    {
+      "start": 71.24,
+      "end": 73.56,
+      "spanish": "la factura",
+      "czech": "faktura"
+    }
+  ]
+}

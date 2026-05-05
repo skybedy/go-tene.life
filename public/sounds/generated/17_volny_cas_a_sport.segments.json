@@ -1,0 +1,127 @@
+{
+  "file": "17_volny_cas_a_sport.mp3",
+  "title": "Volný čas a sport",
+  "lesson": "Lekce 17",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.199,
+      "spanish": "el deporte",
+      "czech": "sport"
+    },
+    {
+      "start": 3.459,
+      "end": 5.519,
+      "spanish": "el fútbol",
+      "czech": "fotbal"
+    },
+    {
+      "start": 6.778,
+      "end": 9.279,
+      "spanish": "el baloncesto",
+      "czech": "basketbal"
+    },
+    {
+      "start": 10.54,
+      "end": 12.556,
+      "spanish": "el tenis",
+      "czech": "tenis"
+    },
+    {
+      "start": 13.817,
+      "end": 16.12,
+      "spanish": "la natación",
+      "czech": "plavání"
+    },
+    {
+      "start": 17.38,
+      "end": 19.739,
+      "spanish": "el gimnasio",
+      "czech": "posilovna"
+    },
+    {
+      "start": 20.999,
+      "end": 22.72,
+      "spanish": "correr",
+      "czech": "běhat"
+    },
+    {
+      "start": 23.98,
+      "end": 25.705,
+      "spanish": "caminar",
+      "czech": "chodit"
+    },
+    {
+      "start": 26.965,
+      "end": 28.812,
+      "spanish": "bailar",
+      "czech": "tančit"
+    },
+    {
+      "start": 30.062,
+      "end": 31.957,
+      "spanish": "cantar",
+      "czech": "zpívat"
+    },
+    {
+      "start": 33.24,
+      "end": 34.878,
+      "spanish": "leer",
+      "czech": "číst"
+    },
+    {
+      "start": 36.138,
+      "end": 38.012,
+      "spanish": "escribir",
+      "czech": "psát"
+    },
+    {
+      "start": 39.272,
+      "end": 41.209,
+      "spanish": "dibujar",
+      "czech": "kreslit"
+    },
+    {
+      "start": 42.469,
+      "end": 44.271,
+      "spanish": "pintar",
+      "czech": "malovat"
+    },
+    {
+      "start": 45.531,
+      "end": 48.483,
+      "spanish": "tocar la guitarra",
+      "czech": "hrát na kytaru"
+    },
+    {
+      "start": 49.743,
+      "end": 52.541,
+      "spanish": "tocar el piano",
+      "czech": "hrát na klavír"
+    },
+    {
+      "start": 53.801,
+      "end": 56.708,
+      "spanish": "ver una película",
+      "czech": "sledovat film"
+    },
+    {
+      "start": 57.969,
+      "end": 61.035,
+      "spanish": "escuchar música",
+      "czech": "poslouchat hudbu"
+    },
+    {
+      "start": 62.292,
+      "end": 65.622,
+      "spanish": "salir con amigos",
+      "czech": "jít ven s přáteli"
+    },
+    {
+      "start": 66.882,
+      "end": 69.8,
+      "spanish": "ir de compras",
+      "czech": "jít nakupovat"
+    }
+  ]
+}

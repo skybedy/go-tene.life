@@ -1,0 +1,127 @@
+{
+  "file": "03_opravy_a_sluzby.mp3",
+  "title": "Opravy a služby",
+  "lesson": "Lekce 3",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.639,
+      "spanish": "el fontanero",
+      "czech": "instalatér"
+    },
+    {
+      "start": 3.899,
+      "end": 6.689,
+      "spanish": "el electricista",
+      "czech": "elektrikář"
+    },
+    {
+      "start": 7.949,
+      "end": 10.396,
+      "spanish": "el carpintero",
+      "czech": "truhlář"
+    },
+    {
+      "start": 11.657,
+      "end": 13.683,
+      "spanish": "el pintor",
+      "czech": "malíř"
+    },
+    {
+      "start": 14.944,
+      "end": 17.18,
+      "spanish": "el albañil",
+      "czech": "zedník"
+    },
+    {
+      "start": 18.45,
+      "end": 20.959,
+      "spanish": "el mecánico",
+      "czech": "automechanik"
+    },
+    {
+      "start": 22.213,
+      "end": 24.797,
+      "spanish": "el cerrajero",
+      "czech": "zámečník"
+    },
+    {
+      "start": 26.057,
+      "end": 28.119,
+      "spanish": "la avería",
+      "czech": "porucha"
+    },
+    {
+      "start": 29.379,
+      "end": 31.307,
+      "spanish": "la fuga",
+      "czech": "únik"
+    },
+    {
+      "start": 32.567,
+      "end": 34.925,
+      "spanish": "el enchufe",
+      "czech": "zásuvka"
+    },
+    {
+      "start": 36.185,
+      "end": 38.469,
+      "spanish": "la bombilla",
+      "czech": "žárovka"
+    },
+    {
+      "start": 39.726,
+      "end": 41.802,
+      "spanish": "el martillo",
+      "czech": "kladivo"
+    },
+    {
+      "start": 43.062,
+      "end": 45.123,
+      "spanish": "el clavo",
+      "czech": "hřebík"
+    },
+    {
+      "start": 46.378,
+      "end": 48.45,
+      "spanish": "el tornillo",
+      "czech": "šroub"
+    },
+    {
+      "start": 49.71,
+      "end": 52.938,
+      "spanish": "la llave inglesa",
+      "czech": "francouzský klíč"
+    },
+    {
+      "start": 54.198,
+      "end": 56.731,
+      "spanish": "la herramienta",
+      "czech": "nářadí"
+    },
+    {
+      "start": 57.991,
+      "end": 59.821,
+      "spanish": "el cable",
+      "czech": "kabel"
+    },
+    {
+      "start": 61.08,
+      "end": 62.941,
+      "spanish": "arreglar",
+      "czech": "opravit"
+    },
+    {
+      "start": 64.205,
+      "end": 66.151,
+      "spanish": "reparar",
+      "czech": "spravit"
+    },
+    {
+      "start": 67.408,
+      "end": 69.59,
+      "spanish": "cambiar",
+      "czech": "vyměnit"
+    }
+  ]
+}
