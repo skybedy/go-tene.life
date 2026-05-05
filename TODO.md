@@ -5,6 +5,7 @@
 - Udržovat AI kontextové soubory (`AGENTS.md`, `PROJECT_CONTEXT.md`, `TODO.md`, `DECISIONS.md`) aktuální při každé významné změně.
 - Otestovat migrace `0008` a `0009` na lokální kopii produkčních dat.
 - Po ověření přepnout klienty ingestu na posílání `measured_at` (datum+čas) pro ruční teplotu moře.
+- Rozhodnout, zda aktuální swap barev ve weather boxu (orange/white) ponechat finálně, a případně commitnout.
 
 ## K doplnění
 
@@ -17,6 +18,7 @@
 - Ověřit, zda je `README.md` plně aktuální vůči současným routám a stránkám.
 - Ověřit aktuální CI/CD postup (zatím nezjištěno).
 - Ověřit kontrolní SQL dotazy z `docs/sql/water_temperatures_migration_checks.sql` po backfillu.
+- Ověřit vizuálně weather box na mobilu i desktopu po swapu barev (kontrast, čitelnost).
 
 ## Možné budoucí úpravy
 

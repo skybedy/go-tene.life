@@ -22,3 +22,9 @@
 
 7. Teplota moře se migruje z denního agregátu `weather_daily.sea_temperature` do samostatné tabulky `water_temperatures` s přesným časem měření.
 - Důvod: ruční měření probíhá nepravidelně a vícekrát denně; denní agregát neodpovídá realitě point-in-time měření.
+
+8. Backfill historických teplot moře používá default čas `10:00:00` (UTC) pro záznamy převzaté z `weather_daily`.
+- Důvod: v původních datech není přesný čas měření; byl zvolen jednotný a zdokumentovaný čas pro konzistentní migraci.
+
+9. V homepage weather boxu byl použit konzistentní swap barev mezi `text-white/90` a `text-orange-300`.
+- Důvod: uživatelský požadavek na sjednocení vizuální hierarchie (co bylo bílé má být oranžové a naopak).

@@ -4,6 +4,7 @@ Pravidla pro AI coding agenty v tomto repozitáři (`go-tene.life`).
 
 ## Základní principy
 
+- Komunikuj primárně v češtině, ale angličtina je akceptovatelná v technických kontextech.
 - Pracuj pouze podle aktuálního stavu souborů a repozitáře.
 - Nepředpokládej kontext z předchozích chatů.
 - Před změnami vždy ověř aktuální adresář (`pwd`) a Git stav, pokud je Git dostupný.

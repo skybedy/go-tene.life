@@ -8,7 +8,7 @@
 ## Aktuální stav
 
 - Typ: rozpracovaný existující projekt.
-- Git: repozitář je inicializovaný; pracovní strom byl při založení tohoto kontextu čistý.
+- Git: aktuální větev `feature/water-temperature-refactor`; pracovní strom obsahuje lokální úpravu `views/index.html` (UI swap barev ve weather boxu, zatím bez commitu).
 - AI kontextové soubory byly vytvořeny v tomto kroku.
 
 ## Technologie
@@ -20,6 +20,7 @@
 - Styling: Tailwind CSS 4 (`@tailwindcss/cli`), zdroj `resources/css/app.css`, výstup `public/css/app.css`.
 - Migrace: SQL migrace v `migrations/` přes `golang-migrate` (Makefile).
 - Sea temperature redesign (in progress): nové měření jde do `water_temperatures` (timestamp + hodnota), legacy `weather_daily.sea_temperature` je zatím ponechán kvůli bezpečné etapizaci.
+- Backfill pravidlo: historické hodnoty z `weather_daily.sea_temperature` se mapují na čas `10:00:00` (UTC) jako default pro legacy denní záznamy.
 
 ## Důležité adresáře a soubory
 
@@ -55,3 +56,4 @@
 - `node_modules/` je přítomné v projektu.
 - V `data/` jsou cache JSON soubory používané kolektory.
 - Konkrétní deployment workflow je zatím nezjištěno (k doplnění).
+- V homepage weather boxu proběhl swap barev (to, co bylo `text-white/90`, je nyní `text-orange-300`; původní `text-orange-300` je nyní `text-white/90`).
