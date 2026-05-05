@@ -691,10 +691,16 @@ func loadSoundTracks(root string) ([]models.SoundTrack, error) {
 			track.Lesson = meta.Lesson
 			track.Spanish = meta.Spanish
 			track.Czech = meta.Czech
+			track.Segments = meta.Segments
 		}
 		if strings.TrimSpace(track.Lesson) == "" {
 			track.Lesson = track.Title
 		}
+		segmentsJSON, err := json.Marshal(track.Segments)
+		if err != nil {
+			segmentsJSON = []byte("[]")
+		}
+		track.SegmentsJSON = string(segmentsJSON)
 		tracks = append(tracks, track)
 	}
 
@@ -702,11 +708,12 @@ func loadSoundTracks(root string) ([]models.SoundTrack, error) {
 }
 
 type soundTrackMetadata struct {
-	File    string `json:"file"`
-	Title   string `json:"title"`
-	Lesson  string `json:"lesson"`
-	Spanish string `json:"spanish"`
-	Czech   string `json:"czech"`
+	File     string                `json:"file"`
+	Title    string                `json:"title"`
+	Lesson   string                `json:"lesson"`
+	Spanish  string                `json:"spanish"`
+	Czech    string                `json:"czech"`
+	Segments []models.SoundSegment `json:"segments"`
 }
 
 func loadSoundTrackMetadata(path string) map[string]soundTrackMetadata {

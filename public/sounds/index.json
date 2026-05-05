@@ -1,5 +1,191 @@
 [
-  {"file":"01_nakupovani_a_jidlo.mp3","title":"Nakupování a jídlo","lesson":"Test metadat","spanish":"TEST ESPAÑOL","czech":"TEST ČESKY"},
+  {
+    "file": "01_nakupovani_a_jidlo.mp3",
+    "title": "Nakupování a jídlo",
+    "lesson": "Lekce 1",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.968,
+        "spanish": "el supermercado",
+        "czech": "supermarket"
+      },
+      {
+        "start": 4.228,
+        "end": 6.187,
+        "spanish": "la tienda",
+        "czech": "obchod"
+      },
+      {
+        "start": 7.447,
+        "end": 9.688,
+        "spanish": "el cajero",
+        "czech": "pokladník"
+      },
+      {
+        "start": 10.948,
+        "end": 13.097,
+        "spanish": "el efectivo",
+        "czech": "hotovost"
+      },
+      {
+        "start": 14.337,
+        "end": 16.349,
+        "spanish": "la tarjeta",
+        "czech": "karta"
+      },
+      {
+        "start": 17.61,
+        "end": 19.506,
+        "spanish": "la bolsa",
+        "czech": "taška"
+      },
+      {
+        "start": 20.766,
+        "end": 22.827,
+        "spanish": "la cesta",
+        "czech": "košík"
+      },
+      {
+        "start": 24.087,
+        "end": 26.294,
+        "spanish": "el carrito",
+        "czech": "vozík"
+      },
+      {
+        "start": 27.546,
+        "end": 29.417,
+        "spanish": "la carne",
+        "czech": "maso"
+      },
+      {
+        "start": 30.676,
+        "end": 32.582,
+        "spanish": "el pescado",
+        "czech": "ryba"
+      },
+      {
+        "start": 33.842,
+        "end": 36.294,
+        "spanish": "las verduras",
+        "czech": "zelenina"
+      },
+      {
+        "start": 37.55,
+        "end": 39.713,
+        "spanish": "las frutas",
+        "czech": "ovoce"
+      },
+      {
+        "start": 40.974,
+        "end": 42.684,
+        "spanish": "el pan",
+        "czech": "chleba"
+      },
+      {
+        "start": 43.944,
+        "end": 45.862,
+        "spanish": "la leche",
+        "czech": "mléko"
+      },
+      {
+        "start": 47.122,
+        "end": 48.945,
+        "spanish": "el queso",
+        "czech": "sýr"
+      },
+      {
+        "start": 50.205,
+        "end": 52.322,
+        "spanish": "los huevos",
+        "czech": "vejce"
+      },
+      {
+        "start": 53.583,
+        "end": 55.419,
+        "spanish": "el arroz",
+        "czech": "rýže"
+      },
+      {
+        "start": 56.679,
+        "end": 58.76,
+        "spanish": "la pasta",
+        "czech": "těstoviny"
+      },
+      {
+        "start": 60.02,
+        "end": 62.098,
+        "spanish": "la bebida",
+        "czech": "nápoj"
+      },
+      {
+        "start": 63.358,
+        "end": 65.119,
+        "spanish": "el agua",
+        "czech": "voda"
+      },
+      {
+        "start": 66.379,
+        "end": 68.165,
+        "spanish": "el vino",
+        "czech": "víno"
+      },
+      {
+        "start": 69.424,
+        "end": 71.299,
+        "spanish": "la cerveza",
+        "czech": "pivo"
+      },
+      {
+        "start": 72.559,
+        "end": 74.669,
+        "spanish": "el descuento",
+        "czech": "sleva"
+      },
+      {
+        "start": 75.929,
+        "end": 78.141,
+        "spanish": "la oferta",
+        "czech": "nabídka"
+      },
+      {
+        "start": 79.401,
+        "end": 81.232,
+        "spanish": "el precio",
+        "czech": "cena"
+      },
+      {
+        "start": 82.492,
+        "end": 84.194,
+        "spanish": "el kilo",
+        "czech": "kilo"
+      },
+      {
+        "start": 85.454,
+        "end": 87.231,
+        "spanish": "el litro",
+        "czech": "litr"
+      },
+      {
+        "start": 88.493,
+        "end": 90.506,
+        "spanish": "la marca",
+        "czech": "značka"
+      },
+      {
+        "start": 91.766,
+        "end": 93.882,
+        "spanish": "la lista",
+        "czech": "seznam"
+      },
+      {
+        "start": 95.142,
+        "end": 97.1,
+        "spanish": "el mercado",
+        "czech": "trh"
+      }
+    ]
+  },
   {"file":"02_domacnost_a_sousedi.mp3","title":"Domácnost a sousedé","lesson":"Test metadat","spanish":"TEST ESPAÑOL","czech":"TEST ČESKY"},
   {"file":"03_opravy_a_sluzby.mp3","title":"Opravy a služby","lesson":"Opravy a služby"},
   {"file":"04_doprava_a_orientace.mp3","title":"Doprava a orientace","lesson":"Doprava a orientace"},

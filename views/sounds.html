@@ -20,6 +20,7 @@
                         <p class="text-xs font-semibold uppercase text-gray-500">{{ index .I18n "sounds_now_playing" }}</p>
                         <p id="soundSpanishText" class="mt-2 text-xl sm:text-2xl font-bold text-gray-900">{{ index .I18n "sounds_selected" }}</p>
                         <p id="soundCzechText" class="mt-1 text-sm sm:text-base text-gray-700"></p>
+                        <p id="soundSegmentPosition" class="mt-1 text-xs text-gray-500"></p>
                         <p id="soundLessonText" class="mt-3 text-xs text-gray-500"></p>
                         <button type="button" id="soundToggleCzech"
                             class="hidden mt-3 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
@@ -113,7 +114,8 @@
                             data-file="{{ .FileName }}"
                             data-lesson="{{ .Lesson }}"
                             data-spanish="{{ .Spanish }}"
-                            data-czech="{{ .Czech }}">
+                            data-czech="{{ .Czech }}"
+                            data-segments="{{ .SegmentsJSON }}">
                             <div class="flex items-center gap-3 min-w-0 w-full sm:w-auto">
                                 <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">
                                     {{ .Icon }}
@@ -160,6 +162,7 @@
 
 <script>
     (() => {
+        const DEBUG_SOUNDS = false;
         const player = document.getElementById('soundsPlayer');
         const title = document.getElementById('currentSoundTitle');
         const tracks = Array.from(document.querySelectorAll('.sound-track'));
@@ -169,23 +172,68 @@
         const panel = document.getElementById('soundVocabularyPanel');
         const spanishText = document.getElementById('soundSpanishText');
         const czechText = document.getElementById('soundCzechText');
+        const segmentPositionText = document.getElementById('soundSegmentPosition');
         const lessonText = document.getElementById('soundLessonText');
         const toggleCzechButton = document.getElementById('soundToggleCzech');
         let selectedRate = 1;
         let activeQueue = [];
         let activeQueueIndex = -1;
         let czechHidden = false;
+        let currentItem = null;
+        let currentSegmentIndex = -1;
 
-        console.debug('[sounds] init');
+        const debugLog = (...args) => {
+            if (DEBUG_SOUNDS) {
+                console.debug(...args);
+            }
+        };
+
+        debugLog('[sounds] init');
         if (!player || !title) {
             console.warn('[sounds] player/title not found');
             return;
         }
-        if (!panel || !spanishText || !czechText || !lessonText) {
+        if (!panel || !spanishText || !czechText || !segmentPositionText || !lessonText) {
             console.warn('[sounds] vocabulary panel elements missing');
         } else {
-            console.debug('[sounds] vocabulary panel ready');
+            debugLog('[sounds] vocabulary panel ready');
         }
+
+        const parseSegments = (rawValue) => {
+            if (!rawValue) {
+                return [];
+            }
+            try {
+                const parsed = JSON.parse(rawValue);
+                if (!Array.isArray(parsed)) {
+                    return [];
+                }
+                return parsed.filter((segment) =>
+                    segment &&
+                    Number.isFinite(Number.parseFloat(segment.start)) &&
+                    Number.isFinite(Number.parseFloat(segment.end)) &&
+                    Number.parseFloat(segment.end) > Number.parseFloat(segment.start)
+                ).map((segment) => ({
+                    start: Number.parseFloat(segment.start),
+                    end: Number.parseFloat(segment.end),
+                    spanish: segment.spanish || '',
+                    czech: segment.czech || ''
+                }));
+            } catch (error) {
+                console.warn('[sounds] invalid segments json', error);
+                return [];
+            }
+        };
+
+        const normalizeItem = (item) => ({
+            src: item.src || '',
+            title: item.title || '',
+            file: item.file || '',
+            lesson: item.lesson || '',
+            spanish: item.spanish || '',
+            czech: item.czech || '',
+            segments: Array.isArray(item.segments) ? item.segments : []
+        });
 
         const trackData = tracks.map((track) => ({
             src: track.dataset.src || '',
@@ -193,30 +241,85 @@
             file: track.dataset.file || '',
             lesson: track.dataset.lesson || '',
             spanish: track.dataset.spanish || '',
-            czech: track.dataset.czech || ''
+            czech: track.dataset.czech || '',
+            segments: parseSegments(track.dataset.segments || '[]')
         })).filter((track) => track.src);
 
-        const updateVocabularyPanel = (item) => {
-            if (!spanishText || !czechText || !lessonText) {
+        const updateVocabularyPanel = (item, segmentIndex = -1) => {
+            if (!spanishText || !czechText || !segmentPositionText || !lessonText) {
                 return;
             }
 
-            const primaryText = item.spanish || item.title || item.file || '';
+            const segments = Array.isArray(item.segments) ? item.segments : [];
+            const hasSegment = segmentIndex >= 0 && segmentIndex < segments.length;
+            const segment = hasSegment ? segments[segmentIndex] : null;
+            const primaryText = segment ? (segment.spanish || item.title || item.file || '') : (item.spanish || item.title || item.file || '');
+            const czechValue = segment ? (segment.czech || '') : (item.czech || '');
             const fallbackText = {{ printf "%q" (index .I18n "sounds_selected") }};
             spanishText.textContent = primaryText;
-            czechText.textContent = item.czech || '';
-            czechText.classList.toggle('hidden', czechHidden || !item.czech);
+            czechText.textContent = czechValue;
+            czechText.classList.toggle('hidden', czechHidden || !czechValue);
             lessonText.textContent = item.lesson || item.title || item.file || '';
-            if (!item.spanish && !item.czech) {
-                console.debug('[sounds] metadata missing, using fallback', item);
+            segmentPositionText.textContent = hasSegment ? `${segmentIndex + 1} / ${segments.length}` : '';
+            if (!segment && !item.spanish && !item.czech) {
+                debugLog('[sounds] metadata missing, using fallback', item);
             }
             if (!primaryText) {
                 spanishText.textContent = fallbackText;
             }
             if (toggleCzechButton) {
-                toggleCzechButton.classList.toggle('hidden', !item.czech);
+                toggleCzechButton.classList.toggle('hidden', !czechValue);
             }
-            console.debug('[sounds] panel updated', item);
+            debugLog('[sounds] panel updated', item, segmentIndex);
+        };
+
+        const findActiveSegmentIndex = (segments, currentTime, previousIndex) => {
+            if (!segments.length) {
+                return -1;
+            }
+
+            if (previousIndex >= 0 && previousIndex < segments.length) {
+                const current = segments[previousIndex];
+                if (currentTime >= current.start && currentTime < current.end) {
+                    return previousIndex;
+                }
+            }
+
+            for (let index = 0; index < segments.length; index += 1) {
+                const segment = segments[index];
+                if (currentTime >= segment.start && currentTime < segment.end) {
+                    return index;
+                }
+            }
+
+            if (currentTime < segments[0].start) {
+                return -1;
+            }
+
+            for (let index = segments.length - 1; index >= 0; index -= 1) {
+                if (currentTime >= segments[index].start) {
+                    return index;
+                }
+            }
+
+            return -1;
+        };
+
+        const updateFromCurrentTime = () => {
+            if (!currentItem) {
+                return;
+            }
+            const segments = currentItem.segments || [];
+            if (!segments.length) {
+                updateVocabularyPanel(currentItem, -1);
+                return;
+            }
+            const nextIndex = findActiveSegmentIndex(segments, player.currentTime, currentSegmentIndex);
+            if (nextIndex !== currentSegmentIndex) {
+                currentSegmentIndex = nextIndex;
+                debugLog('[sounds] active segment changed', currentSegmentIndex, player.currentTime);
+            }
+            updateVocabularyPanel(currentItem, currentSegmentIndex);
         };
 
         const setActiveSpeed = (activeButton) => {
@@ -245,13 +348,17 @@
                 console.warn('[sounds] invalid track item', item);
                 return;
             }
+            const normalizedItem = normalizeItem(item);
+            currentItem = normalizedItem;
+            currentSegmentIndex = -1;
 
-            console.debug('[sounds] current track', item);
-            title.textContent = item.title;
-            updateVocabularyPanel(item);
-            player.src = item.src;
+            debugLog('[sounds] current track', normalizedItem);
+            title.textContent = normalizedItem.title;
+            updateVocabularyPanel(normalizedItem, -1);
+            player.src = normalizedItem.src;
             player.playbackRate = selectedRate;
             player.loop = loop;
+            updateFromCurrentTime();
             player.play().catch(() => {});
         };
 
@@ -281,7 +388,8 @@
                 file: track.dataset.file || '',
                 lesson: track.dataset.lesson || '',
                 spanish: track.dataset.spanish || '',
-                czech: track.dataset.czech || ''
+                czech: track.dataset.czech || '',
+                segments: parseSegments(track.dataset.segments || '[]')
             }, button.classList.contains('sound-play-loop'));
         };
 
@@ -310,7 +418,8 @@
                     file: '',
                     lesson: button.dataset.title || '',
                     spanish: button.dataset.title || '',
-                    czech: ''
+                    czech: '',
+                    segments: []
                 }, false);
             });
         });
@@ -329,6 +438,9 @@
 
             playItem(activeQueue[activeQueueIndex], false);
         });
+        player.addEventListener('timeupdate', updateFromCurrentTime);
+        player.addEventListener('seeked', updateFromCurrentTime);
+        player.addEventListener('loadedmetadata', updateFromCurrentTime);
 
         speedButtons.forEach((button) => {
             button.addEventListener('click', () => {
@@ -346,21 +458,23 @@
         if (toggleCzechButton) {
             toggleCzechButton.addEventListener('click', () => {
                 czechHidden = !czechHidden;
-                czechText.classList.toggle('hidden', czechHidden);
+                updateFromCurrentTime();
                 toggleCzechButton.textContent = czechHidden
                     ? {{ printf "%q" (index .I18n "sounds_show_czech") }}
                     : {{ printf "%q" (index .I18n "sounds_hide_czech") }};
             });
         }
 
-        updateVocabularyPanel({
+        currentItem = normalizeItem({
             src: '',
             title: {{ printf "%q" (index .I18n "sounds_selected") }},
             file: '',
             lesson: '',
             spanish: '',
-            czech: ''
+            czech: '',
+            segments: []
         });
+        updateVocabularyPanel(currentItem, -1);
     })();
 </script>
 
