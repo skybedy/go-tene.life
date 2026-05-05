@@ -8,7 +8,7 @@
 ## Aktuální stav
 
 - Typ: rozpracovaný existující projekt.
-- Git: aktuální větev `feature/water-temperature-refactor`; pracovní strom je čistý, UI swap barev a dokumentace byly commitnuty.
+- Git: aktuální větev `main`; feature větev `feature/water-temperature-refactor` byla úspěšně sloučena. Pracovní strom je čistý.
 - Migrace `0008`, `0009` a `0010` byly otestovány a aplikovány.
 
 ## Technologie
