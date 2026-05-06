@@ -21,6 +21,8 @@ type SoundSegment struct {
 
 type SoundsPageData struct {
 	Tracks          []SoundTrack
+	Track250        *SoundTrack
+	Track500        *SoundTrack
 	PageTitle       string
 	Locale          string
 	LocalePrefix    string

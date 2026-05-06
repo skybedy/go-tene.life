@@ -66,8 +66,12 @@
                             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 <button type="button"
                                     class="sound-playlist flex min-w-0 items-center gap-3 text-left text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg"
-                                    data-src="/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_1_250.mp3"
-                                    data-title="{{ index .I18n "sounds_play_1_250" }}">
+                                    data-src="{{ if .Track250 }}{{ .Track250.URL }}{{ else }}/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_1_250.mp3{{ end }}"
+                                    data-title="{{ index .I18n "sounds_play_1_250" }}"
+                                    data-file="spanelsko_ceska_slovicka_1_250.mp3"
+                                    data-lesson="1-250"
+                                    data-spanish="{{ index .I18n "sounds_play_1_250" }}"
+                                    data-segments="{{ if .Track250 }}{{ .Track250.SegmentsJSON }}{{ end }}">
                                     <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">📘</span>
                                     <span class="min-w-0">{{ index .I18n "sounds_play_1_250" }}</span>
                                 </button>
@@ -84,8 +88,12 @@
                             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 <button type="button"
                                     class="sound-playlist flex min-w-0 items-center gap-3 text-left text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg"
-                                    data-src="/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_251_500.mp3"
-                                    data-title="{{ index .I18n "sounds_play_251_500" }}">
+                                    data-src="{{ if .Track500 }}{{ .Track500.URL }}{{ else }}/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_251_500.mp3{{ end }}"
+                                    data-title="{{ index .I18n "sounds_play_251_500" }}"
+                                    data-file="spanelsko_ceska_slovicka_251_500.mp3"
+                                    data-lesson="251-500"
+                                    data-spanish="{{ index .I18n "sounds_play_251_500" }}"
+                                    data-segments="{{ if .Track500 }}{{ .Track500.SegmentsJSON }}{{ end }}">
                                     <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">📙</span>
                                     <span class="min-w-0">{{ index .I18n "sounds_play_251_500" }}</span>
                                 </button>
@@ -415,11 +423,11 @@
                 playItem({
                     src: button.dataset.src || '',
                     title: button.dataset.title || '',
-                    file: '',
-                    lesson: button.dataset.title || '',
-                    spanish: button.dataset.title || '',
-                    czech: '',
-                    segments: []
+                    file: button.dataset.file || '',
+                    lesson: button.dataset.lesson || button.dataset.title || '',
+                    spanish: button.dataset.spanish || button.dataset.title || '',
+                    czech: button.dataset.czech || '',
+                    segments: parseSegments(button.dataset.segments || '[]')
                 }, false);
             });
         });

@@ -646,8 +646,19 @@ func (h *Handler) SoundsHandler(c echo.Context) error {
 		tracks = nil
 	}
 
+	var track250, track500 *models.SoundTrack
+	for i := range tracks {
+		if tracks[i].FileName == "spanelsko_ceska_slovicka_1_250.mp3" {
+			track250 = &tracks[i]
+		} else if tracks[i].FileName == "spanelsko_ceska_slovicka_251_500.mp3" {
+			track500 = &tracks[i]
+		}
+	}
+
 	data := models.SoundsPageData{
 		Tracks:          tracks,
+		Track250:        track250,
+		Track500:        track500,
 		PageTitle:       i18n.T(locale, "sounds_title"),
 		Locale:          locale,
 		LocalePrefix:    i18n.LocalePrefix(locale),
