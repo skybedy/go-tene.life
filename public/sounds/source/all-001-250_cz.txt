@@ -1,0 +1,250 @@
+supermarket
+obchod
+pokladník
+hotovost
+karta
+taška
+košík
+vozík
+maso
+ryba
+zelenina
+ovoce
+chleba
+mléko
+sýr
+vejce
+rýže
+těstoviny
+nápoj
+voda
+víno
+pivo
+sleva
+nabídka
+cena
+kilo
+litr
+značka
+seznam
+trh
+soused
+čtvrť
+dům
+byt
+dveře
+klíč
+zvonek
+domovník
+garáž
+balkon
+okno
+výtah
+schody
+střecha
+zahrada
+obývák
+kuchyň
+koupelna
+ložnice
+postel
+instalatér
+elektrikář
+truhlář
+malíř
+zedník
+automechanik
+zámečník
+porucha
+únik
+zásuvka
+žárovka
+kladivo
+hřebík
+šroub
+francouzský klíč
+nářadí
+kabel
+opravit
+spravit
+vyměnit
+ulice
+třída
+náměstí
+roh
+semafor
+zastávka
+stanice
+metro
+autobus
+vlak
+taxi
+auto
+motorka
+kolo
+parkoviště
+benzín
+mapa
+adresa
+zeptat se
+hledat
+lékař
+nemocnice
+klinika
+lékárna
+objednání
+pacient
+ordinace
+příznak
+bolest
+hlava
+žaludek
+krk
+horečka
+kašel
+nachlazení
+chřipka
+alergie
+pojištění
+recept
+lék
+radnice
+kancelář
+policie
+pas
+cizinecké číslo
+povolení k pobytu
+přihlášení k pobytu
+předchozí objednání
+dokument
+potvrzení
+žádost
+obnovení
+podpis
+vyplnit
+požádat
+zaplatit
+daň
+pokuta
+smlouva
+zákon
+ahoj
+dobrý den
+dobré odpoledne
+dobrý večer, dobrou noc
+sbohem
+zatím
+prosím
+děkuji
+není zač
+promiňte
+omluvte mě
+jak se máte?
+dobře
+špatně
+tak tak
+těší mě
+potěšení
+jak se jmenuješ?
+jmenuji se…
+odkud jsi?
+restaurace
+bar
+kavárna
+stůl
+číšník
+jídelní lístek
+menu
+účet
+rezervace
+objednat
+přinést
+zaplatit
+spropitné
+snídaně
+oběd
+večeře
+dezert
+nápoj
+káva
+čaj
+pohovka
+židle
+stůl
+lampa
+koberec
+skříň
+zásuvka
+zrcadlo
+závěs
+zeď
+podlaha
+strop
+topení
+klimatizace
+ventilátor
+kohoutek
+sprcha
+vana
+záchod
+umyvadlo
+čistit
+mýt
+zametat
+vysávat
+utírat prach
+prát
+žehlit
+skládat
+pračka
+sušička
+prací prostředek
+aviváž
+mýdlo
+houbička
+koště
+kýbl
+mop
+hadr
+odpadky
+odpadkový koš
+počítač
+notebook
+myš
+klávesnice
+obrazovka
+mobil
+nabíječka
+baterie
+e-mail
+zpráva
+volat
+položit telefon
+odpovědět
+poslat
+přijmout
+internet
+heslo
+soubor
+aplikace
+sociální síť
+internetový obchod
+objednávka
+balíček
+doručení
+zásilka
+doručovatel
+doručovací adresa
+sledování zásilky
+platba
+faktura
+vrátit
+vrátit peníze
+záruka
+výměna
+velikost
+číslo
+barva
+model
+design
+kvalita

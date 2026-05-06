@@ -9,7 +9,7 @@
 
 - Typ: rozpracovaný existující projekt.
 - Git: aktuální větev `feature/sound-segments-lesson-02`.
-- Lekce 1–26 španělských slovíček mají vygenerované časované segmenty v `public/sounds/index.json`.
+- Všechna slovíčka (lekce 1–26 i velké soubory 1–250, 251–500) mají vygenerované časované segmenty v `public/sounds/index.json`.
 
 ## Technologie
 
