@@ -18,6 +18,7 @@
 - Ověřit aktuální CI/CD postup (zatím nezjištěno).
 - Ověřit kontrolní SQL dotazy z `docs/sql/water_temperatures_migration_checks.sql` po backfillu.
 - Ověřit vizuálně weather box na mobilu i desktopu po swapu barev (kontrast, čitelnost).
+- Vizuálně ověřit na `/statistics/daily` chování teploty moře po restartu aplikace: `Dnes HH:MM` pro dnešní měření a fallback na poslední dostupné datum+čas, pokud dnešní záznam chybí.
 
 ## Možné budoucí úpravy
 

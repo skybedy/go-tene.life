@@ -34,3 +34,6 @@
 
 11. Legacy sloupec `weather_daily.sea_temperature` se odstraňuje migrací `0011_drop_weather_daily_sea_temperature`.
 - Důvod: po přepnutí čtení i zápisu na `water_temperatures` už sloupec způsoboval jen duplicitní stav a riziko nekonzistence.
+
+12. Na `/statistics/daily` se při chybějícím dnešním měření teploty moře použije fallback na poslední dostupné měření, ale štítek `Dnes HH:MM` se zobrazí pouze pro skutečně dnešní záznam.
+- Důvod: UI má korektně rozlišit aktuální dnešní měření od historické fallback hodnoty a předejít dojmu, že starší data jsou dnešní. Čas fallback záznamu se pro tuto stránku vrací tak, jak je uložený ve `water_temperatures`.

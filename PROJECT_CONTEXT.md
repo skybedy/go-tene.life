@@ -22,6 +22,7 @@
 - Sea temperature redesign (active): nové měření jde do `water_temperatures` (timestamp + hodnota), legacy sloupec `weather_daily.sea_temperature` je určen k odstranění migrací `0011`.
 - Backfill pravidlo: historické hodnoty z `weather_daily.sea_temperature` se mapují na čas `10:00:00` (UTC) jako default pro legacy denní záznamy.
 - Denní statistiky (`/statistics/daily`) už berou teplotu moře z `water_temperatures` (nejnovější měření v rámci dne) a v UI zobrazují i timestamp poslední aktualizace.
+- Na `/statistics/daily` je doplněný fallback: pokud pro dnešní datum chybí teplota moře, API vrátí poslední dostupné měření; UI pak zobrazuje `Dnes HH:MM` jen pokud měření opravdu pochází z dnešního dne, jinak zobrazí celé datum+čas uložené v `water_temperatures`.
 
 ## Důležité adresáře a soubory
 
