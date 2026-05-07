@@ -139,7 +139,8 @@
         max: {{ printf "%q" (index .I18n "max") }},
         detailChartsLoadError: {{ printf "%q" (index .I18n "detail_charts_load_error") }},
         noData: {{ printf "%q" (index .I18n "no_data") }},
-        futureDateNotReached: {{ printf "%q" (index .I18n "future_date_not_reached") }}
+        futureDateNotReached: {{ printf "%q" (index .I18n "future_date_not_reached") }},
+        noDataForToday: {{ printf "%q" (index .I18n "no_data_for_today") }}
     };
 </script>
 <script src="/js/statistics-charts.js"></script>
@@ -287,17 +288,28 @@
             if (detailSection) detailSection.classList[method]('hidden');
         }
 
-        function setFutureNoticeVisible(visible) {
+        function setFutureNoticeVisible(visible, customText) {
             if (!futureDateNotice) return;
             if (visible) {
                 if (futureDateNoticeText) {
-                    const raw = i18n.futureDateNotReached || 'This date has not occurred yet.';
+                    const raw = customText || i18n.futureDateNotReached || 'This date has not occurred yet.';
                     futureDateNoticeText.textContent = raw.replace(/^[\"'„“”]+|[\"'„“”]+$/g, '');
                 }
                 futureDateNotice.classList.remove('hidden');
                 return;
             }
             futureDateNotice.classList.add('hidden');
+        }
+
+        function isTodayDate(dateStr) {
+            const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr || '');
+            if (!m) return false;
+            const selectedKey = m[1] + m[2] + m[3];
+            const now = new Date();
+            const todayKey = String(now.getFullYear())
+                + String(now.getMonth() + 1).padStart(2, '0')
+                + String(now.getDate()).padStart(2, '0');
+            return selectedKey === todayKey;
         }
 
         function isFutureDate(dateStr) {
@@ -371,26 +383,38 @@
                 const response = await fetch('/api/weather/hourly?date=' + encodeURIComponent(date));
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 const data = await response.json();
+                const labels = Array.isArray(data.labels) ? data.labels : [];
+                const hasDatasets = !!data.datasets;
+
+                if (isTodayDate(date) && labels.length === 0) {
+                    setSummaryFromHourly(null);
+                    clearDetailCharts();
+                    renderHourlyTable([], null);
+                    setDetailsVisible(false);
+                    setFutureNoticeVisible(true, i18n.noDataForToday || 'Pro dnešní den ještě nemáme k dispozici data');
+                    errorEl.classList.add('hidden');
+                    return;
+                }
                 updateSeaTemperatureSummary(date, data.sea_temperature, data.sea_measured_at);
-                if (!Array.isArray(data.labels) || !data.datasets) throw new Error('Invalid response');
+                if (!hasDatasets) throw new Error('Invalid response');
 
                 if (detailCharts.temperature) {
-                    detailCharts.temperature.data.labels = data.labels;
+                    detailCharts.temperature.data.labels = labels;
                     detailCharts.temperature.data.datasets[0].data = data.datasets.temperature || [];
                     detailCharts.temperature.update();
                 }
                 if (detailCharts.pressure) {
-                    detailCharts.pressure.data.labels = data.labels;
+                    detailCharts.pressure.data.labels = labels;
                     detailCharts.pressure.data.datasets[0].data = data.datasets.pressure || [];
                     detailCharts.pressure.update();
                 }
                 if (detailCharts.humidity) {
-                    detailCharts.humidity.data.labels = data.labels;
+                    detailCharts.humidity.data.labels = labels;
                     detailCharts.humidity.data.datasets[0].data = data.datasets.humidity || [];
                     detailCharts.humidity.update();
                 }
                 setSummaryFromHourly(data.datasets);
-                renderHourlyTable(data.labels, data.datasets);
+                renderHourlyTable(labels, data.datasets);
             } catch (err) {
                 setSummaryFromHourly(null);
                 clearDetailCharts();
