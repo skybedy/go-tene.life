@@ -234,11 +234,15 @@
             const measuredDate = m[1] + '-' + m[2] + '-' + m[3];
             const day = String(Number.parseInt(m[3], 10));
             const month = String(Number.parseInt(m[2], 10));
-            const hour = String(Number.parseInt(m[4], 10));
+            const hour = String(Number.parseInt(m[4], 10)).padStart(2, '0');
             const minute = m[5];
+            const now = new Date();
+            const todayDate = String(now.getFullYear()) + '-'
+                + String(now.getMonth() + 1).padStart(2, '0') + '-'
+                + String(now.getDate()).padStart(2, '0');
 
-            if (measuredDate === selectedDate) {
-                return hour + ':' + minute;
+            if (measuredDate === todayDate) {
+                return 'Dnes ' + hour + ':' + minute;
             }
 
             return day + '.' + month + ' ' + hour + ':' + minute;
@@ -367,8 +371,8 @@
                 const response = await fetch('/api/weather/hourly?date=' + encodeURIComponent(date));
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 const data = await response.json();
-                if (!data.labels || !data.datasets) throw new Error('Invalid response');
                 updateSeaTemperatureSummary(date, data.sea_temperature, data.sea_measured_at);
+                if (!Array.isArray(data.labels) || !data.datasets) throw new Error('Invalid response');
 
                 if (detailCharts.temperature) {
                     detailCharts.temperature.data.labels = data.labels;

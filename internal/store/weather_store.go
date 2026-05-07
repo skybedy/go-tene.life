@@ -109,7 +109,32 @@ func (s *WeatherStore) GetSeaTemperatureForDate(date string) (*float64, *time.Ti
 	if err == nil && temp.Valid {
 		v := temp.Float64
 		if measuredAt.Valid {
-			t := measuredAt.Time.In(canaryLocation())
+			t := measuredAt.Time
+			return &v, &t, nil
+		}
+		return &v, nil, nil
+	}
+
+	loc := canaryLocation()
+	if date != time.Now().In(loc).Format("2006-01-02") {
+		return nil, nil, nil
+	}
+
+	query = `SELECT temperature, measured_at
+	         FROM water_temperatures
+	         ORDER BY measured_at DESC
+	         LIMIT 1`
+	err = s.DB.QueryRow(query).Scan(&temp, &measuredAt)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil, nil
+		}
+		return nil, nil, err
+	}
+	if temp.Valid {
+		v := temp.Float64
+		if measuredAt.Valid {
+			t := measuredAt.Time
 			return &v, &t, nil
 		}
 		return &v, nil, nil
