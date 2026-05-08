@@ -140,7 +140,8 @@
         detailChartsLoadError: {{ printf "%q" (index .I18n "detail_charts_load_error") }},
         noData: {{ printf "%q" (index .I18n "no_data") }},
         futureDateNotReached: {{ printf "%q" (index .I18n "future_date_not_reached") }},
-        noDataForToday: {{ printf "%q" (index .I18n "no_data_for_today") }}
+        noDataForToday: {{ printf "%q" (index .I18n "no_data_for_today") }},
+        todayShort: {{ printf "%q" (index .I18n "today_short") }}
     };
 </script>
 <script src="/js/statistics-charts.js"></script>
@@ -243,7 +244,7 @@
                 + String(now.getDate()).padStart(2, '0');
 
             if (measuredDate === todayDate) {
-                return 'Dnes ' + hour + ':' + minute;
+                return (i18n.todayShort || 'Today') + ' ' + hour + ':' + minute;
             }
 
             return day + '.' + month + ' ' + hour + ':' + minute;
