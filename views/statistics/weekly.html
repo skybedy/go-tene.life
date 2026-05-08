@@ -17,26 +17,26 @@
         <!-- Stats Table -->
         <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden mb-8">
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-[0.65rem] sm:text-sm">
+                <table class="w-full text-center text-[0.65rem] sm:text-sm">
                     <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 text-[0.58rem] sm:text-xs md:text-sm">
                         <tr>
-                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold leading-tight">{{ index .I18n "week_year" }}</th>
-                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold leading-tight">{{ index .I18n "period" }}</th>
-                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-right leading-tight">{{ index .I18n "avg_temp" }}</th>
-                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-right leading-tight">{{ index .I18n "pressure" }}</th>
-                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-right leading-tight"><span class="sm:hidden">Vlhk.</span><span class="hidden sm:inline">{{ index .I18n "humidity" }}</span></th>
-                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-right leading-tight">{{ index .I18n "sea" }}</th>
+                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-center leading-tight">{{ index .I18n "week_year" }}</th>
+                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-center leading-tight">{{ index .I18n "period" }}</th>
+                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-center leading-tight">{{ index .I18n "avg_temp" }} (°C)</th>
+                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-center leading-tight">{{ index .I18n "pressure" }} (hPa)</th>
+                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-center leading-tight"><span class="sm:hidden">Vlhk. (%)</span><span class="hidden sm:inline">{{ index .I18n "humidity" }} (%)</span></th>
+                            <th class="px-1 sm:px-3 py-2 sm:py-3 font-semibold text-center leading-tight">{{ index .I18n "sea" }} (°C)</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         {{ range .WeeklyStats }}
                         <tr class="hover:bg-white/40 transition">
-                            <td class="px-1 sm:px-3 py-2 sm:py-3 font-medium text-gray-900">{{ .Week }} / {{ .Year }}</td>
-                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-gray-500 whitespace-nowrap">{{ shortDate .WeekStart }} - {{ shortDate .WeekEnd }}</td>
-                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-right text-gray-700 whitespace-nowrap">{{ f1 .AvgTemperature }} °C</td>
-                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-right text-gray-700 whitespace-nowrap">{{ f1 .AvgPressure }} hPa</td>
-                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-right text-gray-700 whitespace-nowrap">{{ f0 .AvgHumidity }} %</td>
-                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-right text-gray-700 whitespace-nowrap">{{ f1 .AvgSeaTemperature }} °C</td>
+                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-center font-medium text-gray-900">{{ .Week }} / {{ .Year }}</td>
+                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-center text-gray-500 whitespace-nowrap">{{ shortDate .WeekStart }} - {{ shortDate .WeekEnd }}</td>
+                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-center text-gray-700 whitespace-nowrap">{{ f1 .AvgTemperature }}</td>
+                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-center text-gray-700 whitespace-nowrap">{{ f1 .AvgPressure }}</td>
+                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-center text-gray-700 whitespace-nowrap">{{ f0 .AvgHumidity }}</td>
+                            <td class="px-1 sm:px-3 py-2 sm:py-3 text-center text-gray-700 whitespace-nowrap">{{ f1 .AvgSeaTemperature }}</td>
                         </tr>
                         {{ else }}
                         <tr>

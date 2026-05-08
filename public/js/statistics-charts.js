@@ -78,7 +78,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         display: true,
                         ticks: {
                             callback: function(value) {
-                                return value + unit;
+                                const numeric = Number(value);
+                                if (Number.isNaN(numeric)) return value + unit;
+                                const rounded = Math.round((numeric + Number.EPSILON) * 10) / 10;
+                                return rounded.toFixed(1) + unit;
                             }
                         }
                     }

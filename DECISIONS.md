@@ -46,3 +46,9 @@
 
 15. Na `/statistics/recent` se u hodnoty moře zobrazuje i čas měření z `SeaMeasuredAt` ve formátu `H:MM` bez úvodní nuly.
 - Důvod: uživatel potřebuje vidět, kdy byla denní sea hodnota skutečně naměřena; kratší formát je čitelnější v úzké tabulce.
+
+16. Na `/statistics/recent` se měrné jednotky zobrazují v hlavičkách sloupců, ne v každé datové buňce.
+- Důvod: odstranění vizuálního šumu v tabulce; hodnoty jsou lépe porovnatelné po řádcích.
+
+17. V grafových osách statistik se hodnoty formátují na 1 desetinné místo před zobrazením.
+- Důvod: eliminace floating-point artefaktů v UI (např. dlouhé desetinné zbytky u teplot).

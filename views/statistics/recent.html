@@ -47,31 +47,31 @@
         <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">{{ index .I18n "table_overview" }}</h2>
         <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden mb-8">
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs sm:text-sm">
+                <table class="w-full text-center text-xs sm:text-sm">
                     <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase text-[0.55rem] leading-tight sm:text-xs">
                         <tr>
-                            <th class="px-3 py-3 font-semibold">{{ index .I18n "date" }}</th>
-                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_temp" }}</th>
-                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "min_max" }}</th>
-                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "pressure" }}</th>
-                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "humidity" }}</th>
-                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "sea" }}</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "date" }}</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_temp" }} (°C)</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "min_max" }}</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "pressure" }} (hPa)</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "humidity" }} (%)</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "sea" }} (°C)</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         {{ range .DailyStats }}
                         <tr class="odd:bg-white/55 even:bg-blue-50/55 hover:bg-white/75 transition">
-                            <td class="px-3 py-3 font-medium text-gray-900">{{ shortDate .Date }}</td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgTemperature }} °C</td>
-                            <td class="px-3 py-3 text-right text-gray-500">
+                            <td class="px-3 py-3 text-center font-medium text-gray-900">{{ shortDate .Date }}</td>
+                            <td class="px-3 py-3 text-center text-gray-700">{{ f1 .AvgTemperature }}</td>
+                            <td class="px-3 py-3 text-center text-gray-500">
                                 <span class="text-blue-600">{{ f1 .MinTemperature }}</span> /
                                 <span class="text-red-600">{{ f1 .MaxTemperature }}</span>
                             </td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgPressure }} hPa</td>
-                            <td class="px-3 py-3 text-right text-gray-700">{{ f0 .AvgHumidity }} %</td>
-                            <td class="px-3 py-3 text-right text-gray-700">
+                            <td class="px-3 py-3 text-center text-gray-700">{{ f1 .AvgPressure }}</td>
+                            <td class="px-3 py-3 text-center text-gray-700">{{ f0 .AvgHumidity }}</td>
+                            <td class="px-3 py-3 text-center text-gray-700">
                                 {{ if .SeaTemperature }}
-                                <div>{{ f1 .SeaTemperature }} °C</div>
+                                <div>{{ f1 .SeaTemperature }}</div>
                                 {{ if .SeaMeasuredAt }}<div class="text-[0.65rem] text-gray-500">{{ shortTimeNoZero .SeaMeasuredAt }}</div>{{ end }}
                                 {{ else }}-{{ end }}
                             </td>
