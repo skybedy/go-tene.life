@@ -646,9 +646,11 @@ func (h *Handler) SoundsHandler(c echo.Context) error {
 		tracks = nil
 	}
 
-	var track250, track500 *models.SoundTrack
+	var trackAll, track250, track500 *models.SoundTrack
 	for i := range tracks {
-		if tracks[i].FileName == "spanelsko_ceska_slovicka_1_250.mp3" {
+		if tracks[i].FileName == "spanelsko_ceska_slovicka_1_500.mp3" {
+			trackAll = &tracks[i]
+		} else if tracks[i].FileName == "spanelsko_ceska_slovicka_1_250.mp3" {
 			track250 = &tracks[i]
 		} else if tracks[i].FileName == "spanelsko_ceska_slovicka_251_500.mp3" {
 			track500 = &tracks[i]
@@ -657,6 +659,7 @@ func (h *Handler) SoundsHandler(c echo.Context) error {
 
 	data := models.SoundsPageData{
 		Tracks:          tracks,
+		TrackAll:        trackAll,
 		Track250:        track250,
 		Track500:        track500,
 		PageTitle:       i18n.T(locale, "sounds_title"),
@@ -798,6 +801,7 @@ var soundTrackTitles = map[string]string{
 	"24_zeme_a_cestovani":                "Země a cestování",
 	"25_zakladni_prislovce_a_spojky":     "Základní příslovce a spojky",
 	"26_lide_a_vztahy":                   "Lidé a vztahy",
+	"spanelsko_ceska_slovicka_1_500":     "Španělsko-česká slovíčka 1-500",
 	"spanelsko_ceska_slovicka_1_250":     "Španělsko-česká slovíčka 1-250",
 	"spanelsko_ceska_slovicka_251_500":   "Španělsko-česká slovíčka 251-500",
 }
@@ -836,6 +840,7 @@ var soundTrackIcons = map[string]string{
 	"24_zeme_a_cestovani":                "🌍",
 	"25_zakladni_prislovce_a_spojky":     "🔗",
 	"26_lide_a_vztahy":                   "🤝",
+	"spanelsko_ceska_slovicka_1_500":     "📚",
 	"spanelsko_ceska_slovicka_1_250":     "📚",
 	"spanelsko_ceska_slovicka_251_500":   "📚",
 }
