@@ -11,21 +11,46 @@
 
             <div class="space-y-5">
                 <section class="bg-white/55 rounded-xl border border-gray-200 p-4 sm:p-5 shadow-sm">
-                    <p class="text-xs font-semibold uppercase text-gray-500">{{ index .I18n "sounds_player_label" }}</p>
+                    <p class="mb-3 inline-flex items-center rounded-lg border border-blue-200 bg-blue-50 px-3 py-1 text-sm sm:text-base font-bold text-blue-900 shadow-sm">{{ index .I18n "sounds_player_label" }}</p>
                     <h2 id="currentSoundTitle" class="mt-2 min-h-8 text-lg sm:text-xl font-semibold text-gray-800">
-                        {{ index .I18n "sounds_selected" }}
                     </h2>
-                    <audio id="soundsPlayer" class="mt-4 w-full" controls preload="metadata"></audio>
+                    <audio id="soundsPlayer" class="sr-only" preload="metadata"></audio>
+                    <div class="mt-4 rounded-xl border border-slate-300 bg-slate-100/90 p-3 shadow-sm">
+                        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                            <button type="button" id="soundsPlayPause"
+                                class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                Play
+                            </button>
+                            <div class="min-w-24 rounded-md bg-slate-800 px-2 py-1 text-xs font-semibold text-slate-100 tabular-nums" id="soundsTimeLabel">0:00 / 0:00</div>
+                            <input id="soundsSeek" type="range" min="0" max="1000" value="0"
+                                class="h-3 min-w-40 flex-1 cursor-pointer accent-blue-600">
+                            <button type="button" id="soundsMuteToggle"
+                                class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-slate-400 bg-slate-700 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:border-slate-500 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                aria-label="Mute">
+                                🔊
+                            </button>
+                            <input id="soundsVolume" type="range" min="0" max="100" value="100"
+                                class="h-3 w-28 cursor-pointer accent-blue-600"
+                                aria-label="Volume">
+                        </div>
+                    </div>
                     <div id="soundVocabularyPanel" class="mt-4 rounded-xl border border-gray-200 bg-white/70 p-4 shadow-sm">
-                        <p class="text-xs font-semibold uppercase text-gray-500">{{ index .I18n "sounds_now_playing" }}</p>
-                        <p id="soundSpanishText" class="mt-2 text-xl sm:text-2xl font-bold text-gray-900">{{ index .I18n "sounds_selected" }}</p>
-                        <p id="soundCzechText" class="mt-1 text-sm sm:text-base text-gray-700"></p>
-                        <p id="soundSegmentPosition" class="mt-1 text-xs text-gray-500"></p>
-                        <p id="soundLessonText" class="mt-3 text-xs text-gray-500"></p>
-                        <button type="button" id="soundToggleCzech"
-                            class="hidden mt-3 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            {{ index .I18n "sounds_hide_czech" }}
-                        </button>
+                        <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
+                            <div class="flex min-h-40 items-center justify-center rounded-xl border border-blue-100 bg-blue-50/60 p-4 sm:min-h-52">
+                                <p id="soundSpanishText" class="text-center text-3xl font-bold leading-tight text-gray-900 sm:text-4xl md:text-5xl"></p>
+                            </div>
+                            <div class="flex min-h-40 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50/60 p-4 sm:min-h-52">
+                                <p id="soundCzechText" class="text-center text-3xl font-bold leading-tight text-gray-900 sm:text-4xl md:text-5xl"></p>
+                            </div>
+                        </div>
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <p id="soundSegmentPosition" class="rounded-md bg-white px-2 py-1 text-xs font-semibold text-gray-600"></p>
+                            <p id="soundLessonText" class="rounded-md bg-white px-2 py-1 text-xs font-semibold text-gray-600"></p>
+                            <button type="button" id="soundToggleCzech"
+                                class="hidden rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                {{ index .I18n "sounds_hide_czech" }}
+                            </button>
+                        </div>
                     </div>
                     <div class="mt-4">
                         <p class="text-xs font-semibold uppercase text-gray-500">{{ index .I18n "sounds_speed_label" }}</p>
@@ -48,62 +73,170 @@
 
                 {{ if .Tracks }}
                 <section>
-                    <h2 class="px-1 text-sm sm:text-base font-semibold text-gray-700 mb-3">{{ index .I18n "sounds_main_choices_label" }}</h2>
-                    <div class="grid gap-2 sm:grid-cols-2">
-                        <button type="button"
-                            class="sound-playlist rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left text-sm font-semibold text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center gap-3"
-                            data-playlist="all">
-                            <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">🎶</span>
-                            {{ index .I18n "sounds_play_all" }}
-                        </button>
-                        <button type="button"
-                            class="sound-playlist rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left text-sm font-semibold text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center gap-3"
-                            data-playlist="random">
-                            <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">🔀</span>
-                            {{ index .I18n "sounds_play_random" }}
-                        </button>
-                        <div class="rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white">
-                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                <button type="button"
-                                    class="sound-playlist flex min-w-0 items-center gap-3 text-left text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg"
+                    <h2 class="mb-3 inline-flex items-center rounded-lg border border-blue-200 bg-blue-50 px-3 py-1 text-sm sm:text-base font-bold text-blue-900 shadow-sm">{{ index .I18n "sounds_main_choices_label" }}</h2>
+                    <div class="grid gap-2">
+                        <div class="sound-panel flex min-h-16 flex-col gap-3 rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left shadow-sm transition hover:border-blue-300 hover:bg-white xl:flex-row xl:items-center xl:justify-between overflow-hidden"
+                            data-panel-src="{{ if .TrackAll }}{{ .TrackAll.URL }}{{ end }}">
+                            <div class="flex items-center gap-3 min-w-0 w-full xl:w-auto">
+                                <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">🎶</div>
+                                <div class="min-w-0 flex-1">
+                                    <span class="block truncate text-sm sm:text-base font-semibold text-gray-800">{{ index .I18n "sounds_play_all" }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-1 xl:mt-0 w-full xl:w-auto xl:flex-shrink-0">
+                                <button type="button" class="sound-playlist-action flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    data-playlist="all" data-loop="false"
+                                    data-src="{{ if .TrackAll }}{{ .TrackAll.URL }}{{ end }}"
+                                    data-title="{{ index .I18n "sounds_play_all" }}"
+                                    data-file="spanelsko_ceska_slovicka_1_500.mp3"
+                                    data-lesson="1-500"
+                                    data-spanish="{{ if .TrackAll }}{{ .TrackAll.Title }}{{ else }}{{ index .I18n "sounds_play_all" }}{{ end }}"
+                                    data-segments="{{ if .TrackAll }}{{ .TrackAll.SegmentsJSON }}{{ end }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="truncate">{{ index $.I18n "sounds_play_once" }}</span>
+                                </button>
+                                <button type="button" class="sound-playlist-action flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-xs font-semibold text-blue-700 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    data-playlist="all" data-loop="true"
+                                    data-src="{{ if .TrackAll }}{{ .TrackAll.URL }}{{ end }}"
+                                    data-title="{{ index .I18n "sounds_play_all" }}"
+                                    data-file="spanelsko_ceska_slovicka_1_500.mp3"
+                                    data-lesson="1-500"
+                                    data-spanish="{{ if .TrackAll }}{{ .TrackAll.Title }}{{ else }}{{ index .I18n "sounds_play_all" }}{{ end }}"
+                                    data-segments="{{ if .TrackAll }}{{ .TrackAll.SegmentsJSON }}{{ end }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    <span class="truncate">{{ index $.I18n "sounds_play_loop" }}</span>
+                                </button>
+                                {{ if .TrackAll }}
+                                <a href="{{ .TrackAll.URL }}" download="spanelsko_ceska_slovicka_1_500.mp3"
+                                    class="flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 12 4-4m-4 4-4-4m-3 8h14" />
+                                    </svg>
+                                    <span class="truncate">{{ index $.I18n "sounds_download" }}</span>
+                                </a>
+                                {{ end }}
+                            </div>
+                        </div>
+                        <div class="sound-panel flex min-h-16 flex-col gap-3 rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left shadow-sm transition hover:border-blue-300 hover:bg-white xl:flex-row xl:items-center xl:justify-between overflow-hidden"
+                            data-panel-src="{{ if .Track250 }}{{ .Track250.URL }}{{ else }}/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_1_250.mp3{{ end }}">
+                            <div class="flex items-center gap-3 min-w-0 w-full xl:w-auto">
+                                <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">📘</div>
+                                <div class="min-w-0 flex-1">
+                                    <span class="block truncate text-sm sm:text-base font-semibold text-gray-800">{{ index .I18n "sounds_play_1_250" }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-1 xl:mt-0 w-full xl:w-auto xl:flex-shrink-0">
+                                <button type="button" class="sound-playlist-action flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                     data-src="{{ if .Track250 }}{{ .Track250.URL }}{{ else }}/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_1_250.mp3{{ end }}"
                                     data-title="{{ index .I18n "sounds_play_1_250" }}"
                                     data-file="spanelsko_ceska_slovicka_1_250.mp3"
                                     data-lesson="1-250"
                                     data-spanish="{{ index .I18n "sounds_play_1_250" }}"
                                     data-segments="{{ if .Track250 }}{{ .Track250.SegmentsJSON }}{{ end }}">
-                                    <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">📘</span>
-                                    <span class="min-w-0">{{ index .I18n "sounds_play_1_250" }}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="truncate">{{ index $.I18n "sounds_play_once" }}</span>
+                                </button>
+                                <button type="button" class="sound-playlist-action flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-xs font-semibold text-blue-700 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    data-src="{{ if .Track250 }}{{ .Track250.URL }}{{ else }}/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_1_250.mp3{{ end }}"
+                                    data-title="{{ index .I18n "sounds_play_1_250" }}"
+                                    data-file="spanelsko_ceska_slovicka_1_250.mp3"
+                                    data-lesson="1-250"
+                                    data-spanish="{{ index .I18n "sounds_play_1_250" }}"
+                                    data-segments="{{ if .Track250 }}{{ .Track250.SegmentsJSON }}{{ end }}"
+                                    data-loop="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    <span class="truncate">{{ index $.I18n "sounds_play_loop" }}</span>
                                 </button>
                                 <a href="/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_1_250.mp3" download="spanelsko_ceska_slovicka_1_250.mp3"
-                                    class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400 sm:flex-shrink-0">
+                                    class="flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 12 4-4m-4 4-4-4m-3 8h14" />
                                     </svg>
-                                    <span class="truncate">{{ index .I18n "sounds_download" }}</span>
+                                    <span class="truncate">{{ index $.I18n "sounds_download" }}</span>
                                 </a>
                             </div>
                         </div>
-                        <div class="rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-gray-800 shadow-sm transition hover:border-blue-300 hover:bg-white">
-                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                <button type="button"
-                                    class="sound-playlist flex min-w-0 items-center gap-3 text-left text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg"
+                        <div class="sound-panel flex min-h-16 flex-col gap-3 rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left shadow-sm transition hover:border-blue-300 hover:bg-white xl:flex-row xl:items-center xl:justify-between overflow-hidden"
+                            data-panel-src="{{ if .Track500 }}{{ .Track500.URL }}{{ else }}/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_251_500.mp3{{ end }}">
+                            <div class="flex items-center gap-3 min-w-0 w-full xl:w-auto">
+                                <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">📙</div>
+                                <div class="min-w-0 flex-1">
+                                    <span class="block truncate text-sm sm:text-base font-semibold text-gray-800">{{ index .I18n "sounds_play_251_500" }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-1 xl:mt-0 w-full xl:w-auto xl:flex-shrink-0">
+                                <button type="button" class="sound-playlist-action flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                     data-src="{{ if .Track500 }}{{ .Track500.URL }}{{ else }}/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_251_500.mp3{{ end }}"
                                     data-title="{{ index .I18n "sounds_play_251_500" }}"
                                     data-file="spanelsko_ceska_slovicka_251_500.mp3"
                                     data-lesson="251-500"
                                     data-spanish="{{ index .I18n "sounds_play_251_500" }}"
                                     data-segments="{{ if .Track500 }}{{ .Track500.SegmentsJSON }}{{ end }}">
-                                    <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">📙</span>
-                                    <span class="min-w-0">{{ index .I18n "sounds_play_251_500" }}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="truncate">{{ index $.I18n "sounds_play_once" }}</span>
+                                </button>
+                                <button type="button" class="sound-playlist-action flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-xs font-semibold text-blue-700 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    data-src="{{ if .Track500 }}{{ .Track500.URL }}{{ else }}/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_251_500.mp3{{ end }}"
+                                    data-title="{{ index .I18n "sounds_play_251_500" }}"
+                                    data-file="spanelsko_ceska_slovicka_251_500.mp3"
+                                    data-lesson="251-500"
+                                    data-spanish="{{ index .I18n "sounds_play_251_500" }}"
+                                    data-segments="{{ if .Track500 }}{{ .Track500.SegmentsJSON }}{{ end }}"
+                                    data-loop="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    <span class="truncate">{{ index $.I18n "sounds_play_loop" }}</span>
                                 </button>
                                 <a href="/spanelsko-ceska-slovicka/files/spanelsko_ceska_slovicka_251_500.mp3" download="spanelsko_ceska_slovicka_251_500.mp3"
-                                    class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400 sm:flex-shrink-0">
+                                    class="flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 12 4-4m-4 4-4-4m-3 8h14" />
                                     </svg>
-                                    <span class="truncate">{{ index .I18n "sounds_download" }}</span>
+                                    <span class="truncate">{{ index $.I18n "sounds_download" }}</span>
                                 </a>
+                            </div>
+                        </div>
+                        <div class="sound-panel flex min-h-16 flex-col gap-3 rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left shadow-sm transition hover:border-blue-300 hover:bg-white xl:flex-row xl:items-center xl:justify-between overflow-hidden">
+                            <div class="flex items-center gap-3 min-w-0 w-full xl:w-auto">
+                                <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">🔀</div>
+                                <div class="min-w-0 flex-1">
+                                    <span class="block truncate text-sm sm:text-base font-semibold text-gray-800">{{ index .I18n "sounds_play_random" }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-1 xl:mt-0 w-full xl:w-auto xl:flex-shrink-0">
+                                <button type="button" class="sound-playlist-action flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    data-playlist="random" data-loop="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="truncate">{{ index $.I18n "sounds_play_once" }}</span>
+                                </button>
+                                <button type="button" class="sound-playlist-action flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-xs font-semibold text-blue-700 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    data-playlist="random" data-loop="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    <span class="truncate">{{ index $.I18n "sounds_play_loop" }}</span>
+                                </button>
+                                <button type="button" disabled
+                                    class="flex-1 xl:flex-none inline-flex cursor-not-allowed items-center justify-center rounded-lg border border-gray-200 bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-400 shadow-sm"
+                                    title="Náhodné přehrávání nemá jeden soubor ke stažení">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 12 4-4m-4 4-4-4m-3 8h14" />
+                                    </svg>
+                                    <span class="truncate">{{ index $.I18n "sounds_download" }}</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -111,20 +244,21 @@
                 {{ end }}
 
                 <section>
-                    <h2 class="px-1 text-sm sm:text-base font-semibold text-gray-700 mb-3">{{ index .I18n "sounds_playlist_label" }}</h2>
+                    <h2 class="mb-3 inline-flex items-center rounded-lg border border-blue-200 bg-blue-50 px-3 py-1 text-sm sm:text-base font-bold text-blue-900 shadow-sm">{{ index .I18n "sounds_playlist_label" }}</h2>
                     {{ if .Tracks }}
                     <div class="grid gap-2">
                         {{ range .Tracks }}
-                        {{ if and (ne .FileName "spanelsko_ceska_slovicka_1_250.mp3") (ne .FileName "spanelsko_ceska_slovicka_251_500.mp3") }}
-                        <div class="sound-track flex min-h-16 flex-col gap-3 rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left shadow-sm transition hover:border-blue-300 hover:bg-white sm:flex-row sm:items-center sm:justify-between overflow-hidden"
+                        {{ if and (ne .FileName "spanelsko_ceska_slovicka_1_500.mp3") (ne .FileName "spanelsko_ceska_slovicka_1_250.mp3") (ne .FileName "spanelsko_ceska_slovicka_251_500.mp3") }}
+                        <div class="sound-track sound-panel flex min-h-16 flex-col gap-3 rounded-xl border border-gray-200 bg-white/65 px-4 py-3 text-left shadow-sm transition hover:border-blue-300 hover:bg-white xl:flex-row xl:items-center xl:justify-between overflow-hidden"
                             data-src="{{ .URL }}"
+                            data-panel-src="{{ .URL }}"
                             data-title="{{ .Title }}"
                             data-file="{{ .FileName }}"
                             data-lesson="{{ .Lesson }}"
                             data-spanish="{{ .Spanish }}"
                             data-czech="{{ .Czech }}"
                             data-segments="{{ .SegmentsJSON }}">
-                            <div class="flex items-center gap-3 min-w-0 w-full sm:w-auto">
+                            <div class="flex items-center gap-3 min-w-0 w-full xl:w-auto">
                                 <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50/50 text-xl shadow-sm border border-gray-200">
                                     {{ .Icon }}
                                 </div>
@@ -132,23 +266,23 @@
                                     <span class="block truncate text-sm sm:text-base font-semibold text-gray-800">{{ .Title }}</span>
                                 </div>
                             </div>
-                            <div class="flex flex-wrap gap-2 mt-1 sm:mt-0 w-full sm:w-auto sm:flex-shrink-0">
+                            <div class="flex flex-wrap gap-2 mt-1 xl:mt-0 w-full xl:w-auto xl:flex-shrink-0">
                                 <button type="button"
-                                    class="sound-play flex-1 sm:flex-none inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                    class="sound-play flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
                                     </svg>
                                     <span class="truncate">{{ index $.I18n "sounds_play_once" }}</span>
                                 </button>
                                 <button type="button"
-                                    class="sound-play-loop flex-1 sm:flex-none inline-flex items-center justify-center rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-xs font-semibold text-blue-700 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                    class="sound-play-loop flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-xs font-semibold text-blue-700 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                     </svg>
                                     <span class="truncate">{{ index $.I18n "sounds_play_loop" }}</span>
                                 </button>
                                 <a href="{{ .URL }}" download="{{ .FileName }}"
-                                    class="flex-1 sm:flex-none inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                    class="flex-1 xl:flex-none inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 12 4-4m-4 4-4-4m-3 8h14" />
                                     </svg>
@@ -174,9 +308,15 @@
         const player = document.getElementById('soundsPlayer');
         const title = document.getElementById('currentSoundTitle');
         const tracks = Array.from(document.querySelectorAll('.sound-track'));
+        const panels = Array.from(document.querySelectorAll('.sound-panel'));
         const playButtons = document.querySelectorAll('.sound-play, .sound-play-loop');
-        const playlistButtons = document.querySelectorAll('.sound-playlist');
+        const playlistButtons = document.querySelectorAll('.sound-playlist-action');
         const speedButtons = document.querySelectorAll('.sound-speed');
+        const playPauseButton = document.getElementById('soundsPlayPause');
+        const seekInput = document.getElementById('soundsSeek');
+        const timeLabel = document.getElementById('soundsTimeLabel');
+        const muteToggleButton = document.getElementById('soundsMuteToggle');
+        const volumeInput = document.getElementById('soundsVolume');
         const panel = document.getElementById('soundVocabularyPanel');
         const spanishText = document.getElementById('soundSpanishText');
         const czechText = document.getElementById('soundCzechText');
@@ -186,7 +326,9 @@
         let selectedRate = 1;
         let activeQueue = [];
         let activeQueueIndex = -1;
+        let replayQueueMode = '';
         let czechHidden = false;
+        let hideVocabularyPanel = true;
         let currentItem = null;
         let currentSegmentIndex = -1;
 
@@ -201,6 +343,48 @@
             console.warn('[sounds] player/title not found');
             return;
         }
+
+        const formatTime = (seconds) => {
+            if (!Number.isFinite(seconds) || seconds < 0) {
+                return '0:00';
+            }
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${String(secs).padStart(2, '0')}`;
+        };
+
+        const formatPlayerTitle = (rawTitle) => {
+            const trimmed = (rawTitle || '').trim();
+            if (!trimmed) {
+                return '';
+            }
+            const withoutPrefix = trimmed.replace(/^Přehrát\s+/i, '').trim();
+            if (!withoutPrefix) {
+                return '';
+            }
+            return withoutPrefix.charAt(0).toUpperCase() + withoutPrefix.slice(1);
+        };
+
+        const refreshPlayerUi = () => {
+            const duration = Number.isFinite(player.duration) ? player.duration : 0;
+            const current = Number.isFinite(player.currentTime) ? player.currentTime : 0;
+            if (timeLabel) {
+                timeLabel.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+            }
+            if (seekInput) {
+                const ratio = duration > 0 ? Math.min(1, Math.max(0, current / duration)) : 0;
+                seekInput.value = String(Math.round(ratio * 1000));
+            }
+            if (playPauseButton) {
+                playPauseButton.textContent = player.paused ? 'Play' : 'Pause';
+            }
+            if (muteToggleButton) {
+                muteToggleButton.textContent = (player.muted || player.volume === 0) ? '🔇' : '🔊';
+            }
+            if (volumeInput) {
+                volumeInput.value = String(Math.round((player.volume || 0) * 100));
+            }
+        };
         if (!panel || !spanishText || !czechText || !segmentPositionText || !lessonText) {
             console.warn('[sounds] vocabulary panel elements missing');
         } else {
@@ -263,7 +447,6 @@
             const segment = hasSegment ? segments[segmentIndex] : null;
             const primaryText = segment ? (segment.spanish || item.title || item.file || '') : (item.spanish || item.title || item.file || '');
             const czechValue = segment ? (segment.czech || '') : (item.czech || '');
-            const fallbackText = {{ printf "%q" (index .I18n "sounds_selected") }};
             spanishText.textContent = primaryText;
             czechText.textContent = czechValue;
             czechText.classList.toggle('hidden', czechHidden || !czechValue);
@@ -271,9 +454,6 @@
             segmentPositionText.textContent = hasSegment ? `${segmentIndex + 1} / ${segments.length}` : '';
             if (!segment && !item.spanish && !item.czech) {
                 debugLog('[sounds] metadata missing, using fallback', item);
-            }
-            if (!primaryText) {
-                spanishText.textContent = fallbackText;
             }
             if (toggleCzechButton) {
                 toggleCzechButton.classList.toggle('hidden', !czechValue);
@@ -351,6 +531,28 @@
             return shuffled;
         };
 
+        const setActivePanel = (src) => {
+            panels.forEach((panelEl) => {
+                const panelSrc = panelEl.dataset.panelSrc || '';
+                const isActive = !!src && panelSrc && panelSrc === src;
+                panelEl.classList.toggle('border-blue-500', isActive);
+                panelEl.classList.toggle('bg-blue-100/80', isActive);
+                panelEl.classList.toggle('bg-gradient-to-r', isActive);
+                panelEl.classList.toggle('from-blue-100/90', isActive);
+                panelEl.classList.toggle('to-indigo-100/70', isActive);
+                panelEl.classList.toggle('ring-2', isActive);
+                panelEl.classList.toggle('ring-blue-200', isActive);
+                panelEl.classList.toggle('shadow-md', isActive);
+            });
+        };
+
+        const setVocabularyPanelHidden = (hidden) => {
+            hideVocabularyPanel = hidden;
+            if (panel) {
+                panel.classList.toggle('hidden', hidden);
+            }
+        };
+
         const playItem = (item, loop) => {
             if (!item || !item.src) {
                 console.warn('[sounds] invalid track item', item);
@@ -361,12 +563,14 @@
             currentSegmentIndex = -1;
 
             debugLog('[sounds] current track', normalizedItem);
-            title.textContent = normalizedItem.title;
+            title.textContent = formatPlayerTitle(normalizedItem.title);
+            setActivePanel(normalizedItem.src);
             updateVocabularyPanel(normalizedItem, -1);
             player.src = normalizedItem.src;
             player.playbackRate = selectedRate;
             player.loop = loop;
             updateFromCurrentTime();
+            refreshPlayerUi();
             player.play().catch(() => {});
         };
 
@@ -390,6 +594,8 @@
 
             activeQueue = [];
             activeQueueIndex = -1;
+            replayQueueMode = '';
+            setVocabularyPanelHidden(false);
             playItem({
                 src: track.dataset.src || '',
                 title: track.dataset.title || '',
@@ -401,25 +607,47 @@
             }, button.classList.contains('sound-play-loop'));
         };
 
-        playButtons.forEach((button) => {
+            playButtons.forEach((button) => {
             button.addEventListener('click', () => playTrack(button));
         });
 
         playlistButtons.forEach((button) => {
             button.addEventListener('click', () => {
                 const mode = button.dataset.playlist || '';
+                const shouldLoop = button.dataset.loop === 'true';
                 console.debug('[sounds] playlist action', mode || 'single');
                 if (mode === 'all') {
+                    setVocabularyPanelHidden(false);
+                    if (button.dataset.src) {
+                        activeQueue = [];
+                        activeQueueIndex = -1;
+                        replayQueueMode = '';
+                        playItem({
+                            src: button.dataset.src || '',
+                            title: button.dataset.title || '',
+                            file: button.dataset.file || '',
+                            lesson: button.dataset.lesson || button.dataset.title || '',
+                            spanish: button.dataset.spanish || button.dataset.title || '',
+                            czech: button.dataset.czech || '',
+                            segments: parseSegments(button.dataset.segments || '[]')
+                        }, shouldLoop);
+                        return;
+                    }
+                    replayQueueMode = shouldLoop ? 'all' : '';
                     playQueue(trackData);
                     return;
                 }
                 if (mode === 'random') {
+                    setVocabularyPanelHidden(true);
+                    replayQueueMode = shouldLoop ? 'random' : '';
                     playQueue(shuffleTracks(trackData));
                     return;
                 }
 
+                setVocabularyPanelHidden(false);
                 activeQueue = [];
                 activeQueueIndex = -1;
+                replayQueueMode = '';
                 playItem({
                     src: button.dataset.src || '',
                     title: button.dataset.title || '',
@@ -428,7 +656,7 @@
                     spanish: button.dataset.spanish || button.dataset.title || '',
                     czech: button.dataset.czech || '',
                     segments: parseSegments(button.dataset.segments || '[]')
-                }, false);
+                }, shouldLoop);
             });
         });
 
@@ -439,16 +667,31 @@
 
             activeQueueIndex += 1;
             if (activeQueueIndex >= activeQueue.length) {
+                if (replayQueueMode === 'random') {
+                    playQueue(shuffleTracks(trackData));
+                    return;
+                }
+                if (replayQueueMode === 'all') {
+                    playQueue(trackData);
+                    return;
+                }
                 activeQueue = [];
                 activeQueueIndex = -1;
+                replayQueueMode = '';
                 return;
             }
 
             playItem(activeQueue[activeQueueIndex], false);
         });
         player.addEventListener('timeupdate', updateFromCurrentTime);
+        player.addEventListener('timeupdate', refreshPlayerUi);
         player.addEventListener('seeked', updateFromCurrentTime);
+        player.addEventListener('seeked', refreshPlayerUi);
         player.addEventListener('loadedmetadata', updateFromCurrentTime);
+        player.addEventListener('loadedmetadata', refreshPlayerUi);
+        player.addEventListener('play', refreshPlayerUi);
+        player.addEventListener('pause', refreshPlayerUi);
+        player.addEventListener('volumechange', refreshPlayerUi);
 
         speedButtons.forEach((button) => {
             button.addEventListener('click', () => {
@@ -475,14 +718,58 @@
 
         currentItem = normalizeItem({
             src: '',
-            title: {{ printf "%q" (index .I18n "sounds_selected") }},
+            title: '',
             file: '',
             lesson: '',
             spanish: '',
             czech: '',
             segments: []
         });
+        setVocabularyPanelHidden(true);
+        setActivePanel('');
         updateVocabularyPanel(currentItem, -1);
+        refreshPlayerUi();
+
+        if (playPauseButton) {
+            playPauseButton.addEventListener('click', () => {
+                if (!player.src) {
+                    return;
+                }
+                if (player.paused) {
+                    player.play().catch(() => {});
+                } else {
+                    player.pause();
+                }
+            });
+        }
+
+        if (seekInput) {
+            seekInput.addEventListener('input', () => {
+                if (!Number.isFinite(player.duration) || player.duration <= 0) {
+                    return;
+                }
+                const ratio = Number.parseFloat(seekInput.value || '0') / 1000;
+                player.currentTime = Math.max(0, Math.min(player.duration, ratio * player.duration));
+            });
+        }
+
+        if (muteToggleButton) {
+            muteToggleButton.addEventListener('click', () => {
+                player.muted = !player.muted;
+                refreshPlayerUi();
+            });
+        }
+
+        if (volumeInput) {
+            volumeInput.addEventListener('input', () => {
+                const volume = Number.parseFloat(volumeInput.value || '100') / 100;
+                player.volume = Math.max(0, Math.min(1, volume));
+                if (player.volume > 0 && player.muted) {
+                    player.muted = false;
+                }
+                refreshPlayerUi();
+            });
+        }
     })();
 </script>
 
