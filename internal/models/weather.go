@@ -89,6 +89,17 @@ type DailyChartResponse struct {
 	} `json:"datasets"`
 }
 
+type CurrentMonthSummaryResponse struct {
+	Labels      []string `json:"labels"`
+	ThroughDate string   `json:"through_date,omitempty"`
+	Datasets    struct {
+		AvgTemperature []*float64 `json:"avg_temperature"`
+		AvgPressure    []*float64 `json:"avg_pressure"`
+		AvgHumidity    []*float64 `json:"avg_humidity"`
+		SeaTemperature []*float64 `json:"sea_temperature"`
+	} `json:"datasets"`
+}
+
 type GenericChartResponse struct {
 	Labels   []string                 `json:"labels"`
 	Datasets map[string][]interface{} `json:"datasets"`
@@ -142,6 +153,22 @@ type WeatherMonthly struct {
 	MinHumidity       *float64 `db:"min_humidity"`
 	MaxHumidity       *float64 `db:"max_humidity"`
 	SamplesCount      *int     `db:"samples_count"`
+}
+
+type CurrentMonthSummary struct {
+	Year                  int      `json:"year"`
+	Month                 int      `json:"month"`
+	ThroughDate           string   `json:"through_date"`
+	AvgTemperature        *float64 `json:"avg_temperature"`
+	AvgPressure           *float64 `json:"avg_pressure"`
+	AvgHumidity           *float64 `json:"avg_humidity"`
+	AvgSeaTemperature     *float64 `json:"avg_sea_temperature"`
+	WeatherSamplesCount   int      `json:"weather_samples_count"`
+	SeaSamplesCount       int      `json:"sea_samples_count"`
+	WeatherRangeStartUTC  string   `json:"weather_range_start_utc"`
+	WeatherRangeEndUTC    string   `json:"weather_range_end_utc"`
+	LocalRangeStartCanary string   `json:"local_range_start_canary"`
+	LocalRangeEndCanary   string   `json:"local_range_end_canary"`
 }
 
 type StatsPageData struct {

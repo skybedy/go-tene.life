@@ -159,6 +159,59 @@ document.addEventListener('DOMContentLoaded', function () {
         if (document.getElementById('stat-sea-temp-avg')) document.getElementById('stat-sea-temp-avg').textContent = seaTempAvg === null ? '--' : seaTempAvg.toFixed(1) + ' °C';
     }
 
+    function capitalizeFirst(value) {
+        if (typeof value !== 'string' || value.length === 0) return value;
+        return value.charAt(0).toLocaleUpperCase(document.documentElement.lang || 'cs') + value.slice(1);
+    }
+
+    function stripWrappingQuotes(value) {
+        if (typeof value !== 'string') return '';
+        return value.trim().replace(/^["'“”„]+|["'“”„]+$/g, '');
+    }
+
+    function dateFromISODate(dateString) {
+        if (typeof dateString !== 'string' || !dateString) return '';
+        const parts = dateString.split('-').map(Number);
+        if (parts.length !== 3 || parts.some(Number.isNaN)) return null;
+        return new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+    }
+
+    function formatDateForLocale(dateString) {
+        const date = dateFromISODate(dateString);
+        if (!date) return dateString || '';
+
+        const locale = document.documentElement.lang || 'cs';
+        return new Intl.DateTimeFormat(locale, {
+            day: 'numeric',
+            month: 'numeric',
+            timeZone: 'UTC'
+        }).format(date);
+    }
+
+    function formatMonthForLocale(dateString) {
+        const date = dateFromISODate(dateString);
+        if (!date) return '';
+
+        const locale = document.documentElement.lang || 'cs';
+        const month = new Intl.DateTimeFormat(locale, {
+            month: 'long',
+            timeZone: 'UTC'
+        }).format(date);
+        return capitalizeFirst(month);
+    }
+
+    function updateMonthlySummaryTitle(throughDate) {
+        const title = document.getElementById('monthlyCurrentSummaryTitle');
+        if (!title) return;
+
+        const formattedDate = formatDateForLocale(throughDate);
+        const formattedMonth = formatMonthForLocale(throughDate);
+        const prefix = stripWrappingQuotes(i18n.monthlyCurrentProgressTo || i18n.monthlyCurrentProgress || '');
+        title.textContent = formattedDate && formattedMonth
+            ? `${formattedMonth} ${prefix} ${formattedDate}`
+            : (i18n.monthlyCurrentProgress || title.textContent);
+    }
+
     // Route handling
     if (path.includes('/statistics/daily')) {
         loadDailyStats();
@@ -218,11 +271,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function loadMonthlySummary() {
         try {
-            const response = await fetch('/api/weather/monthly-daily');
+            const response = await fetch('/api/weather/monthly-current');
             const data = await response.json();
 
             if (data.datasets) {
                 updateSummary(data.datasets);
+                updateMonthlySummaryTitle(data.through_date);
             }
         } catch (error) {
             console.error('Error loading current month summary:', error);

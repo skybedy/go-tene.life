@@ -21,7 +21,7 @@
 - Ověřit vizuálně weather box na mobilu i desktopu po swapu barev (kontrast, čitelnost).
 - Vizuálně ověřit na `/statistics/daily` chování teploty moře po restartu aplikace: `Dnes HH:MM` pro dnešní měření a fallback na poslední dostupné datum+čas, pokud dnešní záznam chybí.
 - Vizuálně ověřit na `/statistics/monthly`, `/statistics/weekly` a `/statistics/annual`, že spodní sea graf zobrazuje agregační hodnoty `sea_temperature` z API `/api/weather/{type}` (ne syrovou historii měření).
-- Vizuálně ověřit na `/statistics/monthly`, že horní karty „aktuální měsíc zatím“ odpovídají dostupným denním hodnotám včetně teploty moře.
+- Vizuálně ověřit na `/statistics/monthly`, že horní karty „aktuální měsíc průběžně k poslednímu datu“ odpovídají dynamickému výpočtu z raw `weather` a `water_temperatures` oříznutému podle posledního dne ve `weather_daily`.
 - Vizuálně ověřit na `/statistics/recent` čitelnost nově zobrazeného času měření moře (formát `H:MM` bez počáteční nuly) na mobilu i desktopu.
 - Vizuálně ověřit na `/spanelsko-ceska-slovicka`, že volba `Přehrát všechno za sebou` používá nový track `1-500` a synchronizuje panel slovíček bez posunu.
 

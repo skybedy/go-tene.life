@@ -1162,6 +1162,27 @@ func (h *Handler) GetMonthlyDailyDataHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
+func (h *Handler) GetCurrentMonthSummaryHandler(c echo.Context) error {
+	summary, err := h.WeatherStore.GetCurrentMonthSummary(time.Now())
+	if err != nil {
+		appErr := utils.NewInternalServerError("Failed to get current month summary", err)
+		return c.JSON(appErr.Code, utils.ErrorResponse{
+			Error:   "internal_server_error",
+			Message: appErr.Message,
+		})
+	}
+
+	response := models.CurrentMonthSummaryResponse{}
+	response.ThroughDate = summary.ThroughDate
+	response.Labels = append(response.Labels, fmt.Sprintf("%d/%d", summary.Month, summary.Year))
+	response.Datasets.AvgTemperature = append(response.Datasets.AvgTemperature, summary.AvgTemperature)
+	response.Datasets.AvgPressure = append(response.Datasets.AvgPressure, summary.AvgPressure)
+	response.Datasets.AvgHumidity = append(response.Datasets.AvgHumidity, summary.AvgHumidity)
+	response.Datasets.SeaTemperature = append(response.Datasets.SeaTemperature, summary.AvgSeaTemperature)
+
+	return c.JSON(http.StatusOK, response)
+}
+
 func (h *Handler) GetMonthlyDataHandler(c echo.Context) error {
 	stats, err := h.WeatherStore.GetMonthlyStats(12)
 	if err != nil {

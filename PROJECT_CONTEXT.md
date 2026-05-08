@@ -68,4 +68,4 @@
 - Tabulky na homepage, `/statistics/daily`, `/statistics/weekly`, `/statistics/monthly` a `/statistics/recent` používají sjednocený monthly styl: centrované buňky, jednotky v hlavičkách, `text-xs sm:text-sm`, `px-3 py-3` a střídavé podbarvení řádků.
 - Horní tři souhrnné karty na `/statistics/recent` používají stejný formát a typografii jako souhrnné karty na `/statistics/daily`.
 - `/statistics/recent` má doplněnou čtvrtou souhrnnou kartu pro průměrnou teplotu moře z dostupných hodnot `datasets.sea_temperature`.
-- Horní souhrn na `/statistics/monthly` nově zobrazuje aktuální měsíc zatím (`/api/weather/monthly-daily`) včetně průměrné teploty moře; měsíční tabulka a grafy dál používají měsíční agregace.
+- Horní souhrn na `/statistics/monthly` zobrazuje „aktuální měsíc průběžně k poslednímu datu“ přes `/api/weather/monthly-current`; poslední datum se bere z posledního záznamu `weather_daily` v aktuálním měsíci a výpočet běží z raw `weather` a `water_temperatures` jen do konce tohoto dne.

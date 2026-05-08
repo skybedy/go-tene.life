@@ -275,6 +275,86 @@ func (s *WeatherStore) GetMonthlyStats(limit int) ([]models.WeatherMonthly, erro
 	return results, nil
 }
 
+func (s *WeatherStore) GetCurrentMonthSummary(now time.Time) (*models.CurrentMonthSummary, error) {
+	loc := canaryLocation()
+	localNow := now.In(loc)
+	startLocal := time.Date(localNow.Year(), localNow.Month(), 1, 0, 0, 0, 0, loc)
+	monthEndLocal := startLocal.AddDate(0, 1, 0)
+	localStart := startLocal.Format("2006-01-02 15:04:05")
+	localMonthEnd := monthEndLocal.Format("2006-01-02 15:04:05")
+
+	summary := &models.CurrentMonthSummary{
+		Year:                  startLocal.Year(),
+		Month:                 int(startLocal.Month()),
+		LocalRangeStartCanary: localStart,
+		LocalRangeEndCanary:   localMonthEnd,
+	}
+
+	var latestDailyDate sql.NullString
+	query := `SELECT DATE_FORMAT(MAX(date), '%Y-%m-%d')
+	          FROM weather_daily
+	          WHERE date >= ? AND date < ?`
+	if err := s.DB.QueryRow(query, startLocal.Format("2006-01-02"), monthEndLocal.Format("2006-01-02")).Scan(&latestDailyDate); err != nil {
+		return nil, err
+	}
+	if !latestDailyDate.Valid || strings.TrimSpace(latestDailyDate.String) == "" {
+		return summary, nil
+	}
+
+	throughDate, err := time.ParseInLocation("2006-01-02", latestDailyDate.String, loc)
+	if err != nil {
+		return nil, err
+	}
+	endLocal := throughDate.AddDate(0, 0, 1)
+
+	weatherStartUTC := startLocal.UTC().Format("2006-01-02 15:04:05")
+	weatherEndUTC := endLocal.UTC().Format("2006-01-02 15:04:05")
+	localEnd := endLocal.Format("2006-01-02 15:04:05")
+
+	summary.ThroughDate = latestDailyDate.String
+	summary.WeatherRangeStartUTC = weatherStartUTC
+	summary.WeatherRangeEndUTC = weatherEndUTC
+	summary.LocalRangeEndCanary = localEnd
+
+	var avgTemperature, avgPressure, avgHumidity sql.NullFloat64
+	var weatherSamples int
+	query = `SELECT AVG(temperature), AVG(pressure), AVG(humidity), COUNT(*)
+	         FROM weather
+	         WHERE measured_at >= ? AND measured_at < ?`
+	if err := s.DB.QueryRow(query, weatherStartUTC, weatherEndUTC).Scan(&avgTemperature, &avgPressure, &avgHumidity, &weatherSamples); err != nil {
+		return nil, err
+	}
+	if avgTemperature.Valid {
+		v := avgTemperature.Float64
+		summary.AvgTemperature = &v
+	}
+	if avgPressure.Valid {
+		v := avgPressure.Float64
+		summary.AvgPressure = &v
+	}
+	if avgHumidity.Valid {
+		v := avgHumidity.Float64
+		summary.AvgHumidity = &v
+	}
+	summary.WeatherSamplesCount = weatherSamples
+
+	var avgSeaTemperature sql.NullFloat64
+	var seaSamples int
+	query = `SELECT AVG(temperature), COUNT(*)
+	         FROM water_temperatures
+	         WHERE measured_at >= ? AND measured_at < ?`
+	if err := s.DB.QueryRow(query, localStart, localEnd).Scan(&avgSeaTemperature, &seaSamples); err != nil {
+		return nil, err
+	}
+	if avgSeaTemperature.Valid {
+		v := avgSeaTemperature.Float64
+		summary.AvgSeaTemperature = &v
+	}
+	summary.SeaSamplesCount = seaSamples
+
+	return summary, nil
+}
+
 func (s *WeatherStore) GetAnnualStats() ([]models.WeatherMonthly, error) {
 	var results []models.WeatherMonthly
 	query := `SELECT year, month, avg_sea_temperature, avg_temperature, min_temperature, max_temperature, 

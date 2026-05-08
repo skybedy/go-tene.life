@@ -12,7 +12,7 @@
 
         {{ template "stats_nav.html" . }}
 
-        <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">{{ monthName .Locale (currentMonth) }} {{ monthSoFar .Locale }}</h2>
+        <h2 class="text-lg font-bold text-gray-800 mb-3 px-1" id="monthlyCurrentSummaryTitle">{{ index .I18n "monthly_current_progress" }}</h2>
 
         <!-- Current Month Summary -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
@@ -42,7 +42,7 @@
                 <table class="w-full text-center text-xs sm:text-sm">
                     <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase">
                         <tr>
-                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "month_year" }}</th>
+                            <th class="px-4 sm:px-5 py-3 font-semibold text-left">{{ index .I18n "month_year" }}</th>
                             <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_temp" }} (°C)</th>
                             <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_pressure" }} (hPa)</th>
                             <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_humidity" }} (%)</th>
@@ -52,7 +52,7 @@
                     <tbody class="divide-y divide-gray-200">
                         {{ range .MonthlyStats }}
                         <tr class="odd:bg-white/55 even:bg-blue-50/55 hover:bg-white/75 transition">
-                            <td class="px-3 py-3 text-center font-medium text-gray-900">{{ monthName $.Locale .Month }} / {{ .Year }}</td>
+                            <td class="px-4 sm:px-5 py-3 text-left font-medium text-gray-900 whitespace-nowrap">{{ monthName $.Locale .Month }} / {{ .Year }}</td>
                             <td class="px-3 py-3 text-center text-gray-700">{{ f1 .AvgTemperature }}</td>
                             <td class="px-3 py-3 text-center text-gray-700">{{ f1 .AvgPressure }}</td>
                             <td class="px-3 py-3 text-center text-gray-700">{{ f0 .AvgHumidity }}</td>
@@ -98,7 +98,9 @@
         humidity: {{ printf "%q" (index .I18n "humidity") }},
         min: {{ printf "%q" (index .I18n "min") }},
         average: {{ printf "%q" (index .I18n "average") }},
-        max: {{ printf "%q" (index .I18n "max") }}
+        max: {{ printf "%q" (index .I18n "max") }},
+        monthlyCurrentProgress: {{ printf "%q" (index .I18n "monthly_current_progress") }},
+        monthlyCurrentProgressTo: {{ printf "%q" (index .I18n "monthly_current_progress_to") }}
     };
 </script>
 <script src="/js/statistics-charts.js"></script>

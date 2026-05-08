@@ -172,35 +172,8 @@ func main() {
 	// Template Renderer using Embed
 	renderer := &web.TemplateRenderer{
 		Templates: template.Must(template.New("").Funcs(template.FuncMap{
-			"localeURL": i18n.LocaleURL,
-			"monthName": i18n.MonthName,
-			"currentMonth": func() int {
-				loc, err := time.LoadLocation("Atlantic/Canary")
-				if err != nil {
-					loc = time.UTC
-				}
-				return int(time.Now().In(loc).Month())
-			},
-			"monthSoFar": func(locale string) string {
-				switch strings.ToLower(locale) {
-				case "cs":
-					return "zatím"
-				case "de":
-					return "bisher"
-				case "es":
-					return "hasta ahora"
-				case "fr":
-					return "jusqu'ici"
-				case "hu":
-					return "eddig"
-				case "it":
-					return "finora"
-				case "pl":
-					return "do tej pory"
-				default:
-					return "so far"
-				}
-			},
+			"localeURL":           i18n.LocaleURL,
+			"monthName":           i18n.MonthName,
 			"languageFlag":        i18n.LanguageFlag,
 			"waterQualityStatus":  i18n.WaterQualityStatusLabel,
 			"waterQualityTooltip": i18n.WaterQualityTooltip,
@@ -328,6 +301,7 @@ func main() {
 	// API Statistics
 	e.GET("/api/weather/daily", handler.GetDailyDataHandler)
 	e.GET("/api/weather/monthly-daily", handler.GetMonthlyDailyDataHandler)
+	e.GET("/api/weather/monthly-current", handler.GetCurrentMonthSummaryHandler)
 	e.GET("/api/weather/weekly", handler.GetWeeklyDataHandler)
 	e.GET("/api/weather/monthly", handler.GetMonthlyDataHandler)
 	e.GET("/api/weather/annual", handler.GetAnnualDataHandler)

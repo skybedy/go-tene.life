@@ -97,6 +97,8 @@ var dictionary = map[string]map[string]string{
 		"daily_stats_subtitle":        "Přehled meteorologických dat za posledních 30 dní.",
 		"weekly_stats_subtitle":       "Týdenní průměry a extrémy meteorologických dat.",
 		"monthly_stats_subtitle":      "Měsíční přehledy za poslední rok.",
+		"monthly_current_progress":    "Měsíc průběžně",
+		"monthly_current_progress_to": "průběžně k",
 		"annual_stats_subtitle":       "Kompletní historie měsíčních průměrů.",
 		"daily_temp_chart_title":      "Teplota za posledních 7 dní (°C)",
 		"daily_pressure_chart_title":  "Tlak za posledních 7 dní (hPa)",
@@ -213,6 +215,8 @@ var dictionary = map[string]map[string]string{
 		"daily_stats_subtitle":        "Overview of meteorological data for the last 30 days.",
 		"weekly_stats_subtitle":       "Weekly averages and extremes of meteorological data.",
 		"monthly_stats_subtitle":      "Monthly overviews for the past year.",
+		"monthly_current_progress":    "Month in progress",
+		"monthly_current_progress_to": "ongoing through",
 		"annual_stats_subtitle":       "Complete history of monthly averages.",
 		"daily_temp_chart_title":      "Temperature over the last 7 days (°C)",
 		"daily_pressure_chart_title":  "Pressure over the last 7 days (hPa)",
@@ -302,6 +306,9 @@ func Messages(locale string) map[string]string {
 		merged[k] = v
 	}
 	for k, v := range recentLocaleMessages[loc] {
+		merged[k] = v
+	}
+	for k, v := range monthlyLocaleMessages[loc] {
 		merged[k] = v
 	}
 	for k, v := range hourlyTableLocaleMessages[loc] {
@@ -615,6 +622,33 @@ var recentLocaleMessages = map[string]map[string]string{
 		"detail_charts_load_error":    "Nem sikerült betölteni az órás grafikonokat a kiválasztott dátumhoz.",
 		"click_to_change_date":        "Kattintson a dátum módosításához",
 		"future_date_not_reached":     "Ez a dátum még nem következett be.",
+	},
+}
+
+var monthlyLocaleMessages = map[string]map[string]string{
+	"es": {
+		"monthly_current_progress":    "Mes en curso",
+		"monthly_current_progress_to": "en curso hasta",
+	},
+	"pl": {
+		"monthly_current_progress":    "Miesiąc w trakcie",
+		"monthly_current_progress_to": "dane do",
+	},
+	"de": {
+		"monthly_current_progress":    "Monat fortlaufend",
+		"monthly_current_progress_to": "fortlaufend bis",
+	},
+	"fr": {
+		"monthly_current_progress":    "Mois en cours",
+		"monthly_current_progress_to": "données jusqu'au",
+	},
+	"it": {
+		"monthly_current_progress":    "Mese in corso",
+		"monthly_current_progress_to": "aggiornato al",
+	},
+	"hu": {
+		"monthly_current_progress":    "Folyamatban lévő hónap",
+		"monthly_current_progress_to": "adatok eddig:",
 	},
 }
 

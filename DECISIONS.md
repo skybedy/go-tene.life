@@ -62,8 +62,8 @@
 20. Průměrná teplota moře na `/statistics/recent` se počítá klientsky z dostupných denních hodnot `datasets.sea_temperature`.
 - Důvod: endpoint už vrací jednu denní hodnotu moře z `water_temperatures`; souhrnná karta má zobrazovat průměr za stejný rozsah jako ostatní recent metriky.
 
-21. Souhrnné karty na `/statistics/monthly` zobrazují aktuální měsíc zatím z denních dat endpointu `/api/weather/monthly-daily`, ne průměr posledních 12 měsíčních agregátů.
-- Důvod: horní souhrn má odpovídat právě otevřenému měsíci a dostupným průběžným datům; dlouhodobé měsíční průměry patří do tabulky/grafů nebo ročních statistik.
+21. Souhrnné karty na `/statistics/monthly` zobrazují aktuální měsíc průběžně k poslednímu datu z dynamického endpointu `/api/weather/monthly-current`, ne z denních ani měsíčních agregačních tabulek.
+- Důvod: horní souhrn má odpovídat otevřenému měsíci, ale nemá ukazovat neuzavřený dnešek. Poslední datum se proto bere z `weather_daily`; pokud `water_temperatures` nemá měření ve stejný den, používá se stále stejné datum z `weather_daily` a moře se průměruje jen z dostupných měření v tomto období.
 
 22. Tabulky na homepage a statistikách používají jednotný styl podle `/statistics/monthly` se střídavým podbarvením řádků.
 - Důvod: sjednocená typografie, odsazení, centrování a `odd/even` řádky zvyšují čitelnost napříč podobnými datovými tabulkami.
