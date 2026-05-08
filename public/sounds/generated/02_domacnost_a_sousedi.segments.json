@@ -1,0 +1,127 @@
+{
+  "file": "02_domacnost_a_sousedi.mp3",
+  "title": "Domácnost a sousedé",
+  "lesson": "Lekce 2",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.335,
+      "spanish": "el vecino",
+      "czech": "soused"
+    },
+    {
+      "start": 3.595,
+      "end": 5.549,
+      "spanish": "el barrio",
+      "czech": "čtvrť"
+    },
+    {
+      "start": 6.809,
+      "end": 8.634,
+      "spanish": "la casa",
+      "czech": "dům"
+    },
+    {
+      "start": 9.893,
+      "end": 11.627,
+      "spanish": "el piso",
+      "czech": "byt"
+    },
+    {
+      "start": 12.895,
+      "end": 14.839,
+      "spanish": "la puerta",
+      "czech": "dveře"
+    },
+    {
+      "start": 16.098,
+      "end": 17.989,
+      "spanish": "la llave",
+      "czech": "klíč"
+    },
+    {
+      "start": 19.247,
+      "end": 21.308,
+      "spanish": "el timbre",
+      "czech": "zvonek"
+    },
+    {
+      "start": 22.569,
+      "end": 24.8,
+      "spanish": "el portero",
+      "czech": "domovník"
+    },
+    {
+      "start": 26.06,
+      "end": 28.154,
+      "spanish": "el garaje",
+      "czech": "garáž"
+    },
+    {
+      "start": 29.414,
+      "end": 31.508,
+      "spanish": "el balcón",
+      "czech": "balkon"
+    },
+    {
+      "start": 32.768,
+      "end": 34.672,
+      "spanish": "la ventana",
+      "czech": "okno"
+    },
+    {
+      "start": 35.932,
+      "end": 38.17,
+      "spanish": "el ascensor",
+      "czech": "výtah"
+    },
+    {
+      "start": 39.431,
+      "end": 41.788,
+      "spanish": "las escaleras",
+      "czech": "schody"
+    },
+    {
+      "start": 43.054,
+      "end": 45.061,
+      "spanish": "el tejado",
+      "czech": "střecha"
+    },
+    {
+      "start": 46.321,
+      "end": 48.348,
+      "spanish": "el jardín",
+      "czech": "zahrada"
+    },
+    {
+      "start": 49.607,
+      "end": 51.744,
+      "spanish": "el salón",
+      "czech": "obývák"
+    },
+    {
+      "start": 53.003,
+      "end": 55.004,
+      "spanish": "la cocina",
+      "czech": "kuchyň"
+    },
+    {
+      "start": 56.264,
+      "end": 58.184,
+      "spanish": "el baño",
+      "czech": "koupelna"
+    },
+    {
+      "start": 59.449,
+      "end": 61.85,
+      "spanish": "el dormitorio",
+      "czech": "ložnice"
+    },
+    {
+      "start": 63.11,
+      "end": 65.25,
+      "spanish": "la cama",
+      "czech": "postel"
+    }
+  ]
+}

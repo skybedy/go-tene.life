@@ -37,3 +37,6 @@
 
 12. Na `/statistics/daily` se při chybějícím dnešním měření teploty moře použije fallback na poslední dostupné měření, ale štítek `Dnes HH:MM` se zobrazí pouze pro skutečně dnešní záznam.
 - Důvod: UI má korektně rozlišit aktuální dnešní měření od historické fallback hodnoty a předejít dojmu, že starší data jsou dnešní. Čas fallback záznamu se pro tuto stránku vrací tak, jak je uložený ve `water_temperatures`.
+
+13. Pro volbu `Přehrát všechno za sebou` na `/spanelsko-ceska-slovicka` se používá dedikovaný spojený track `spanelsko_ceska_slovicka_1_500.mp3` s vlastním seznamem časovaných segmentů.
+- Důvod: playlistové řazení více samostatných souborů negarantuje jednu souvislou časovou osu segmentů; spojený soubor umožní přesné synchronní zobrazování CZ/ES slovíček i v režimu „všechno za sebou“.

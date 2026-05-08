@@ -1,0 +1,127 @@
+{
+  "file": "04_doprava_a_orientace.mp3",
+  "title": "Doprava a orientace",
+  "lesson": "Lekce 4",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.0,
+      "spanish": "la calle",
+      "czech": "ulice"
+    },
+    {
+      "start": 3.26,
+      "end": 5.341,
+      "spanish": "la avenida",
+      "czech": "třída"
+    },
+    {
+      "start": 6.602,
+      "end": 8.884,
+      "spanish": "la plaza",
+      "czech": "náměstí"
+    },
+    {
+      "start": 10.144,
+      "end": 11.971,
+      "spanish": "la esquina",
+      "czech": "roh"
+    },
+    {
+      "start": 13.232,
+      "end": 15.545,
+      "spanish": "el semáforo",
+      "czech": "semafor"
+    },
+    {
+      "start": 16.812,
+      "end": 19.118,
+      "spanish": "la parada",
+      "czech": "zastávka"
+    },
+    {
+      "start": 20.378,
+      "end": 22.666,
+      "spanish": "la estación",
+      "czech": "stanice"
+    },
+    {
+      "start": 23.926,
+      "end": 25.726,
+      "spanish": "el metro",
+      "czech": "metro"
+    },
+    {
+      "start": 26.986,
+      "end": 29.409,
+      "spanish": "el autobús",
+      "czech": "autobus"
+    },
+    {
+      "start": 30.67,
+      "end": 32.416,
+      "spanish": "el tren",
+      "czech": "vlak"
+    },
+    {
+      "start": 33.676,
+      "end": 35.585,
+      "spanish": "el taxi",
+      "czech": "taxi"
+    },
+    {
+      "start": 36.845,
+      "end": 38.694,
+      "spanish": "el coche",
+      "czech": "auto"
+    },
+    {
+      "start": 39.954,
+      "end": 41.898,
+      "spanish": "la moto",
+      "czech": "motorka"
+    },
+    {
+      "start": 43.158,
+      "end": 45.103,
+      "spanish": "la bicicleta",
+      "czech": "kolo"
+    },
+    {
+      "start": 46.37,
+      "end": 48.882,
+      "spanish": "el aparcamiento",
+      "czech": "parkoviště"
+    },
+    {
+      "start": 50.143,
+      "end": 52.504,
+      "spanish": "la gasolina",
+      "czech": "benzín"
+    },
+    {
+      "start": 53.764,
+      "end": 55.518,
+      "spanish": "el mapa",
+      "czech": "mapa"
+    },
+    {
+      "start": 56.778,
+      "end": 58.969,
+      "spanish": "la dirección",
+      "czech": "adresa"
+    },
+    {
+      "start": 60.228,
+      "end": 62.252,
+      "spanish": "preguntar",
+      "czech": "zeptat se"
+    },
+    {
+      "start": 63.512,
+      "end": 65.59,
+      "spanish": "buscar",
+      "czech": "hledat"
+    }
+  ]
+}

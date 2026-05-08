@@ -1,0 +1,250 @@
+studovat
+učit se
+učit (někoho)
+učitel
+student
+hodina
+kurz
+zkouška
+známka
+diplom
+pracovat
+práce
+šéf
+kolega
+zákazník
+smlouva
+plat
+rozvrh / pracovní doba
+schůzka
+projekt
+den
+týden
+měsíc
+rok
+pondělí
+úterý
+středa
+čtvrtek
+pátek
+sobota
+neděle
+ráno
+odpoledne
+noc
+dnes
+včera
+zítra
+brzy
+pozdě
+teď
+počasí
+slunce
+měsíc
+hvězdy
+mrak
+déšť
+sníh
+vítr
+teplo
+chlad
+bouřka
+duha
+venkov
+hora
+moře
+řeka
+jezero
+pláž
+les
+park
+sport
+fotbal
+basketbal
+tenis
+plavání
+posilovna
+běhat
+chodit
+tančit
+zpívat
+číst
+psát
+kreslit
+malovat
+hrát na kytaru
+hrát na klavír
+sledovat film
+poslouchat hudbu
+jít ven s přáteli
+jít nakupovat
+olej
+máslo
+sůl
+cukr
+pepř
+ocet
+česnek
+cibule
+mrkev
+rajče
+okurka
+salát
+paprika
+žampion
+brambora
+kukuřice
+jahoda
+jablko
+pomeranč
+banán
+hotel
+hostel
+penzion
+rezervace
+recepční
+pokoj
+manželská postel
+jednolůžko
+vlastní koupelna
+snídaně v ceně
+přihlášení
+odhlášení
+jízdenka
+letenka
+zavazadlo
+kufr
+batoh
+pas
+vízum
+celnice
+sanitka
+pohotovost
+operace
+chirurg
+krevní test
+rentgen
+obvaz
+sádra
+teploměr
+krevní tlak
+tep
+srdce
+plíce
+játra
+ledvina
+kůže
+kost
+sval
+očkování
+infekce
+banka
+bankomat
+bankovní účet
+převod
+příjem
+výdaj
+úspora
+půjčka
+hypotéka
+úrok
+kreditní karta
+debetní karta
+zůstatek
+vybrat peníze
+vložit peníze
+směnit měnu
+mince
+bankovka
+účtenka
+faktura
+policie
+strážník
+oznámení
+krádež
+zloděj
+nouze
+požár
+hasič
+nehoda
+zdravotní pojištění
+pojištění auta
+silniční asistence
+tísňová linka
+nebezpečí
+únikový východ
+hasicí přístroj
+poplach
+chránit
+pojistit
+pomoct
+oslava
+narozeniny
+výročí
+svatba
+křest
+setkání
+událost
+koncert
+festival
+kino
+divadlo
+výstava
+muzeum
+zábavní park
+zoo
+diskotéka
+bar
+hospoda
+karaoke
+jít se bavit
+země
+město
+vesnice
+oblast
+kontinent
+Evropa
+Amerika
+Asie
+Afrika
+Oceánie
+mapa
+hranice
+pas
+vízum
+ambasáda
+konzulát
+jazyk
+kultura
+památka
+turista
+ano
+ne
+možná
+nikdy
+vždy
+také
+ale
+protože
+takže, tedy
+teď
+potom
+předtím
+tady
+tam
+blízko
+daleko
+nahoře
+dole
+uvnitř
+venku
+rodina
+rodiče
+matka
+otec
+bratr
+sestra
+syn
+dcera
+přítel
+přítelkyně

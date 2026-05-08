@@ -8,8 +8,8 @@
 ## Aktuální stav
 
 - Typ: rozpracovaný existující projekt.
-- Git: aktuální větev `main`; feature větev `feature/water-temperature-refactor` byla úspěšně sloučena. Pracovní strom je čistý.
-- Migrace `0008`, `0009` a `0010` byly otestovány a aplikovány.
+- Git: aktuální větev `feature/sound-segments-lesson-02`.
+- Všechna slovíčka (lekce 1–26 i velké soubory 1–250, 251–500) mají vygenerované časované segmenty v `public/sounds/index.json`.
 
 ## Technologie
 
@@ -23,6 +23,7 @@
 - Backfill pravidlo: historické hodnoty z `weather_daily.sea_temperature` se mapují na čas `10:00:00` (UTC) jako default pro legacy denní záznamy.
 - Denní statistiky (`/statistics/daily`) už berou teplotu moře z `water_temperatures` (nejnovější měření v rámci dne) a v UI zobrazují i timestamp poslední aktualizace.
 - Na `/statistics/daily` je doplněný fallback: pokud pro dnešní datum chybí teplota moře, API vrátí poslední dostupné měření; UI pak zobrazuje `Dnes HH:MM` jen pokud měření opravdu pochází z dnešního dne, jinak zobrazí celé datum+čas uložené v `water_temperatures`.
+- Na `/spanelsko-ceska-slovicka` je pro volbu `Přehrát všechno za sebou` nově připravený dedikovaný track `spanelsko_ceska_slovicka_1_500.mp3` s 500 časovanými segmenty, takže se během přehrávání synchronně zobrazuje španělský i český text.
 
 ## Důležité adresáře a soubory
 

@@ -1,0 +1,127 @@
+{
+  "file": "15_cas_a_datum.mp3",
+  "title": "Čas a datum",
+  "lesson": "Lekce 15",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 1.825,
+      "spanish": "el día",
+      "czech": "den"
+    },
+    {
+      "start": 3.085,
+      "end": 5.211,
+      "spanish": "la semana",
+      "czech": "týden"
+    },
+    {
+      "start": 6.471,
+      "end": 8.537,
+      "spanish": "el mes",
+      "czech": "měsíc"
+    },
+    {
+      "start": 9.798,
+      "end": 11.413,
+      "spanish": "el año",
+      "czech": "rok"
+    },
+    {
+      "start": 12.675,
+      "end": 14.832,
+      "spanish": "el lunes",
+      "czech": "pondělí"
+    },
+    {
+      "start": 16.092,
+      "end": 18.332,
+      "spanish": "el martes",
+      "czech": "úterý"
+    },
+    {
+      "start": 19.592,
+      "end": 21.828,
+      "spanish": "el miércoles",
+      "czech": "středa"
+    },
+    {
+      "start": 23.089,
+      "end": 25.232,
+      "spanish": "el jueves",
+      "czech": "čtvrtek"
+    },
+    {
+      "start": 26.491,
+      "end": 28.632,
+      "spanish": "el viernes",
+      "czech": "pátek"
+    },
+    {
+      "start": 29.892,
+      "end": 31.963,
+      "spanish": "el sábado",
+      "czech": "sobota"
+    },
+    {
+      "start": 33.219,
+      "end": 35.298,
+      "spanish": "el domingo",
+      "czech": "neděle"
+    },
+    {
+      "start": 36.558,
+      "end": 38.545,
+      "spanish": "la mañana",
+      "czech": "ráno"
+    },
+    {
+      "start": 39.805,
+      "end": 41.944,
+      "spanish": "la tarde",
+      "czech": "odpoledne"
+    },
+    {
+      "start": 43.203,
+      "end": 45.073,
+      "spanish": "la noche",
+      "czech": "noc"
+    },
+    {
+      "start": 46.33,
+      "end": 47.859,
+      "spanish": "hoy",
+      "czech": "dnes"
+    },
+    {
+      "start": 49.122,
+      "end": 50.637,
+      "spanish": "ayer",
+      "czech": "včera"
+    },
+    {
+      "start": 51.897,
+      "end": 53.83,
+      "spanish": "mañana",
+      "czech": "zítra"
+    },
+    {
+      "start": 55.091,
+      "end": 56.787,
+      "spanish": "temprano",
+      "czech": "brzy"
+    },
+    {
+      "start": 58.047,
+      "end": 59.651,
+      "spanish": "tarde",
+      "czech": "pozdě"
+    },
+    {
+      "start": 60.911,
+      "end": 62.59,
+      "spanish": "ahora",
+      "czech": "teď"
+    }
+  ]
+}

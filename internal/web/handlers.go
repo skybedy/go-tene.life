@@ -646,8 +646,22 @@ func (h *Handler) SoundsHandler(c echo.Context) error {
 		tracks = nil
 	}
 
+	var trackAll, track250, track500 *models.SoundTrack
+	for i := range tracks {
+		if tracks[i].FileName == "spanelsko_ceska_slovicka_1_500.mp3" {
+			trackAll = &tracks[i]
+		} else if tracks[i].FileName == "spanelsko_ceska_slovicka_1_250.mp3" {
+			track250 = &tracks[i]
+		} else if tracks[i].FileName == "spanelsko_ceska_slovicka_251_500.mp3" {
+			track500 = &tracks[i]
+		}
+	}
+
 	data := models.SoundsPageData{
 		Tracks:          tracks,
+		TrackAll:        trackAll,
+		Track250:        track250,
+		Track500:        track500,
 		PageTitle:       i18n.T(locale, "sounds_title"),
 		Locale:          locale,
 		LocalePrefix:    i18n.LocalePrefix(locale),
@@ -667,6 +681,7 @@ func loadSoundTracks(root string) ([]models.SoundTrack, error) {
 	if err != nil {
 		return nil, err
 	}
+	metadata := loadSoundTrackMetadata(filepath.Join(root, "index.json"))
 
 	tracks := make([]models.SoundTrack, 0, len(entries))
 	for _, entry := range entries {
@@ -677,15 +692,68 @@ func loadSoundTracks(root string) ([]models.SoundTrack, error) {
 		if strings.ToLower(filepath.Ext(name)) != ".mp3" {
 			continue
 		}
-		tracks = append(tracks, models.SoundTrack{
+		track := models.SoundTrack{
 			Title:    soundTrackTitle(name),
 			FileName: name,
 			URL:      "/spanelsko-ceska-slovicka/files/" + name,
 			Icon:     soundTrackIcon(name),
-		})
+		}
+		if meta, ok := metadata[name]; ok {
+			if strings.TrimSpace(meta.Title) != "" {
+				track.Title = meta.Title
+			}
+			track.Lesson = meta.Lesson
+			track.Spanish = meta.Spanish
+			track.Czech = meta.Czech
+			track.Segments = meta.Segments
+		}
+		if strings.TrimSpace(track.Lesson) == "" {
+			track.Lesson = track.Title
+		}
+		segmentsJSON, err := json.Marshal(track.Segments)
+		if err != nil {
+			segmentsJSON = []byte("[]")
+		}
+		track.SegmentsJSON = string(segmentsJSON)
+		tracks = append(tracks, track)
 	}
 
 	return tracks, nil
+}
+
+type soundTrackMetadata struct {
+	File     string                `json:"file"`
+	Title    string                `json:"title"`
+	Lesson   string                `json:"lesson"`
+	Spanish  string                `json:"spanish"`
+	Czech    string                `json:"czech"`
+	Segments []models.SoundSegment `json:"segments"`
+}
+
+func loadSoundTrackMetadata(path string) map[string]soundTrackMetadata {
+	out := make(map[string]soundTrackMetadata)
+	f, err := os.Open(path)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			log.Printf("Error loading sound metadata: %v", err)
+		}
+		return out
+	}
+	defer f.Close()
+
+	var records []soundTrackMetadata
+	if err := json.NewDecoder(f).Decode(&records); err != nil {
+		log.Printf("Error decoding sound metadata: %v", err)
+		return out
+	}
+	for _, rec := range records {
+		file := strings.TrimSpace(rec.File)
+		if file == "" {
+			continue
+		}
+		out[file] = rec
+	}
+	return out
 }
 
 func soundTrackTitle(fileName string) string {
@@ -733,6 +801,7 @@ var soundTrackTitles = map[string]string{
 	"24_zeme_a_cestovani":                "Země a cestování",
 	"25_zakladni_prislovce_a_spojky":     "Základní příslovce a spojky",
 	"26_lide_a_vztahy":                   "Lidé a vztahy",
+	"spanelsko_ceska_slovicka_1_500":     "Španělsko-česká slovíčka 1-500",
 	"spanelsko_ceska_slovicka_1_250":     "Španělsko-česká slovíčka 1-250",
 	"spanelsko_ceska_slovicka_251_500":   "Španělsko-česká slovíčka 251-500",
 }
@@ -771,6 +840,7 @@ var soundTrackIcons = map[string]string{
 	"24_zeme_a_cestovani":                "🌍",
 	"25_zakladni_prislovce_a_spojky":     "🔗",
 	"26_lide_a_vztahy":                   "🤝",
+	"spanelsko_ceska_slovicka_1_500":     "📚",
 	"spanelsko_ceska_slovicka_1_250":     "📚",
 	"spanelsko_ceska_slovicka_251_500":   "📚",
 }

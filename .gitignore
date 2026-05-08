@@ -34,3 +34,6 @@ _laravel_reference/storage/
 _laravel_reference/public/build/
 _laravel_reference/public/storage
 _laravel_reference/bootstrap/cache/
+
+# Local sound analysis logs
+public/sounds/silence-*.log

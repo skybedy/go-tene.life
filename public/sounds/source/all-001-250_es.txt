@@ -1,0 +1,250 @@
+el supermercado
+la tienda
+el cajero
+el efectivo
+la tarjeta
+la bolsa
+la cesta
+el carrito
+la carne
+el pescado
+las verduras
+las frutas
+el pan
+la leche
+el queso
+los huevos
+el arroz
+la pasta
+la bebida
+el agua
+el vino
+la cerveza
+el descuento
+la oferta
+el precio
+el kilo
+el litro
+la marca
+la lista
+el mercado
+el vecino
+el barrio
+la casa
+el piso
+la puerta
+la llave
+el timbre
+el portero
+el garaje
+el balcón
+la ventana
+el ascensor
+las escaleras
+el tejado
+el jardín
+el salón
+la cocina
+el baño
+el dormitorio
+la cama
+el fontanero
+el electricista
+el carpintero
+el pintor
+el albañil
+el mecánico
+el cerrajero
+la avería
+la fuga
+el enchufe
+la bombilla
+el martillo
+el clavo
+el tornillo
+la llave inglesa
+la herramienta
+el cable
+arreglar
+reparar
+cambiar
+la calle
+la avenida
+la plaza
+la esquina
+el semáforo
+la parada
+la estación
+el metro
+el autobús
+el tren
+el taxi
+el coche
+la moto
+la bicicleta
+el aparcamiento
+la gasolina
+el mapa
+la dirección
+preguntar
+buscar
+el médico
+el hospital
+la clínica
+la farmacia
+la cita
+el paciente
+la consulta
+el síntoma
+el dolor
+la cabeza
+el estómago
+la garganta
+la fiebre
+la tos
+el resfriado
+la gripe
+la alergia
+el seguro
+la receta
+el medicamento
+el ayuntamiento
+la oficina
+la policía
+el pasaporte
+el NIE
+el permiso de residencia
+el empadronamiento
+la cita previa
+el documento
+el certificado
+la solicitud
+la renovación
+la firma
+rellenar
+solicitar
+pagar
+el impuesto
+la multa
+el contrato
+la ley
+hola
+buenos días
+buenas tardes
+buenas noches
+adiós
+hasta luego
+por favor
+gracias
+de nada
+lo siento
+disculpe
+¿cómo está?
+bien
+mal
+así así
+mucho gusto
+encantado
+¿cómo te llamas?
+me llamo…
+¿de dónde eres?
+el restaurante
+el bar
+la cafetería
+la mesa
+el camarero
+la carta
+el menú
+la cuenta
+la reserva
+pedir
+traer
+pagar
+la propina
+el desayuno
+la comida
+la cena
+el postre
+la bebida
+el café
+el té
+el sofá
+la silla
+la mesa
+la lámpara
+la alfombra
+el armario
+el cajón
+el espejo
+la cortina
+la pared
+el suelo
+el techo
+la calefacción
+el aire acondicionado
+el ventilador
+el grifo
+la ducha
+la bañera
+el váter
+el lavabo
+limpiar
+fregar
+barrer
+pasar la aspiradora
+quitar el polvo
+lavar
+planchar
+doblar
+la lavadora
+la secadora
+el detergente
+el suavizante
+el jabón
+el estropajo
+la escoba
+el cubo
+la fregona
+el trapo
+la basura
+el cubo de basura
+el ordenador
+el portátil
+el ratón
+el teclado
+la pantalla
+el móvil
+el cargador
+la batería
+el correo electrónico
+el mensaje
+llamar
+colgar
+contestar
+enviar
+recibir
+el internet
+la contraseña
+el archivo
+la aplicación
+la red social
+la tienda online
+el pedido
+el paquete
+la entrega
+el envío
+el repartidor
+la dirección de envío
+el seguimiento
+el pago
+la factura
+devolver
+reembolsar
+la garantía
+el cambio
+la talla
+el número
+el color
+el modelo
+el diseño
+la calidad
