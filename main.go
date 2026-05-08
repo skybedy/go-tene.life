@@ -216,6 +216,22 @@ func main() {
 				}
 				return fmt.Sprintf("%d.%d.%02d", d, m, y%100)
 			},
+			"shortTimeNoZero": func(v *string) string {
+				if v == nil || strings.TrimSpace(*v) == "" {
+					return ""
+				}
+				layouts := []string{
+					"2006-01-02 15:04:05",
+					"2006-01-02 15:04",
+					time.RFC3339,
+				}
+				for _, layout := range layouts {
+					if t, err := time.Parse(layout, strings.TrimSpace(*v)); err == nil {
+						return strings.TrimPrefix(t.Format("15:04"), "0")
+					}
+				}
+				return ""
+			},
 			"todayDate": func() string {
 				loc, _ := time.LoadLocation("Atlantic/Canary")
 				return time.Now().In(loc).Format("2. 1. 06")

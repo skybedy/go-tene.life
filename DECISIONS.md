@@ -40,3 +40,9 @@
 
 13. Pro volbu `Přehrát všechno za sebou` na `/spanelsko-ceska-slovicka` se používá dedikovaný spojený track `spanelsko_ceska_slovicka_1_500.mp3` s vlastním seznamem časovaných segmentů.
 - Důvod: playlistové řazení více samostatných souborů negarantuje jednu souvislou časovou osu segmentů; spojený soubor umožní přesné synchronní zobrazování CZ/ES slovíček i v režimu „všechno za sebou“.
+
+14. Na stránkách `/statistics/weekly`, `/statistics/monthly` a `/statistics/annual` se sea graf plní agregačním datasetem `sea_temperature` z endpointu `/api/weather/{type}`, nikoli syrovou historií měření.
+- Důvod: grafulárně má zobrazovat stejnou agregační úroveň jako tabulka dané stránky (týden/měsíc), ne point-in-time křivku z `/api/water-temperatures/history`, která vizuálně neodpovídá měsíčním/týdenním průměrům.
+
+15. Na `/statistics/recent` se u hodnoty moře zobrazuje i čas měření z `SeaMeasuredAt` ve formátu `H:MM` bez úvodní nuly.
+- Důvod: uživatel potřebuje vidět, kdy byla denní sea hodnota skutečně naměřena; kratší formát je čitelnější v úzké tabulce.

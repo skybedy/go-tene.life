@@ -70,7 +70,10 @@
                             <td class="px-3 py-3 text-right text-gray-700">{{ f1 .AvgPressure }} hPa</td>
                             <td class="px-3 py-3 text-right text-gray-700">{{ f0 .AvgHumidity }} %</td>
                             <td class="px-3 py-3 text-right text-gray-700">
-                                {{ if .SeaTemperature }}{{ f1 .SeaTemperature }} °C{{ else }}-{{ end }}
+                                {{ if .SeaTemperature }}
+                                <div>{{ f1 .SeaTemperature }} °C</div>
+                                {{ if .SeaMeasuredAt }}<div class="text-[0.65rem] text-gray-500">{{ shortTimeNoZero .SeaMeasuredAt }}</div>{{ end }}
+                                {{ else }}-{{ end }}
                             </td>
                         </tr>
                         {{ else }}

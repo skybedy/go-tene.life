@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const i18n = window.statsI18n || {};
+    const path = window.location.pathname;
+    const isDailyLikePage = path.includes('/statistics/daily') || path.includes('/statistics/recent');
     const charts = {
         temperature: null,
         seaTemperature: null,
@@ -93,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Initialize charts if they exist on page
-    charts.temperature = initChart('temperatureChart', i18n.temperature || 'Temperature', '#ef4444', '°C', true); // Multi for min/avg/max
+    charts.temperature = initChart('temperatureChart', i18n.temperature || 'Temperature', '#ef4444', '°C', isDailyLikePage);
     charts.seaTemperature = initChart('seaTemperatureChart', i18n.seaTemperature || 'Sea Temperature', '#0ea5e9', '°C');
     charts.pressure = initChart('pressureChart', i18n.pressure || 'Pressure', '#3b82f6', ' hPa');
     charts.humidity = initChart('humidityChart', i18n.humidity || 'Humidity', '#10b981', '%');
@@ -149,7 +151,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Route handling
-    const path = window.location.pathname;
     if (path.includes('/statistics/daily')) {
         loadDailyStats();
     } else if (path.includes('/statistics/recent')) {
@@ -178,8 +179,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 charts.temperature.data.labels = data.labels;
                 charts.temperature.data.datasets[isMultiChart('temperatureChart') ? 1 : 0].data = data.datasets.avg_temperature;
                 charts.temperature.update();
-
-                await loadSeaTemperatureHistoryForPath();
+                if (charts.seaTemperature) {
+                    charts.seaTemperature.data.labels = data.labels;
+                    charts.seaTemperature.data.datasets[0].data = data.datasets.sea_temperature;
+                    charts.seaTemperature.update();
+                }
 
                 if (charts.pressure) {
                     charts.pressure.data.labels = data.labels;
@@ -202,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     function isMultiChart(id) {
          // Helper to check if chart was initialized as multi
-         return id === 'temperatureChart' && path.includes('/statistics/daily');
+         return id === 'temperatureChart' && isDailyLikePage;
     }
 
     async function loadSeaTemperatureHistoryForPath() {
