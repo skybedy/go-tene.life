@@ -77,13 +77,13 @@
             </h2>
             <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm">
-                        <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase text-[0.55rem] leading-tight sm:text-xs">
+                    <table class="w-full text-center text-xs sm:text-sm">
+                        <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase">
                             <tr>
-                                <th class="px-3 py-3 font-semibold">{{ index .I18n "hour" }}</th>
-                                <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_temp" }}</th>
-                                <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_pressure" }}</th>
-                                <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_humidity" }}</th>
+                                <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "hour" }}</th>
+                                <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_temp" }} (°C)</th>
+                                <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_pressure" }} (hPa)</th>
+                                <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_humidity" }} (%)</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200" id="hourlyTableBody">
@@ -332,9 +332,9 @@
             return m[3].replace(/^0/, '') + '. ' + m[2].replace(/^0/, '') + '. ' + m[1];
         }
 
-        function formatValue(value, digits, unit) {
+        function formatValue(value, digits) {
             return typeof value === 'number' && Number.isFinite(value)
-                ? value.toFixed(digits) + unit
+                ? value.toFixed(digits)
                 : '--';
         }
 
@@ -352,10 +352,10 @@
                 const humidity = datasets && Array.isArray(datasets.humidity) ? datasets.humidity[index] : null;
 
                 return '<tr class="odd:bg-white/55 even:bg-blue-50/55 hover:bg-white/75 transition">'
-                    + '<td class="px-3 py-3 font-medium text-gray-900">' + label + '</td>'
-                    + '<td class="px-3 py-3 text-right text-gray-700">' + formatValue(temperature, 1, ' °C') + '</td>'
-                    + '<td class="px-3 py-3 text-right text-gray-700">' + formatValue(pressure, 1, ' hPa') + '</td>'
-                    + '<td class="px-3 py-3 text-right text-gray-700">' + formatValue(humidity, 0, ' %') + '</td>'
+                    + '<td class="px-3 py-3 text-center font-medium text-gray-900">' + label + '</td>'
+                    + '<td class="px-3 py-3 text-center text-gray-700">' + formatValue(temperature, 1) + '</td>'
+                    + '<td class="px-3 py-3 text-center text-gray-700">' + formatValue(pressure, 1) + '</td>'
+                    + '<td class="px-3 py-3 text-center text-gray-700">' + formatValue(humidity, 0) + '</td>'
                     + '</tr>';
             }).join('');
         }

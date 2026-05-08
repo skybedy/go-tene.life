@@ -264,14 +264,13 @@
         <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">{{ index .I18n "table_overview" }}</h2>
         <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs sm:text-sm">
-                    <thead
-                        class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase text-[0.55rem] leading-tight sm:text-xs">
+                <table class="w-full text-center text-xs sm:text-sm">
+                    <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase">
                         <tr>
-                            <th class="px-3 py-3 font-semibold">{{ index .I18n "hour" }}</th>
-                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_temp" }}</th>
-                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_pressure" }}</th>
-                            <th class="px-3 py-3 font-semibold text-right">{{ index .I18n "avg_humidity" }}</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "hour" }}</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_temp" }} (°C)</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_pressure" }} (hPa)</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_humidity" }} (%)</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200" id="hourlyHomeTableBody">

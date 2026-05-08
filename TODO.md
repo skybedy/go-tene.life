@@ -5,7 +5,7 @@
 - Udržovat AI kontextové soubory (`AGENTS.md`, `PROJECT_CONTEXT.md`, `TODO.md`, `DECISIONS.md`) aktuální při každé významné změně.
 - Dokončeno: Zpracování všech lekcí i velkých audio souborů (1–250, 251–500) do časovaných segmentů.
 - Po ověření přepnout klienty ingestu na posílání `measured_at` (datum+čas) pro ruční teplotu moře.
-- Připravit obdobný přechod statistik s agregacemi moře (`weekly/monthly`) na zdroj z `water_temperatures` (zatím běží z agregačních tabulek).
+- Dokončeno: Statistiky s agregacemi moře (`weekly/monthly`) používají hodnoty dopočítané z `water_temperatures` přes weather processor a agregační tabulky.
 
 ## K doplnění
 
@@ -21,6 +21,7 @@
 - Ověřit vizuálně weather box na mobilu i desktopu po swapu barev (kontrast, čitelnost).
 - Vizuálně ověřit na `/statistics/daily` chování teploty moře po restartu aplikace: `Dnes HH:MM` pro dnešní měření a fallback na poslední dostupné datum+čas, pokud dnešní záznam chybí.
 - Vizuálně ověřit na `/statistics/monthly`, `/statistics/weekly` a `/statistics/annual`, že spodní sea graf zobrazuje agregační hodnoty `sea_temperature` z API `/api/weather/{type}` (ne syrovou historii měření).
+- Vizuálně ověřit na `/statistics/monthly`, že horní karty „aktuální měsíc zatím“ odpovídají dostupným denním hodnotám včetně teploty moře.
 - Vizuálně ověřit na `/statistics/recent` čitelnost nově zobrazeného času měření moře (formát `H:MM` bez počáteční nuly) na mobilu i desktopu.
 - Vizuálně ověřit na `/spanelsko-ceska-slovicka`, že volba `Přehrát všechno za sebou` používá nový track `1-500` a synchronizuje panel slovíček bez posunu.
 

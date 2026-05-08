@@ -1103,11 +1103,16 @@ func (h *Handler) GetMonthlyDailyDataHandler(c echo.Context) error {
 	year, _ := strconv.Atoi(yearStr)
 	month, _ := strconv.Atoi(monthStr)
 
+	loc, err := time.LoadLocation("Atlantic/Canary")
+	if err != nil {
+		loc = time.UTC
+	}
+	now := time.Now().In(loc)
 	if year == 0 {
-		year = time.Now().Year()
+		year = now.Year()
 	}
 	if month == 0 {
-		month = int(time.Now().Month())
+		month = int(now.Month())
 	}
 
 	startDate := fmt.Sprintf("%04d-%02d-01", year, month)

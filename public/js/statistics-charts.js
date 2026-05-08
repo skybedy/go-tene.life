@@ -142,15 +142,21 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateSummary(datasets) {
         if (!datasets) return;
 
-        const avg = arr => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1) : '--';
+        const avg = arr => {
+            if (!Array.isArray(arr)) return null;
+            const values = arr.filter(value => typeof value === 'number' && Number.isFinite(value));
+            return values.length ? values.reduce((a, b) => a + b, 0) / values.length : null;
+        };
 
         const tempAvg = avg(datasets.avg_temperature);
         const pressAvg = avg(datasets.avg_pressure);
         const humAvg = avg(datasets.avg_humidity);
+        const seaTempAvg = avg(datasets.sea_temperature);
 
-        if (document.getElementById('stat-temp-avg')) document.getElementById('stat-temp-avg').textContent = tempAvg + ' °C';
-        if (document.getElementById('stat-pressure-avg')) document.getElementById('stat-pressure-avg').textContent = pressAvg + ' hPa';
-        if (document.getElementById('stat-humidity-avg')) document.getElementById('stat-humidity-avg').textContent = Math.round(humAvg) + ' %';
+        if (document.getElementById('stat-temp-avg')) document.getElementById('stat-temp-avg').textContent = tempAvg === null ? '--' : tempAvg.toFixed(1) + ' °C';
+        if (document.getElementById('stat-pressure-avg')) document.getElementById('stat-pressure-avg').textContent = pressAvg === null ? '--' : pressAvg.toFixed(1) + ' hPa';
+        if (document.getElementById('stat-humidity-avg')) document.getElementById('stat-humidity-avg').textContent = humAvg === null ? '--' : Math.round(humAvg) + ' %';
+        if (document.getElementById('stat-sea-temp-avg')) document.getElementById('stat-sea-temp-avg').textContent = seaTempAvg === null ? '--' : seaTempAvg.toFixed(1) + ' °C';
     }
 
     // Route handling
@@ -162,12 +168,13 @@ document.addEventListener('DOMContentLoaded', function () {
         // Implement weekly...
         loadGenericStats('weekly');
     } else if (path.includes('/statistics/monthly')) {
-        loadGenericStats('monthly');
+        loadGenericStats('monthly', false);
+        loadMonthlySummary();
     } else if (path.includes('/statistics/annual')) {
         loadGenericStats('annual');
     }
 
-    async function loadGenericStats(type) {
+    async function loadGenericStats(type, updateCards = true) {
         // Just reuse the charts but fetch different data
         if (!charts.temperature) {
             // Re-init without multi if needed, but for now let's just use it
@@ -200,10 +207,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     charts.humidity.update();
                 }
                 
-                updateSummary(data.datasets);
+                if (updateCards) {
+                    updateSummary(data.datasets);
+                }
             }
         } catch (error) {
             console.error(`Error loading ${type} stats:`, error);
+        }
+    }
+
+    async function loadMonthlySummary() {
+        try {
+            const response = await fetch('/api/weather/monthly-daily');
+            const data = await response.json();
+
+            if (data.datasets) {
+                updateSummary(data.datasets);
+            }
+        } catch (error) {
+            console.error('Error loading current month summary:', error);
         }
     }
     

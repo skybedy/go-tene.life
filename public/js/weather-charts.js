@@ -73,9 +73,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        function formatValue(value, digits, unit) {
+        function formatValue(value, digits) {
             return typeof value === 'number' && Number.isFinite(value)
-                ? value.toFixed(digits) + unit
+                ? value.toFixed(digits)
                 : '--';
         }
 
@@ -87,10 +87,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const humidity = datasets && Array.isArray(datasets.humidity) ? datasets.humidity[reverseIndex] : null;
 
             return '<tr class="odd:bg-white/55 even:bg-blue-50/55 hover:bg-white/75 transition">'
-                + '<td class="px-3 py-3 font-medium text-gray-900">' + label + '</td>'
-                + '<td class="px-3 py-3 text-right text-gray-700">' + formatValue(temperature, 1, ' °C') + '</td>'
-                + '<td class="px-3 py-3 text-right text-gray-700">' + formatValue(pressure, 1, ' hPa') + '</td>'
-                + '<td class="px-3 py-3 text-right text-gray-700">' + formatValue(humidity, 0, ' %') + '</td>'
+                + '<td class="px-3 py-3 text-center font-medium text-gray-900">' + label + '</td>'
+                + '<td class="px-3 py-3 text-center text-gray-700">' + formatValue(temperature, 1) + '</td>'
+                + '<td class="px-3 py-3 text-center text-gray-700">' + formatValue(pressure, 1) + '</td>'
+                + '<td class="px-3 py-3 text-center text-gray-700">' + formatValue(humidity, 0) + '</td>'
                 + '</tr>';
         }).join('');
     }

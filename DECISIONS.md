@@ -52,3 +52,18 @@
 
 17. V grafových osách statistik se hodnoty formátují na 1 desetinné místo před zobrazením.
 - Důvod: eliminace floating-point artefaktů v UI (např. dlouhé desetinné zbytky u teplot).
+
+18. V homepage hodinové tabulce se měrné jednotky zobrazují v hlavičkách sloupců a buňky obsahují pouze hodnoty.
+- Důvod: sjednocení s tabulkami statistik a lepší čitelnost opakovaných hodinových hodnot.
+
+19. Souhrnné karty na `/statistics/recent` používají stejnou vizuální strukturu jako karty na `/statistics/daily`.
+- Důvod: sjednocení statistik a odstranění odlišného měřítka typografie mezi podobnými stránkami.
+
+20. Průměrná teplota moře na `/statistics/recent` se počítá klientsky z dostupných denních hodnot `datasets.sea_temperature`.
+- Důvod: endpoint už vrací jednu denní hodnotu moře z `water_temperatures`; souhrnná karta má zobrazovat průměr za stejný rozsah jako ostatní recent metriky.
+
+21. Souhrnné karty na `/statistics/monthly` zobrazují aktuální měsíc zatím z denních dat endpointu `/api/weather/monthly-daily`, ne průměr posledních 12 měsíčních agregátů.
+- Důvod: horní souhrn má odpovídat právě otevřenému měsíci a dostupným průběžným datům; dlouhodobé měsíční průměry patří do tabulky/grafů nebo ročních statistik.
+
+22. Tabulky na homepage a statistikách používají jednotný styl podle `/statistics/monthly` se střídavým podbarvením řádků.
+- Důvod: sjednocená typografie, odsazení, centrování a `odd/even` řádky zvyšují čitelnost napříč podobnými datovými tabulkami.
