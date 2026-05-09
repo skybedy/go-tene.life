@@ -12,11 +12,11 @@
     }
 
     .glass-tile {
-        @apply flex flex-col bg-linear-to-b from-[#12677e]/42 to-[#1f304a]/51 px-1 py-0.5 rounded-md border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)];
+        @apply flex flex-col bg-[#245675]/58 px-1 py-0.5 rounded-md border border-transparent shadow-[0_6px_14px_rgba(8,20,34,0.18)];
     }
 
     .glass-button {
-        @apply flex items-center gap-2 bg-linear-to-b from-[#12677e]/60 to-[#1f304a]/70 px-3 py-1.5 rounded-md border border-cyan-200/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all hover:bg-white/10 active:scale-95 text-white font-bold;
+        @apply flex items-center gap-2 bg-[#245675]/58 px-3 py-1.5 rounded-md border border-transparent shadow-[0_6px_14px_rgba(8,20,34,0.18)] transition-all hover:bg-[#2a6286]/62 active:scale-95 text-white font-bold;
     }
 
     .weather-first-row-text {
@@ -107,6 +107,17 @@
     .weather-wave-detail-value {
         font-size: 0.792rem;
         line-height: 1;
+    }
+
+    .homepage-weather-strip .weather-box-heading,
+    .homepage-weather-strip .weather-first-row-text,
+    .homepage-weather-strip .weather-box-secondary,
+    .homepage-weather-strip .weather-main-value,
+    .homepage-weather-strip .weather-wave-title,
+    .homepage-weather-strip .weather-wave-value,
+    .homepage-weather-strip .weather-wave-detail-value,
+    .homepage-weather-strip .weather-tide-value {
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
     }
 
     .weather-overlay-shell::before {

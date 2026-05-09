@@ -24,44 +24,44 @@
                 <!-- Vnejsi poloha, odsazeni. atd -->
                 <div class="homepage-weather-strip-wrap col-start-1 row-start-1 self-start justify-self-start p-1 sm:p-2">
                     <!-- Barvy, fonty, atd -->
-                    <div class="homepage-weather-strip grid gap-px sm:gap-[3px] p-px sm:p-[3px] rounded-md lg:rounded-xl border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60  text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm  leading-none">
+                    <div class="homepage-weather-strip grid gap-[2px] sm:gap-[2px] px-[2px] pb-[2px] pt-[2px] sm:px-[2px] sm:pb-[2px] sm:pt-[2px] rounded-md lg:rounded-xl border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm leading-none">
                         
                             <!-- NOVÉ SLOUPCE (První řádek) -->
 
                             <!-- Spojené aktualizace pro Vzduch, Tlak a Vlhkost (Zabírá sloupce 1 a 2) -->
                             <div class="glass-tile col-start-1 col-span-2 row-start-1 h-full grid place-items-center p-0.5 rounded-sm text-center">
                                 <div class="weather-first-row-text font-bold uppercase">
-                                    <span class="text-cyan-300">{{ .FormattedDateSmall }}</span>
+                                    <span class="text-cyan-200">{{ .FormattedDateSmall }}</span>
                                     <span class="text-white/90"> | {{ .FormattedTime }}</span>
                                 </div>
                             </div>
 
                             <!-- Box pod Max/Min (Zabírá 3. sloupec) -->
                             <div class="glass-tile col-start-3 col-span-1 row-start-1 h-full grid place-items-center p-0.5 rounded-sm text-center">
-                                <div class="weather-first-row-text text-cyan-300 font-bold uppercase">{{ .FormattedDateSmall }}</div>
+                                <div class="weather-first-row-text text-cyan-200 font-bold uppercase">{{ .FormattedDateSmall }}</div>
                             </div>
 
                             <!-- 2. sloupec: pod Moře (1 sloupec na všech velikostech) -->
                             <div class="glass-tile col-start-4 col-span-1 row-start-1 h-full grid place-items-center p-0.5 rounded-sm text-center">
-                                <div class="weather-first-row-text min-[375px]:hidden text-cyan-300 font-bold uppercase">
-                                    <span class="text-cyan-300">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</span><span class="text-white/90">|{{ if .SeaTemperatureTime }}{{ .SeaTemperatureTime }}{{ else }}--{{ end }}</span>
+                                <div class="weather-first-row-text min-[375px]:hidden text-cyan-200 font-bold uppercase">
+                                    <span class="text-cyan-200">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</span><span class="text-white/90">|{{ if .SeaTemperatureTime }}{{ .SeaTemperatureTime }}{{ else }}--{{ end }}</span>
                                 </div>
-                                <div class="weather-first-row-text hidden min-[375px]:block px-[1px] sm:px-[2px] text-cyan-300 font-bold uppercase">
-                                    <span class="text-cyan-300">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</span>
+                                <div class="weather-first-row-text hidden min-[375px]:block px-[1px] sm:px-[2px] text-cyan-200 font-bold uppercase">
+                                    <span class="text-cyan-200">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</span>
                                     <span class="text-white/90"> | {{ if .SeaTemperatureTime }}{{ .SeaTemperatureTime }}{{ else }}--{{ end }}</span>
                                 </div>
                             </div>
 
                             <!-- 3. sloupec: pod Příliv a Odliv (Zabírá 2 sloupce na všech obrazovkách) -->
                             <div class="glass-tile col-start-5 col-span-2 row-start-1 h-full grid place-items-center p-0.5 rounded-sm text-center">
-                                <div class="weather-first-row-text text-cyan-300 font-bold uppercase">{{ if .TideUpdatedAt }}{{ .TideUpdatedAt }}{{ else }}--{{ end }}</div>
+                                <div class="weather-first-row-text text-cyan-200 font-bold uppercase">{{ if .TideUpdatedAt }}{{ .TideUpdatedAt }}{{ else }}--{{ end }}</div>
                             </div>
 
                             <!-- Teplota -->
                             <div class="glass-tile row-span-2 col-start-1 row-start-2 text-center">
-                                <div class="weather-box-heading font-bold text-orange-300 uppercase mb-1.5">{{ index .I18n "weatherbox_air" }}</div>
+                                <div class="weather-box-heading font-bold text-amber-200 uppercase mb-1.5">{{ index .I18n "weatherbox_air" }}</div>
                                 <div class="mt-auto mb-[13px] flex flex-col items-center">
-                                    <div class="weather-main-value text-cyan-300 font-semibold mb-0.5">{{ if .Weather }}{{ printf "%.1f" .Weather.Temperature }}{{ else }}--{{ end }}</div>
+                                    <div class="weather-main-value text-cyan-200 font-semibold mb-0.5">{{ if .Weather }}{{ printf "%.1f" .Weather.Temperature }}{{ else }}--{{ end }}</div>
                                     <div class="weather-main-value text-white/90 font-light">°C</div>
                                 </div>
                             </div>
@@ -69,38 +69,38 @@
                          
                             <!-- Tlak -->
                             <div class="glass-tile weather-card-copy col-start-2 row-start-2 flex flex-col justify-start items-center gap-1">
-                                <div class="weather-box-heading font-bold text-orange-300">{{ index .I18n "pressure" }}</div>
-                                <div class="weather-box-secondary text-cyan-300 font-semibold">{{ if .Weather }}{{ printf "%.0f" .Weather.Pressure }}hPa{{ else }}--{{ end }}</div>
+                                <div class="weather-box-heading font-bold text-amber-200">{{ index .I18n "pressure" }}</div>
+                                <div class="weather-box-secondary text-cyan-200 font-semibold">{{ if .Weather }}{{ printf "%.0f" .Weather.Pressure }}hPa{{ else }}--{{ end }}</div>
                             </div>
 
                              <!-- Vlhkost -->
                             <div class="glass-tile weather-card-copy col-start-2 row-start-3 flex flex-col justify-start items-center gap-1">
-                                <div class="weather-box-heading font-bold text-orange-300">{{ index .I18n "humidity" }}</div>
-                                <div class="weather-box-secondary text-cyan-300 font-semibold">{{ if .Weather }}{{ printf "%.0f" .Weather.Humidity }}%{{ else }}--{{ end }}</div>
+                                <div class="weather-box-heading font-bold text-amber-200">{{ index .I18n "humidity" }}</div>
+                                <div class="weather-box-secondary text-cyan-200 font-semibold">{{ if .Weather }}{{ printf "%.0f" .Weather.Humidity }}%{{ else }}--{{ end }}</div>
                             </div>
 
  
 
                             <!-- Max Temp -->
                             <div class="glass-tile weather-card-copy col-start-3 row-start-2 flex flex-col justify-start items-center gap-1">
-                                <div class="weather-box-heading font-bold text-orange-300">{{ index .I18n "max" }}</div>
+                                <div class="weather-box-heading font-bold text-amber-200">{{ index .I18n "max" }}</div>
                                 <div class="weather-box-secondary font-semibold leading-none">
                                     {{ if .DayMaxTempText }}
-                                    <span class="text-cyan-300">{{ .DayMaxTempText }}°C</span><span class="text-white/90">/{{ .DayMaxTime }}</span>
+                                    <span class="text-cyan-200">{{ .DayMaxTempText }}°C</span><span class="text-white/90">/{{ .DayMaxTime }}</span>
                                     {{ else }}
-                                    <span class="text-cyan-300">--</span><span class="text-white/90">/--</span>
+                                    <span class="text-cyan-200">--</span><span class="text-white/90">/--</span>
                                     {{ end }}
                                 </div>
                             </div>
 
                              <!-- Min Temp -->
                             <div class="glass-tile weather-card-copy col-start-3 row-start-3 flex flex-col justify-start items-center gap-1">
-                                <div class="weather-box-heading font-bold text-orange-300">{{ index .I18n "min" }}</div>
+                                <div class="weather-box-heading font-bold text-amber-200">{{ index .I18n "min" }}</div>
                                 <div class="weather-box-secondary font-semibold leading-none">
                                     {{ if .DayMinTempText }}
-                                    <span class="text-cyan-300">{{ .DayMinTempText }}°C</span><span class="text-white/90">/{{ .DayMinTime }}</span>
+                                    <span class="text-cyan-200">{{ .DayMinTempText }}°C</span><span class="text-white/90">/{{ .DayMinTime }}</span>
                                     {{ else }}
-                                    <span class="text-cyan-300">--</span><span class="text-white/90">/--</span>
+                                    <span class="text-cyan-200">--</span><span class="text-white/90">/--</span>
                                     {{ end }}
                                 </div>
                             </div>
@@ -109,9 +109,9 @@
 
                             <!-- Sea  temperature-->
                             <div class="glass-tile row-span-2 col-start-4 row-start-2 text-center flex flex-col justify-start items-center">
-                                <div class="weather-box-heading font-bold text-orange-300 uppercase mb-1.5">{{ index .I18n "weatherbox_sea" }}</div>
+                                <div class="weather-box-heading font-bold text-amber-200 uppercase mb-1.5">{{ index .I18n "weatherbox_sea" }}</div>
                                 <div class="mt-auto mb-[13px] flex flex-col items-center">
-                                    <div class="weather-main-value text-cyan-300 font-semibold mb-0.5">{{ if .SeaTemperature }}{{ printf "%.1f" .SeaTemperatureVal }}{{ else }}--{{ end }}</div>
+                                    <div class="weather-main-value text-cyan-200 font-semibold mb-0.5">{{ if .SeaTemperature }}{{ printf "%.1f" .SeaTemperatureVal }}{{ else }}--{{ end }}</div>
                                     <div class="weather-main-value text-white/90 font-light">°C</div>
                                 </div>
                             </div>
@@ -119,10 +119,10 @@
 
                             <!-- Vlny -->
                             <div class="glass-tile row-span-2 col-start-5 row-start-2 text-center justify-between hidden">
-                                <div class="weather-wave-title font-bold text-orange-300 mb-0.5">{{ index .I18n "weatherbox_waves" }}</div>
+                                <div class="weather-wave-title font-bold text-amber-200 mb-0.5">{{ index .I18n "weatherbox_waves" }}</div>
                                 {{ if .Waves }}
                                 <div class="weather-wave-value text-cyan-300 font-semibold leading-none mb-1">
-                                    {{ printf "%.1f" .Waves.Hm0M }}<span class="weather-wave-unit text-white/70 font-light ml-[1px]">m</span>
+                                    {{ printf "%.1f" .Waves.Hm0M }}<span class="weather-wave-unit text-white/80 font-light ml-[1px]">m</span>
                                 </div>
                                 <div class="flex justify-between w-full px-0.5 pb-0.5">
                                     <div class="flex flex-col items-center">
@@ -143,7 +143,7 @@
                                                        <!-- Příliv -->
                             <div class="glass-tile row-span-2 col-start-5 row-start-2 text-center flex flex-col justify-start items-center">
                                
-                                <div class="weather-box-heading font-bold text-orange-300 uppercase mb-0.5">
+                                <div class="weather-box-heading font-bold text-amber-200 uppercase mb-0.5">
                                     {{ index .I18n "tide_high" }}
                                 </div>
                                
@@ -152,7 +152,7 @@
                                         {{ $lenHigh := len .TideHighEvents }}
                                             {{ range $i, $event := .TideHighEvents }}
                                                 <div class="flex flex-col items-center gap-1">
-                                                    <div class="weather-tide-value text-cyan-300 font-bold">{{ .Time }}</div>
+                                                    <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
                                                     <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
                                                 </div>
                                                 {{ if and (eq $lenHigh 2) (eq $i 0) }}
@@ -170,7 +170,7 @@
                              <!-- Odliv -->
                             <div class="glass-tile row-span-2 col-start-6 row-start-2 text-center flex flex-col justify-start items-center">
                                
-                                <div class="weather-box-heading font-bold text-orange-300 uppercase mb-px">
+                                <div class="weather-box-heading font-bold text-amber-200 uppercase mb-px">
                                     {{ index .I18n "tide_low" }}
                                 </div>
                                
@@ -179,7 +179,7 @@
                                         {{ $lenLow := len .TideLowEvents }}
                                             {{ range $i, $event := .TideLowEvents }}
                                                 <div class="flex flex-col items-center gap-1">
-                                                    <div class="weather-tide-value text-cyan-300 font-bold">{{ .Time }}</div>
+                                                    <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
                                                     <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
                                                 </div>
                                                 {{ if and (eq $lenLow 2) (eq $i 0) }}
