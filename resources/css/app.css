@@ -12,7 +12,7 @@
     }
 
     .glass-tile {
-        @apply flex flex-col bg-linear-to-b from-[#12677e]/38 to-[#1f304a]/46 px-1 py-0.5 rounded-md border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)];
+        @apply flex flex-col bg-linear-to-b from-[#12677e]/42 to-[#1f304a]/51 px-1 py-0.5 rounded-md border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)];
     }
 
     .glass-button {

@@ -314,6 +314,9 @@ func Messages(locale string) map[string]string {
 	for k, v := range hourlyTableLocaleMessages[loc] {
 		merged[k] = v
 	}
+	for k, v := range weatherBoxLocaleMessages[loc] {
+		merged[k] = v
+	}
 
 	return merged
 }
@@ -688,6 +691,65 @@ var hourlyTableLocaleMessages = map[string]map[string]string{
 		"hourly_table_title": "Óránkénti táblázat",
 		"hourly_values_for":  "Óránkénti értékek erre",
 		"hour":               "Óra",
+	},
+}
+
+var weatherBoxLocaleMessages = map[string]map[string]string{
+	"cs": {
+		"weatherbox_air":             "Vzduch",
+		"weatherbox_sea":             "Moře",
+		"weatherbox_waves":           "Vlny",
+		"weatherbox_period_short":    "Per.",
+		"weatherbox_direction_short": "Směr",
+	},
+	"en": {
+		"weatherbox_air":             "Air",
+		"weatherbox_sea":             "Sea",
+		"weatherbox_waves":           "Waves",
+		"weatherbox_period_short":    "Per.",
+		"weatherbox_direction_short": "Dir.",
+	},
+	"es": {
+		"weatherbox_air":             "Aire",
+		"weatherbox_sea":             "Mar",
+		"weatherbox_waves":           "Olas",
+		"weatherbox_period_short":    "Per.",
+		"weatherbox_direction_short": "Dir.",
+	},
+	"pl": {
+		"weatherbox_air":             "Powietrze",
+		"weatherbox_sea":             "Morze",
+		"weatherbox_waves":           "Fale",
+		"weatherbox_period_short":    "Okres",
+		"weatherbox_direction_short": "Kier.",
+	},
+	"de": {
+		"weatherbox_air":             "Luft",
+		"weatherbox_sea":             "Meer",
+		"weatherbox_waves":           "Wellen",
+		"weatherbox_period_short":    "Per.",
+		"weatherbox_direction_short": "Richt.",
+	},
+	"fr": {
+		"weatherbox_air":             "Air",
+		"weatherbox_sea":             "Mer",
+		"weatherbox_waves":           "Vagues",
+		"weatherbox_period_short":    "Pér.",
+		"weatherbox_direction_short": "Dir.",
+	},
+	"it": {
+		"weatherbox_air":             "Aria",
+		"weatherbox_sea":             "Mare",
+		"weatherbox_waves":           "Onde",
+		"weatherbox_period_short":    "Per.",
+		"weatherbox_direction_short": "Dir.",
+	},
+	"hu": {
+		"weatherbox_air":             "Levegő",
+		"weatherbox_sea":             "Tenger",
+		"weatherbox_waves":           "Hullámok",
+		"weatherbox_period_short":    "Per.",
+		"weatherbox_direction_short": "Irány",
 	},
 }
 
