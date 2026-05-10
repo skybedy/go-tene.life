@@ -256,6 +256,7 @@ func main() {
 	})
 	e.GET("/spanelsko-ceska-slovicka", handler.SoundsHandler)
 	e.GET("/teplota-more", handler.SeaTemperatureHandler)
+	e.GET("/teplota-more-kanary", handler.SeaTemperatureCanaryHandler)
 	e.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/statistics/daily")
 	})
@@ -285,6 +286,7 @@ func main() {
 		return c.Redirect(http.StatusMovedPermanently, "/spanelsko-ceska-slovicka")
 	})
 	localized.GET("/teplota-more", handler.SeaTemperatureHandler)
+	localized.GET("/teplota-more-kanary", handler.SeaTemperatureCanaryHandler)
 	localized.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/statistics/daily"))
 	})

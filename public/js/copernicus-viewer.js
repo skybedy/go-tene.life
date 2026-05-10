@@ -1,9 +1,9 @@
 (() => {
-  const basePath = '/data/copernicus/sea-temp/tenerife';
   const statusEl = document.getElementById('copernicusStatus');
   const viewerEl = document.getElementById('copernicusViewer');
   const monthSelectEl = document.getElementById('copernicusMonthSelect');
   if (!statusEl || !viewerEl) return;
+  const basePath = viewerEl.dataset.basePath || '/data/copernicus/sea-temp/tenerife';
 
   const imgEl = document.getElementById('copernicusFrame');
   const dateEl = document.getElementById('copernicusFrameDate');
