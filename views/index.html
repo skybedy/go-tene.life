@@ -24,7 +24,7 @@
                 <!-- Vnejsi poloha, odsazeni. atd -->
                 <div class="homepage-weather-strip-wrap col-start-1 row-start-1 self-start justify-self-start p-1 sm:p-2">
                     <!-- Barvy, fonty, atd -->
-                    <div class="homepage-weather-strip grid gap-[2px] sm:gap-[2px] px-[2px] pb-[2px] pt-[2px] sm:px-[2px] sm:pb-[2px] sm:pt-[2px] rounded-md lg:rounded-xl border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm leading-none">
+                    <div class="homepage-weather-strip grid gap-x-[2px] gap-y-px sm:gap-x-[2px] sm:gap-y-px px-[2px] pb-[2px] pt-[2px] sm:px-[2px] sm:pb-[2px] sm:pt-[2px] rounded-md lg:rounded-xl border border-[#46a7e8]/40 bg-[linear-gradient(135deg,rgba(9,52,88,0.78),rgba(4,31,49,0.72))] text-white shadow-[0_10px_30px_rgba(0,24,45,0.34)] backdrop-blur-sm leading-none">
                         
                             <!-- NOVÉ SLOUPCE (První řádek) -->
 
@@ -197,9 +197,9 @@
 
             </div>
 
-            <div class="absolute right-5 bottom-5 sm:right-6 sm:top-6 sm:bottom-auto md:right-7 md:top-7 lg:right-8 lg:top-8 z-20 rounded-md border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 p-0.5 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm transition-all duration-300">
+            <div class="webcam-enlarge-shell absolute right-5 bottom-5 sm:right-6 sm:top-6 sm:bottom-auto md:right-7 md:top-7 lg:right-8 lg:top-8 z-20 rounded-md lg:rounded-xl border border-[#46a7e8]/40 p-0.5 text-white shadow-[0_10px_30px_rgba(0,24,45,0.34)] backdrop-blur-sm transition-all duration-300">
                 <a href="{{ localeURL .Locale "/webcam/big" }}"
-                    class="glass-button"
+                    class="glass-button webcam-enlarge-button"
                     title="{{ index .I18n "webcam_big_title" }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2.25">

@@ -750,11 +750,17 @@
   .gap-x-4 {
     column-gap: calc(var(--spacing) * 4);
   }
+  .gap-x-\[2px\] {
+    column-gap: 2px;
+  }
   .gap-y-0 {
     row-gap: calc(var(--spacing) * 0);
   }
   .gap-y-2 {
     row-gap: calc(var(--spacing) * 2);
+  }
+  .gap-y-px {
+    row-gap: 1px;
   }
   .divide-y {
     :where(& > :not(:last-child)) {
@@ -849,6 +855,9 @@
   .border-dashed {
     --tw-border-style: dashed;
     border-style: dashed;
+  }
+  .border-\[\#46a7e8\]\/40 {
+    border-color: color-mix(in oklab, #46a7e8 40%, transparent);
   }
   .border-blue-100 {
     border-color: var(--color-blue-100);
@@ -1063,6 +1072,9 @@
   .bg-gradient-to-r {
     --tw-gradient-position: to right in oklab;
     background-image: linear-gradient(var(--tw-gradient-stops));
+  }
+  .bg-\[linear-gradient\(135deg\,rgba\(9\,52\,88\,0\.78\)\,rgba\(4\,31\,49\,0\.72\)\)\] {
+    background-image: linear-gradient(135deg,rgba(9,52,88,0.78),rgba(4,31,49,0.72));
   }
   .from-blue-100\/90 {
     --tw-gradient-from: color-mix(in srgb, oklch(93.2% 0.032 255.585) 90%, transparent);
@@ -1514,6 +1526,10 @@
   }
   .shadow-\[0_10px_30px_rgba\(0\,0\,0\,0\.2\)\] {
     --tw-shadow: 0 10px 30px var(--tw-shadow-color, rgba(0,0,0,0.2));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-\[0_10px_30px_rgba\(0\,24\,45\,0\.34\)\] {
+    --tw-shadow: 0 10px 30px var(--tw-shadow-color, rgba(0,24,45,0.34));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   .shadow-lg {
@@ -2012,9 +2028,19 @@
       }
     }
   }
+  .sm\:gap-x-\[2px\] {
+    @media (width >= 40rem) {
+      column-gap: 2px;
+    }
+  }
   .sm\:gap-y-1 {
     @media (width >= 40rem) {
       row-gap: calc(var(--spacing) * 1);
+    }
+  }
+  .sm\:gap-y-px {
+    @media (width >= 40rem) {
+      row-gap: 1px;
     }
   }
   .sm\:rounded-xl {
@@ -2922,6 +2948,28 @@
       scale: var(--tw-scale-x) var(--tw-scale-y);
     }
   }
+  .webcam-enlarge-shell {
+    padding: 7px !important;
+    border-color: rgba(70, 167, 232, 0.42);
+    background: linear-gradient(135deg, rgba(9, 52, 88, 0.78), rgba(4, 31, 49, 0.72));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(245, 249, 255, 0.14), inset 0 0 0 2px rgba(31, 118, 180, 0.22), 0 10px 30px rgba(0, 24, 45, 0.34);
+  }
+  .webcam-enlarge-button {
+    border-radius: 0.5rem;
+    border-color: rgba(69, 148, 196, 0.16);
+    background: linear-gradient(180deg, rgba(8, 43, 65, 0.96), rgba(8, 29, 38, 0.9));
+    color: rgba(245, 249, 255, 0.94);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+    box-shadow: inset 0 1px 0 rgba(135, 217, 255, 0.08), 0 5px 14px rgba(0, 20, 35, 0.2);
+  }
+  .webcam-enlarge-button:hover {
+    background: linear-gradient(180deg, rgba(10, 52, 78, 0.98), rgba(9, 35, 47, 0.94));
+  }
+  @media (min-width: 1024px) {
+    .webcam-enlarge-button {
+      border-radius: 0.55rem;
+    }
+  }
   .weather-first-row-text {
     font-size: 0.5rem;
     line-height: 1;
@@ -2963,6 +3011,15 @@
     max-width: 100%;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     grid-template-rows: 1.05rem 1fr 1fr;
+    padding: 7px !important;
+    border-color: rgba(70, 167, 232, 0.42);
+    background: linear-gradient(180deg, rgba(45, 128, 190, 0.34), rgba(11, 54, 82, 0.23)), linear-gradient(135deg, rgba(9, 52, 88, 0.78), rgba(4, 31, 49, 0.72));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(245, 249, 255, 0.14), inset 0 0 0 2px rgba(31, 118, 180, 0.22), 0 10px 30px rgba(0, 24, 45, 0.34);
+  }
+  .homepage-weather-strip .glass-tile {
+    border-color: rgba(69, 148, 196, 0.16);
+    background: linear-gradient(180deg, rgba(8, 43, 65, 0.96), rgba(8, 29, 38, 0.9));
+    box-shadow: inset 0 1px 0 rgba(135, 217, 255, 0.08), 0 5px 14px rgba(0, 20, 35, 0.2);
   }
   .weather-tile-label, .weather-small-tile, .weather-small-label, .weather-tide-label {
     font-size: 0.42rem;
@@ -2990,6 +3047,18 @@
   }
   .homepage-weather-strip .weather-box-heading, .homepage-weather-strip .weather-first-row-text, .homepage-weather-strip .weather-box-secondary, .homepage-weather-strip .weather-main-value, .homepage-weather-strip .weather-wave-title, .homepage-weather-strip .weather-wave-value, .homepage-weather-strip .weather-wave-detail-value, .homepage-weather-strip .weather-tide-value {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  }
+  .homepage-weather-strip .weather-box-heading, .homepage-weather-strip .weather-wave-title {
+    color: #f2d451;
+  }
+  .homepage-weather-strip .weather-main-value, .homepage-weather-strip .weather-box-secondary, .homepage-weather-strip .weather-wave-value, .homepage-weather-strip .weather-wave-detail-value, .homepage-weather-strip .weather-tide-value.font-bold, .homepage-weather-strip .text-cyan-200, .homepage-weather-strip .text-cyan-300 {
+    color: #6fe7f2;
+  }
+  .homepage-weather-strip .weather-first-row-text, .homepage-weather-strip .weather-first-row-text.text-cyan-200, .homepage-weather-strip .weather-first-row-text .text-cyan-200, .homepage-weather-strip .text-white\/90, .homepage-weather-strip .text-white\/80, .homepage-weather-strip .text-white\/70, .homepage-weather-strip .text-white {
+    color: rgba(245, 249, 255, 0.94);
+  }
+  .homepage-weather-strip hr {
+    border-color: rgba(214, 230, 238, 0.34);
   }
   .weather-overlay-shell::before {
     content: "";

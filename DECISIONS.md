@@ -77,3 +77,5 @@
 - 2026-05-10: Položka „Vizualizace teplot Atlantiku“ je v hlavní navigaci jako samostatné podmenu (`Tenerife`, `Kanárské ostrovy`), nikoli pod „Rozšířené statistiky počasí`.
 - 2026-05-10: Status text v vieweru se běžně nezobrazuje; je vyhrazen jen pro chybové stavy (např. chybějící manifest / chyba načtení snímku), aby UI nebylo zbytečně zahlcené.
 - 2026-05-10: Nové texty pro stránky teploty moře a viewer JS hlášky jsou řešené přes i18n klíče pro všechny podporované jazyky (`cs`, `en`, `es`, `pl`, `de`, `fr`, `it`, `hu`).
+- 2026-05-10: Homepage weather info box a tlačítko „Zvětšit fotku“ používají sjednocený tmavě modrý vizuální styl s modrým rámem, jemnou světlou linkou a stejným vnějším paddingem.
+- Důvod: uživatelský požadavek sjednotit vzhled podle dodané reference a zachovat stávající layout, velikosti a obsah.

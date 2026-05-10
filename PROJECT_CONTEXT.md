@@ -78,3 +78,4 @@
   Staré `/teplota-more` a `/teplota-more-kanary` zůstaly jako redirecty kvůli zpětné kompatibilitě.
 - 2026-05-10: V navigaci je nová položka s podmenu „Vizualizace teplot Atlantiku“ (`Tenerife`, `Kanárské ostrovy`) v desktop i mobilní variantě.
 - 2026-05-10: Texty a UI pro obě stránky teploty moře (včetně hlášek vieweru v JS) jsou lokalizované pro všechny podporované jazyky (`cs`, `en`, `es`, `pl`, `de`, `fr`, `it`, `hu`).
+- 2026-05-10: Homepage weather info box má upravený tmavě modrý vizuální styl podle dodané reference. Stejný rám, pozadí a vnější padding používá i tlačítko „Zvětšit fotku“; tlačítko má bílé písmo/ikonu.
