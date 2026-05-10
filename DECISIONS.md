@@ -67,3 +67,6 @@
 
 22. Tabulky na homepage a statistikách používají jednotný styl podle `/statistics/monthly` se střídavým podbarvením řádků.
 - Důvod: sjednocená typografie, odsazení, centrování a `odd/even` řádky zvyšují čitelnost napříč podobnými datovými tabulkami.
+
+- 2026-05-09: Pro první fázi Copernicus integrace v tene.life zvolena statická architektura (`public/data/.../manifest.json` + snímky), bez volání externích API z webu.
+- 2026-05-09: Přidána route `/teplota-more` a samostatný vanilla JS přehrávač s Play/Pause + sliderem, aby šlo později jednoduše přidat archiv měsíců.

@@ -638,6 +638,22 @@ func (h *Handler) WebcamBigHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "webcam-big.html", data)
 }
 
+
+func (h *Handler) SeaTemperatureHandler(c echo.Context) error {
+	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
+	return c.Render(http.StatusOK, "sea-temperature.html", models.PageData{
+		PageTitle:       "Teplota moře – satelitní vizualizace",
+		Locale:          locale,
+		LocalePrefix:    i18n.LocalePrefix(locale),
+		CurrentPath:     currentPath,
+		CurrentSection:  "sea-temperature",
+		Languages:       languages,
+		I18n:            messages,
+		GAEnabled:       gaEnabled,
+		GAMeasurementID: gaMeasurementID,
+	})
+}
+
 func (h *Handler) SoundsHandler(c echo.Context) error {
 	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	tracks, err := loadSoundTracks("public/sounds")
