@@ -1,0 +1,25 @@
+{
+  "id": "tenerife-sea-temp-2026-04",
+  "title": "Vývoj teploty moře kolem Tenerife – duben 2026",
+  "type": "sea_surface_temperature",
+  "source": "Copernicus",
+  "area": "Tenerife / Canary Islands",
+  "year": 2026,
+  "month": 4,
+  "dateFrom": "2026-04-01",
+  "dateTo": "2026-04-02",
+  "unit": "°C",
+  "frameCount": 2,
+  "frames": [
+    {
+      "date": "2026-04-01",
+      "file": "2026-04-01.svg",
+      "label": "1. 4. 2026"
+    },
+    {
+      "date": "2026-04-02",
+      "file": "2026-04-02.svg",
+      "label": "2. 4. 2026"
+    }
+  ]
+}

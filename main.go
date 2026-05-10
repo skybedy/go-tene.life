@@ -248,6 +248,7 @@ func main() {
 		return c.Redirect(http.StatusMovedPermanently, "/spanelsko-ceska-slovicka")
 	})
 	e.GET("/spanelsko-ceska-slovicka", handler.SoundsHandler)
+	e.GET("/teplota-more", handler.SeaTemperatureHandler)
 	e.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/statistics/daily")
 	})
@@ -276,6 +277,7 @@ func main() {
 	localized.GET("/spanelsko-ceska-slovicka", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/spanelsko-ceska-slovicka")
 	})
+	localized.GET("/teplota-more", handler.SeaTemperatureHandler)
 	localized.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/statistics/daily"))
 	})

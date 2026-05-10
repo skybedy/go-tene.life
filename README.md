@@ -150,3 +150,37 @@ Daily tide extremes (high/low with time and height) are stored in DB table `tide
 - Default serving source: `open_meteo` (`TIDES_SERVING_SOURCE=open_meteo`)
 - Optional hybrid mode: `TIDES_SERVING_SOURCE=hybrid` (Puertos first, fallback Open-Meteo)
 - If data is missing, endpoint triggers synchronous collect with short timeout and may return `503` (`try_later`).
+
+## Copernicus Sea Temperature Viewer (`/teplota-more`)
+
+Page `/teplota-more` is a static viewer for pre-generated Copernicus outputs.
+
+- Viewer manifest URL (phase 1): `/data/copernicus/sea-temp/tenerife/2026/04/manifest.json`
+- Required structure in `public/`:
+
+```text
+public/data/copernicus/sea-temp/tenerife/2026/04/
+  manifest.json
+  2026-04-01.png (or .jpg)
+  2026-04-02.png (or .jpg)
+  ...
+  video.mp4 (optional)
+```
+
+### How to copy exports from Meteodata (manual phase-1 sync)
+
+Copy generated month export from Meteodata into this repo under `public/data/...`.
+
+Example:
+
+```bash
+# from go-tene.life root
+mkdir -p public/data/copernicus/sea-temp/tenerife/2026/04
+cp -R /path/to/meteodata/exports/copernicus/sea-temp/tenerife/2026/04/* public/data/copernicus/sea-temp/tenerife/2026/04/
+```
+
+After copy, open `/teplota-more`; viewer loads `manifest.json` via `fetch()` and renders slider/playback from static files only.
+
+
+> Note: Real Copernicus exports from Meteodata (especially PNG/JPG/MP4) should **not** be committed in PRs.
+> Copy them to `public/data/...` only for local/server static deployment. Keep repo demo assets text-based (e.g. SVG + manifest).

@@ -69,3 +69,5 @@
 - Horní tři souhrnné karty na `/statistics/recent` používají stejný formát a typografii jako souhrnné karty na `/statistics/daily`.
 - `/statistics/recent` má doplněnou čtvrtou souhrnnou kartu pro průměrnou teplotu moře z dostupných hodnot `datasets.sea_temperature`.
 - Horní souhrn na `/statistics/monthly` zobrazuje „aktuální měsíc průběžně k poslednímu datu“ přes `/api/weather/monthly-current`; poslední datum se bere z posledního záznamu `weather_daily` v aktuálním měsíci a výpočet běží z raw `weather` a `water_temperatures` jen do konce tohoto dne.
+
+- 2026-05-09: Přidána první statická stránka `/teplota-more` pro Copernicus SST vizualizace. Načítá manifest z `public/data/copernicus/.../manifest.json` a používá nový JS viewer (`public/js/copernicus-viewer.js`).

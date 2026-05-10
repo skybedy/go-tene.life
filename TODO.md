@@ -30,3 +30,6 @@
 - Přidat stručný troubleshooting section pro lokální spuštění (DB, `.env`, migrace).
 - Přidat jednotné release/checklist instrukce před nasazením.
 - Ověřit nasazení migrace `0011_drop_weather_daily_sea_temperature` na všech prostředích.
+
+- Copernicus viewer: doplnit archiv měsíců (výběr období) a produkční data exportovaná z Meteodata.
+- Copernicus viewer: nahradit dočasné demo snímky reálnými SST framy + volitelným `video.mp4`.

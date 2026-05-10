@@ -37,3 +37,10 @@ _laravel_reference/bootstrap/cache/
 
 # Local sound analysis logs
 public/sounds/silence-*.log
+
+
+# Avoid committing heavy Copernicus exports (real production assets)
+public/data/copernicus/**/*.png
+public/data/copernicus/**/*.jpg
+public/data/copernicus/**/*.jpeg
+public/data/copernicus/**/*.mp4
