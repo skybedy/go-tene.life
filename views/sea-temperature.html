@@ -5,15 +5,14 @@
   <div class="mx-auto w-full lg:w-11/12 xl:w-5/6 2xl:w-3/4 p-3 sm:p-4 md:p-6 lg:p-8">
     <section class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-4 sm:p-5 md:p-6 lg:p-7 space-y-6">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Teplota moře kolem Tenerife</h1>
-        <p class="mt-3 text-sm sm:text-base text-gray-700">Satelitní vizualizace vývoje povrchové teploty Atlantiku v okolí Tenerife podle dat Copernicus Marine.</p>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">{{ index .I18n "sea_temp_tenerife_h1" }}</h1>
+        <p class="mt-3 text-sm sm:text-base text-gray-700">{{ index .I18n "sea_temp_tenerife_intro" }}</p>
       </div>
 
       <section class="rounded-xl border border-gray-200 bg-white/70 p-4 sm:p-5 shadow-sm">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Vizualizace teploty moře (Copernicus)</h2>
         <div class="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label for="copernicusMonthSelect" class="text-sm font-semibold text-gray-700">Období:</label>
-          <select id="copernicusMonthSelect" class="w-full sm:w-auto rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm">
+          <label for="copernicusMonthSelect" class="text-sm font-semibold text-gray-700">{{ index .I18n "sea_temp_period" }}:</label>
+          <select id="copernicusMonthSelect" class="w-full sm:w-auto rounded-lg border-2 border-blue-200 bg-blue-50/70 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-200">
             <option value="2025-01">2025-01</option>
             <option value="2025-02">2025-02</option>
             <option value="2025-03">2025-03</option>
@@ -32,27 +31,36 @@
             <option value="2026-04" selected>2026-04</option>
           </select>
         </div>
-        <p id="copernicusStatus" class="mt-2 text-sm text-gray-600">Načítám manifest…</p>
+        <p id="copernicusStatus" class="mt-2 hidden text-sm text-gray-600"></p>
 
-        <div id="copernicusViewer" data-base-path="/data/copernicus/sea-temp/tenerife" class="mt-4 hidden space-y-4">
+        <div id="copernicusViewer"
+          data-base-path="/data/copernicus/sea-temp/tenerife"
+          data-label-play="{{ index .I18n "sea_temp_play" }}"
+          data-label-pause="{{ index .I18n "sea_temp_pause" }}"
+          data-msg-invalid-period="{{ index .I18n "sea_temp_msg_invalid_period" }}"
+          data-msg-no-data="{{ index .I18n "sea_temp_msg_no_data" }}"
+          data-msg-manifest-prefix="{{ index .I18n "sea_temp_msg_manifest_prefix" }}"
+          data-msg-load-prefix="{{ index .I18n "sea_temp_msg_load_prefix" }}"
+          data-msg-image-error="{{ index .I18n "sea_temp_msg_image_error" }}"
+          class="mt-4 hidden space-y-4">
           <figure class="overflow-hidden rounded-xl border border-gray-200 bg-black/80">
-            <img id="copernicusFrame" alt="Snímek vizualizace teploty moře" class="w-full h-auto object-contain max-h-[70vh]" loading="eager">
+            <img id="copernicusFrame" alt="{{ index .I18n "sea_temp_img_alt" }}" class="w-full h-auto object-contain max-h-[70vh]" loading="eager">
           </figure>
 
           <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div class="text-sm font-semibold text-gray-700">Datum snímku: <span id="copernicusFrameDate">-</span></div>
+            <div class="text-sm font-semibold text-gray-700">{{ index .I18n "sea_temp_frame_date" }}: <span id="copernicusFrameDate">-</span></div>
             <div class="text-xs text-gray-500" id="copernicusFrameIndex">-</div>
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
-            <button id="copernicusPrev" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold">← Zpět</button>
-            <button id="copernicusPlayPause" class="rounded-lg bg-blue-600 text-white px-3 py-2 text-sm font-semibold">▶ Play</button>
-            <button id="copernicusNext" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold">Vpřed →</button>
-            <label class="ml-auto text-sm text-gray-600">Rychlost:
+            <button id="copernicusPrev" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold">← {{ index .I18n "sea_temp_prev" }}</button>
+            <button id="copernicusPlayPause" class="rounded-lg bg-blue-600 text-white px-3 py-2 text-sm font-semibold">▶ {{ index .I18n "sea_temp_play" }}</button>
+            <button id="copernicusNext" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold">{{ index .I18n "sea_temp_next" }} →</button>
+            <label class="ml-auto text-sm text-gray-600">{{ index .I18n "sea_temp_speed" }}:
               <select id="copernicusSpeed" class="ml-1 rounded border border-gray-300 bg-white px-2 py-1">
-                <option value="1200">Pomalá</option>
-                <option value="700" selected>Střední</option>
-                <option value="400">Rychlá</option>
+                <option value="1200">{{ index .I18n "sea_temp_speed_slow" }}</option>
+                <option value="700" selected>{{ index .I18n "sea_temp_speed_medium" }}</option>
+                <option value="400">{{ index .I18n "sea_temp_speed_fast" }}</option>
               </select>
             </label>
           </div>

@@ -638,11 +638,10 @@ func (h *Handler) WebcamBigHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "webcam-big.html", data)
 }
 
-
 func (h *Handler) SeaTemperatureHandler(c echo.Context) error {
 	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	return c.Render(http.StatusOK, "sea-temperature.html", models.PageData{
-		PageTitle:       "Teplota moře – vizualizace vývoje",
+		PageTitle:       i18n.T(locale, "sea_temp_page_title_tenerife"),
 		Locale:          locale,
 		LocalePrefix:    i18n.LocalePrefix(locale),
 		CurrentPath:     currentPath,
@@ -657,7 +656,7 @@ func (h *Handler) SeaTemperatureHandler(c echo.Context) error {
 func (h *Handler) SeaTemperatureCanaryHandler(c echo.Context) error {
 	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	return c.Render(http.StatusOK, "sea-temperature-canary.html", models.PageData{
-		PageTitle:       "Teplota moře (Kanárské ostrovy) – vizualizace vývoje",
+		PageTitle:       i18n.T(locale, "sea_temp_page_title_canary"),
 		Locale:          locale,
 		LocalePrefix:    i18n.LocalePrefix(locale),
 		CurrentPath:     currentPath,

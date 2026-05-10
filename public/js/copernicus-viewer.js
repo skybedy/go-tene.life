@@ -2,7 +2,7 @@
   const statusEl = document.getElementById('copernicusStatus');
   const viewerEl = document.getElementById('copernicusViewer');
   const monthSelectEl = document.getElementById('copernicusMonthSelect');
-  if (!statusEl || !viewerEl) return;
+  if (!viewerEl) return;
   const basePath = viewerEl.dataset.basePath || '/data/copernicus/sea-temp/tenerife';
 
   const imgEl = document.getElementById('copernicusFrame');
@@ -13,6 +13,13 @@
   const prevEl = document.getElementById('copernicusPrev');
   const nextEl = document.getElementById('copernicusNext');
   const speedEl = document.getElementById('copernicusSpeed');
+  const labelPlay = viewerEl.dataset.labelPlay || 'Play';
+  const labelPause = viewerEl.dataset.labelPause || 'Pause';
+  const msgInvalidPeriod = viewerEl.dataset.msgInvalidPeriod || 'Invalid period.';
+  const msgNoData = viewerEl.dataset.msgNoData || 'Data for this month is not available yet.';
+  const msgManifestPrefix = viewerEl.dataset.msgManifestPrefix || 'Unable to load manifest';
+  const msgLoadPrefix = viewerEl.dataset.msgLoadPrefix || 'Failed to load Copernicus data';
+  const msgImageError = viewerEl.dataset.msgImageError || 'Error loading frame image.';
 
   let manifest;
   let manifestUrl = '';
@@ -20,10 +27,22 @@
   let currentIndex = 0;
   let timer = null;
 
+  const hideStatus = () => {
+    if (!statusEl) return;
+    statusEl.textContent = '';
+    statusEl.classList.add('hidden');
+  };
+
+  const showStatus = (msg) => {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    statusEl.classList.remove('hidden');
+  };
+
   const stopPlayback = () => {
     if (timer) clearInterval(timer);
     timer = null;
-    playPauseEl.textContent = '▶ Play';
+    playPauseEl.textContent = `▶ ${labelPlay}`;
   };
 
   const hideViewer = () => {
@@ -65,43 +84,43 @@
     const parts = month.split('-');
     if (parts.length !== 2) {
       hideViewer();
-      statusEl.textContent = 'Neplatné období.';
+      showStatus(msgInvalidPeriod);
       return;
     }
 
     const [year, mon] = parts;
     manifestUrl = `${basePath}/${year}/${mon}/manifest.json`;
     manifestBaseUrl = new URL(manifestUrl, window.location.origin).toString();
-    statusEl.textContent = `Načítám manifest pro ${month}…`;
+    hideStatus();
     hideViewer();
 
     fetch(manifestBaseUrl)
       .then((res) => {
         if (!res.ok) {
           if (res.status === 404) {
-            throw new Error('Data pro tento měsíc zatím nejsou dostupná.');
+            throw new Error(msgNoData);
           }
-          throw new Error(`Manifest nelze načíst (${res.status})`);
+          throw new Error(`${msgManifestPrefix} (${res.status})`);
         }
         return res.json();
       })
       .then((data) => {
         manifest = data;
         if (!manifest.frames || manifest.frames.length === 0) {
-          throw new Error('Data pro tento měsíc zatím nejsou dostupná.');
+          throw new Error(msgNoData);
         }
 
         sliderEl.max = String(manifest.frames.length - 1);
-        statusEl.textContent = `${manifest.title || 'Satelitní vizualizace'} (${manifest.dateFrom} až ${manifest.dateTo})`;
+        hideStatus();
         viewerEl.classList.remove('hidden');
 
         renderFrame(0);
       })
       .catch((err) => {
         hideViewer();
-        statusEl.textContent = err.message.includes('Data pro tento měsíc')
+        showStatus(err.message.includes(msgNoData)
           ? err.message
-          : `Nepodařilo se načíst Copernicus data: ${err.message}`;
+          : `${msgLoadPrefix}: ${err.message}`);
       });
   };
 
@@ -116,7 +135,7 @@
       stopPlayback();
       return;
     }
-    playPauseEl.textContent = '⏸ Pause';
+    playPauseEl.textContent = `⏸ ${labelPause}`;
     timer = setInterval(() => step(1), Number(speedEl.value));
   });
   speedEl.addEventListener('change', () => {
@@ -126,7 +145,7 @@
   });
 
   imgEl.addEventListener('error', () => {
-    statusEl.textContent = 'Chyba při načítání snímku.';
+    showStatus(msgImageError);
     stopPlayback();
   });
 
