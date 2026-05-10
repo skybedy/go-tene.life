@@ -167,6 +167,13 @@ func main() {
 	// We still need to serve local images for other files
 	e.Static("/images", "public/images")
 	e.Static("/files", "public/files")
+	dataStaticDir := "public/data"
+	if _, err := os.Stat(dataStaticDir); err != nil {
+		if _, err2 := os.Stat("../public/data"); err2 == nil {
+			dataStaticDir = "../public/data"
+		}
+	}
+	e.Static("/data", dataStaticDir)
 	e.Static("/spanelsko-ceska-slovicka/files", "public/sounds")
 
 	// Template Renderer using Embed
