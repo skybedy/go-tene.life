@@ -7,6 +7,10 @@ Potom spusť `pwd`, `git branch --show-current` a `git status --short`.
 Nepředpokládej kontext z předchozího chatu.
 Nerevertuj nesouvisející necommitované změny.
 Před úpravami si vždy projdi relevantní soubory.
+Pokud řešíš Copernicus/teplotu moře, ověř obě aktuální routy:
+- `/atlantic-sea-temperature-tenerife`
+- `/atlantic-sea-temperature-canary-islands`
+a zkontroluj i locale varianty (`/en/...`, `/es/...`, ...).
 Pak pokračuj na konkrétním úkolu, který doplním.
 Na konci aktualizuj kontextové soubory, ukaž `git status --short` a navrhni commit message." 
 Komunikuj primárně v češtině, ale angličtina je akceptovatelná v technických kontextech.

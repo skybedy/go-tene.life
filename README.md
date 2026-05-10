@@ -151,20 +151,30 @@ Daily tide extremes (high/low with time and height) are stored in DB table `tide
 - Optional hybrid mode: `TIDES_SERVING_SOURCE=hybrid` (Puertos first, fallback Open-Meteo)
 - If data is missing, endpoint triggers synchronous collect with short timeout and may return `503` (`try_later`).
 
-## Copernicus Sea Temperature Viewer (`/teplota-more`)
+## Copernicus Sea Temperature Viewers
 
-Page `/teplota-more` is a static viewer for pre-generated Copernicus outputs.
+Static pages for pre-generated Copernicus outputs:
 
-- Viewer manifest URL (phase 1): `/data/copernicus/sea-temp/tenerife/2026/04/manifest.json`
-- Required structure in `public/`:
+- Tenerife: `/atlantic-sea-temperature-tenerife`
+- Canary Islands: `/atlantic-sea-temperature-canary-islands`
+
+Legacy aliases still work via redirect:
+
+- `/teplota-more` -> `/atlantic-sea-temperature-tenerife`
+- `/teplota-more-kanary` -> `/atlantic-sea-temperature-canary-islands`
+
+Viewer loads monthly manifest by selected period from:
+
+- `/data/copernicus/sea-temp/tenerife/YYYY/MM/manifest.json`
+- `/data/copernicus/sea-temp/canary/YYYY/MM/manifest.json`
+
+Required structure in `public/`:
 
 ```text
-public/data/copernicus/sea-temp/tenerife/2026/04/
+public/data/copernicus/sea-temp/{tenerife|canary}/YYYY/MM/
   manifest.json
-  2026-04-01.png (or .jpg)
-  2026-04-02.png (or .jpg)
+  YYYY-MM-DD.png (or .jpg/.svg)
   ...
-  video.mp4 (optional)
 ```
 
 ### How to copy exports from Meteodata (manual phase-1 sync)
@@ -177,10 +187,13 @@ Example:
 # from go-tene.life root
 mkdir -p public/data/copernicus/sea-temp/tenerife/2026/04
 cp -R /path/to/meteodata/exports/copernicus/sea-temp/tenerife/2026/04/* public/data/copernicus/sea-temp/tenerife/2026/04/
+
+mkdir -p public/data/copernicus/sea-temp/canary/2026/04
+cp -R /path/to/meteodata/exports/copernicus/sea-temp/canary/2026/04/* public/data/copernicus/sea-temp/canary/2026/04/
 ```
 
-After copy, open `/teplota-more`; viewer loads `manifest.json` via `fetch()` and renders slider/playback from static files only.
+After copy, open one of the viewer URLs above; page loads `manifest.json` via `fetch()` and renders slider/playback from static files only.
 
 
-> Note: Real Copernicus exports from Meteodata (especially PNG/JPG/MP4) should **not** be committed in PRs.
+> Note: Real Copernicus exports from Meteodata (especially PNG/JPG/SVG/MP4) should **not** be committed in PRs.
 > Copy them to `public/data/...` only for local/server static deployment. Keep repo demo assets text-based (e.g. SVG + manifest).

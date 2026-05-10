@@ -24,6 +24,12 @@
 - Vizuálně ověřit na `/statistics/monthly`, že horní karty „aktuální měsíc průběžně k poslednímu datu“ odpovídají dynamickému výpočtu z raw `weather` a `water_temperatures` oříznutému podle posledního dne ve `weather_daily`.
 - Vizuálně ověřit na `/statistics/recent` čitelnost nově zobrazeného času měření moře (formát `H:MM` bez počáteční nuly) na mobilu i desktopu.
 - Vizuálně ověřit na `/spanelsko-ceska-slovicka`, že volba `Přehrát všechno za sebou` používá nový track `1-500` a synchronizuje panel slovíček bez posunu.
+- Vizuálně ověřit nové routy a podmenu vizualizací teplot Atlantiku:
+  - `/atlantic-sea-temperature-tenerife`
+  - `/atlantic-sea-temperature-canary-islands`
+  včetně locale prefix variant (`/en/...`, `/es/...`, ...).
+- Vizuálně ověřit desktop/mobil navigaci po přidání nové položky a podmenu (zalomení kolem `lg` breakpointu).
+- Vizuálně ověřit lokalizované texty na obou stránkách teploty moře a ve viewer chybových hláškách.
 
 ## Možné budoucí úpravy
 
@@ -32,4 +38,4 @@
 - Ověřit nasazení migrace `0011_drop_weather_daily_sea_temperature` na všech prostředích.
 
 - Copernicus viewer: doplnit archiv měsíců (výběr období) a produkční data exportovaná z Meteodata.
-- Copernicus viewer: nahradit dočasné demo snímky reálnými SST framy + volitelným `video.mp4`.
+- Copernicus viewer: nahradit dočasné demo snímky reálnými SST framy.

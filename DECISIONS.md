@@ -70,3 +70,10 @@
 
 - 2026-05-09: Pro první fázi Copernicus integrace v tene.life zvolena statická architektura (`public/data/.../manifest.json` + snímky), bez volání externích API z webu.
 - 2026-05-09: Přidána route `/teplota-more` a samostatný vanilla JS přehrávač s Play/Pause + sliderem, aby šlo později jednoduše přidat archiv měsíců.
+- 2026-05-10: Pro veřejné odkazy na viewer zvoleny anglické a jednoznačné cesty:
+  - `/atlantic-sea-temperature-tenerife`
+  - `/atlantic-sea-temperature-canary-islands`
+  Staré české routy (`/teplota-more`, `/teplota-more-kanary`) zůstávají jako redirecty kvůli kompatibilitě.
+- 2026-05-10: Položka „Vizualizace teplot Atlantiku“ je v hlavní navigaci jako samostatné podmenu (`Tenerife`, `Kanárské ostrovy`), nikoli pod „Rozšířené statistiky počasí`.
+- 2026-05-10: Status text v vieweru se běžně nezobrazuje; je vyhrazen jen pro chybové stavy (např. chybějící manifest / chyba načtení snímku), aby UI nebylo zbytečně zahlcené.
+- 2026-05-10: Nové texty pro stránky teploty moře a viewer JS hlášky jsou řešené přes i18n klíče pro všechny podporované jazyky (`cs`, `en`, `es`, `pl`, `de`, `fr`, `it`, `hu`).

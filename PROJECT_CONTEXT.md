@@ -8,7 +8,7 @@
 ## Aktuální stav
 
 - Typ: rozpracovaný existující projekt.
-- Git: aktuální větev `main`.
+- Git: aktuální větev `codex/implement-data-export-from-meteodata`.
 - Všechna slovíčka (lekce 1–26 i velké soubory 1–250, 251–500) mají vygenerované časované segmenty v `public/sounds/index.json`.
 
 ## Technologie
@@ -71,3 +71,10 @@
 - Horní souhrn na `/statistics/monthly` zobrazuje „aktuální měsíc průběžně k poslednímu datu“ přes `/api/weather/monthly-current`; poslední datum se bere z posledního záznamu `weather_daily` v aktuálním měsíci a výpočet běží z raw `weather` a `water_temperatures` jen do konce tohoto dne.
 
 - 2026-05-09: Přidána první statická stránka `/teplota-more` pro Copernicus SST vizualizace. Načítá manifest z `public/data/copernicus/.../manifest.json` a používá nový JS viewer (`public/js/copernicus-viewer.js`).
+- 2026-05-10: Viewer pro teplotu moře podporuje výběr období (měsíce) ze statického seznamu a načítá měsíční manifesty z `public/data/copernicus/sea-temp/{tenerife|canary}/YYYY/MM/manifest.json`.
+- 2026-05-10: Přidána druhá stránka pro oblast Kanárských ostrovů a nové anglické routy:
+  - `/atlantic-sea-temperature-tenerife`
+  - `/atlantic-sea-temperature-canary-islands`
+  Staré `/teplota-more` a `/teplota-more-kanary` zůstaly jako redirecty kvůli zpětné kompatibilitě.
+- 2026-05-10: V navigaci je nová položka s podmenu „Vizualizace teplot Atlantiku“ (`Tenerife`, `Kanárské ostrovy`) v desktop i mobilní variantě.
+- 2026-05-10: Texty a UI pro obě stránky teploty moře (včetně hlášek vieweru v JS) jsou lokalizované pro všechny podporované jazyky (`cs`, `en`, `es`, `pl`, `de`, `fr`, `it`, `hu`).
