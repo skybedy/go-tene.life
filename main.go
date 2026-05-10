@@ -255,8 +255,14 @@ func main() {
 		return c.Redirect(http.StatusMovedPermanently, "/spanelsko-ceska-slovicka")
 	})
 	e.GET("/spanelsko-ceska-slovicka", handler.SoundsHandler)
-	e.GET("/teplota-more", handler.SeaTemperatureHandler)
-	e.GET("/teplota-more-kanary", handler.SeaTemperatureCanaryHandler)
+	e.GET("/atlantic-sea-temperature-tenerife", handler.SeaTemperatureHandler)
+	e.GET("/atlantic-sea-temperature-canary-islands", handler.SeaTemperatureCanaryHandler)
+	e.GET("/teplota-more", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/atlantic-sea-temperature-tenerife")
+	})
+	e.GET("/teplota-more-kanary", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/atlantic-sea-temperature-canary-islands")
+	})
 	e.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/statistics/daily")
 	})
@@ -285,8 +291,14 @@ func main() {
 	localized.GET("/spanelsko-ceska-slovicka", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/spanelsko-ceska-slovicka")
 	})
-	localized.GET("/teplota-more", handler.SeaTemperatureHandler)
-	localized.GET("/teplota-more-kanary", handler.SeaTemperatureCanaryHandler)
+	localized.GET("/atlantic-sea-temperature-tenerife", handler.SeaTemperatureHandler)
+	localized.GET("/atlantic-sea-temperature-canary-islands", handler.SeaTemperatureCanaryHandler)
+	localized.GET("/teplota-more", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/atlantic-sea-temperature-tenerife"))
+	})
+	localized.GET("/teplota-more-kanary", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/atlantic-sea-temperature-canary-islands"))
+	})
 	localized.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/statistics/daily"))
 	})

@@ -33,6 +33,9 @@ var dictionary = map[string]map[string]string{
 	"cs": {
 		"home":                        "Webkamera",
 		"statistics":                  "Rozšířené statistiky počasí",
+		"atlantic_viz":                "Vizualizace teplot Atlantiku",
+		"atlantic_tenerife":           "Tenerife",
+		"atlantic_canary":             "Kanárské ostrovy",
 		"sounds_nav":                  "Španělsko-česká slovíčka",
 		"sounds_title":                "Španělsko-česká slovíčka",
 		"sounds_subtitle":             "Zvukové lekce pro poslech a opakování slovní zásoby, celkem 500 slovíček.",
@@ -151,6 +154,9 @@ var dictionary = map[string]map[string]string{
 	"en": {
 		"home":                        "Webcam",
 		"statistics":                  "Extended Statistics",
+		"atlantic_viz":                "Atlantic Sea Temperature",
+		"atlantic_tenerife":           "Tenerife",
+		"atlantic_canary":             "Canary Islands",
 		"sounds_nav":                  "Spanish-Czech Vocabulary",
 		"sounds_title":                "Spanish-Czech Vocabulary",
 		"sounds_subtitle":             "Audio lessons for listening and vocabulary practice.",

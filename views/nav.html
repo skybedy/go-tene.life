@@ -10,15 +10,15 @@
                 </a>
             </div>
 
-            <div class="hidden lg:flex items-center gap-2 lg:gap-4 ml-6 lg:ml-8">
+            <div class="hidden lg:flex items-center gap-1 xl:gap-4 ml-4 xl:ml-8">
                 <a href="{{ localeURL .Locale "/" }}"
-                    class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "home" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                    class="px-2 xl:px-4 py-2 text-sm xl:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "home" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                     {{ index .I18n "home" }}
                 </a>
 
                 <div class="relative group">
                     <button
-                        class="flex items-center gap-1 px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "statistics" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                        class="flex items-center gap-1 px-2 xl:px-4 py-2 text-sm xl:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "statistics" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                         {{ index .I18n "statistics" }}
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -27,7 +27,7 @@
                     </button>
 
                     <div
-                        class="absolute left-0 mt-1 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
+                        class="absolute left-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
                         <a href="{{ localeURL .Locale "/statistics/daily" }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "daily_statistics" }}</a>
                         <a href="{{ localeURL .Locale "/statistics/weekly" }}"
@@ -38,8 +38,26 @@
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "recent_statistics" }}</a>
          </div>
                 </div>
+                <div class="relative group">
+                    <button
+                        class="flex items-center gap-1 px-2 xl:px-4 py-2 text-sm xl:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sea-temperature" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                        {{ index .I18n "atlantic_viz" }}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <div
+                        class="absolute left-0 mt-1 w-48 bg-white rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
+                        <a href="{{ localeURL .Locale "/atlantic-sea-temperature-tenerife" }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "atlantic_tenerife" }}</a>
+                        <a href="{{ localeURL .Locale "/atlantic-sea-temperature-canary-islands" }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "atlantic_canary" }}</a>
+                    </div>
+                </div>
                 <a href="/spanelsko-ceska-slovicka"
-                    class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sounds" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                    class="px-2 xl:px-4 py-2 text-sm xl:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sounds" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                     {{ index .I18n "sounds_nav" }}
                 </a>
             </div>
@@ -57,7 +75,7 @@
                         </svg>
                     </button>
                     <div id="mobileLangMenu"
-                        class="hidden absolute right-0 mt-1 w-36 max-w-[calc(100vw-1rem)] bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 z-50 py-1">
+                        class="hidden absolute right-0 mt-1 w-36 max-w-[calc(100vw-1rem)] bg-white rounded-xl shadow-xl border border-gray-200 z-50 py-1">
                         {{ range .Languages }}
                         <a href="{{ localeURL .Code $.CurrentPath }}"
                             class="flex items-center gap-2 px-3 py-2 text-xs {{ if eq .Code $.Locale }}font-semibold text-blue-700 bg-blue-50/70{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }} transition"><span>{{ languageFlag .Code }}</span><span class="truncate">{{ .Name }}</span></a>
@@ -93,7 +111,7 @@
                 </button>
 
                 <div
-                    class="absolute right-0 mt-1 w-44 bg-white/90 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
+                    class="absolute right-0 mt-1 w-44 bg-white rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
                     {{ range .Languages }}
                     <a href="{{ localeURL .Code $.CurrentPath }}"
                         class="flex items-center gap-2 px-4 py-2 text-sm {{ if eq .Code $.Locale }}font-semibold text-blue-700 bg-blue-50/70{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }} transition"><span>{{ languageFlag .Code }}</span><span>{{ .Name }}</span></a>
@@ -104,7 +122,7 @@
         </div>
 
         <div id="mobileMainMenu" class="lg:hidden hidden pb-3">
-            <div class="bg-white/85 backdrop-blur-md rounded-xl shadow-lg border border-gray-200 p-2 space-y-1">
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-2 space-y-1">
                 <a href="{{ localeURL .Locale "/" }}"
                     class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "home" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
                     {{ index .I18n "home" }}
@@ -124,6 +142,18 @@
                 <a href="{{ localeURL .Locale "/statistics/monthly" }}"
                     class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                     {{ index .I18n "monthly_statistics" }}
+                </a>
+                <div
+                    class="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide {{ if eq .CurrentSection "sea-temperature" }}text-blue-700{{ else }}text-gray-500{{ end }}">
+                    {{ index .I18n "atlantic_viz" }}
+                </div>
+                <a href="{{ localeURL .Locale "/atlantic-sea-temperature-tenerife" }}"
+                    class="block px-3 py-2 text-sm rounded-lg {{ if eq .CurrentPath "/atlantic-sea-temperature-tenerife" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
+                    {{ index .I18n "atlantic_tenerife" }}
+                </a>
+                <a href="{{ localeURL .Locale "/atlantic-sea-temperature-canary-islands" }}"
+                    class="block px-3 py-2 text-sm rounded-lg {{ if eq .CurrentPath "/atlantic-sea-temperature-canary-islands" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
+                    {{ index .I18n "atlantic_canary" }}
                 </a>
                 <a href="/spanelsko-ceska-slovicka"
                     class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "sounds" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
