@@ -9,6 +9,13 @@
   "dateFrom": "2026-04-01",
   "dateTo": "2026-04-30",
   "unit": "°C",
+  "temperature": {
+    "unit": "°C",
+    "monthlyMin": 18.497,
+    "monthlyMax": 20.617,
+    "scaleMin": 18.0,
+    "scaleMax": 21.0
+  },
   "frameCount": 30,
   "frames": [
     {
