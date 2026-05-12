@@ -79,3 +79,5 @@
 - 2026-05-10: V navigaci je nová položka s podmenu „Vizualizace teplot Atlantiku“ (`Tenerife`, `Kanárské ostrovy`) v desktop i mobilní variantě.
 - 2026-05-10: Texty a UI pro obě stránky teploty moře (včetně hlášek vieweru v JS) jsou lokalizované pro všechny podporované jazyky (`cs`, `en`, `es`, `pl`, `de`, `fr`, `it`, `hu`).
 - 2026-05-10: Homepage weather info box má upravený tmavě modrý vizuální styl podle dodané reference. Stejný rám, pozadí a vnější padding používá i tlačítko „Zvětšit fotku“; tlačítko má bílé písmo/ikonu.
+- 2026-05-12: Na experimentální branchi `experiment/jack-dorsey-redesign` proběhl UX/UI experiment homepage: sjednocení panelových kontejnerů (`surface-panel`) a jemné navýšení čitelnosti weather overlaye (větší typografie a vyšší první řádek gridu).
+- 2026-05-12: V experimentální branchi byla navigace přepojena na `public/images/tenelife-logo-transparent-v2.png`, protože původní `tenelife-logo.png` obsahuje neprůhledné pozadí `rgb(243,244,246)`.

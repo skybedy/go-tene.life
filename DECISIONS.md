@@ -79,3 +79,9 @@
 - 2026-05-10: Nové texty pro stránky teploty moře a viewer JS hlášky jsou řešené přes i18n klíče pro všechny podporované jazyky (`cs`, `en`, `es`, `pl`, `de`, `fr`, `it`, `hu`).
 - 2026-05-10: Homepage weather info box a tlačítko „Zvětšit fotku“ používají sjednocený tmavě modrý vizuální styl s modrým rámem, jemnou světlou linkou a stejným vnějším paddingem.
 - Důvod: uživatelský požadavek sjednotit vzhled podle dodané reference a zachovat stávající layout, velikosti a obsah.
+
+23. Pro experimentální redesign homepage byl zaveden opakovaně použitelný panelový styl `surface-panel` a současně byla navýšena čitelnost weather overlaye drobným zvětšením typografie a vertikálního rytmu.
+- Důvod: zlepšení vizuální hierarchie a skenovatelnosti dat bez změny struktury stránky nebo přidání nových závislostí.
+
+24. V experimentální navigaci se používá transparentní varianta loga `tenelife-logo-transparent-v2.png`.
+- Důvod: původní PNG logo obsahuje neprůhledný šedý podklad (`rgb(243,244,246)`), který vytvářel viditelný obdélník na upravené navigační liště.

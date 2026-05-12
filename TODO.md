@@ -31,6 +31,7 @@
 - Vizuálně ověřit desktop/mobil navigaci po přidání nové položky a podmenu (zalomení kolem `lg` breakpointu).
 - Vizuálně ověřit lokalizované texty na obou stránkách teploty moře a ve viewer chybových hláškách.
 - Vizuálně ověřit nový tmavě modrý styl homepage weather boxu a tlačítka „Zvětšit fotku“ na mobilu i desktopu (mezery, rámečky, kontrast, zaoblení).
+- V experimentální branchi `experiment/jack-dorsey-redesign` vizuálně porovnat `before/after` screenshot homepage a rozhodnout, které změny ponechat pro merge do hlavní větve.
 
 ## Možné budoucí úpravy
 
