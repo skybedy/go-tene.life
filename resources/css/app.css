@@ -1,6 +1,19 @@
 @import "tailwindcss";
 
 @layer components {
+    .app-shell {
+        background:
+            radial-gradient(1200px 520px at 8% -5%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0)),
+            linear-gradient(180deg, #e8eff5 0%, #dfe8ef 45%, #e6edf3 100%);
+    }
+
+    .surface-panel {
+        @apply bg-white/74 rounded-2xl shadow-xl backdrop-blur-md border border-white/80;
+        box-shadow:
+            0 18px 40px rgba(15, 23, 42, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+
     .weather-overlay-shell {
         position: relative;
         overflow: hidden;
@@ -54,21 +67,21 @@
     }
 
     .weather-first-row-text {
-        font-size: 0.5rem;
+        font-size: 0.56rem;
         line-height: 1;
         letter-spacing: 0.04em;
     }
 
     .weather-box-heading {
-        font-size: 0.495rem;
+        font-size: 0.54rem;
     }
 
     .weather-card-copy {
-        font-size: 0.45rem;
+        font-size: 0.5rem;
     }
 
     .weather-main-value {
-        font-size: 0.908rem;
+        font-size: 0.96rem;
     }
 
     .weather-wave-title {
@@ -92,7 +105,7 @@
     }
 
     .weather-tide-value {
-        font-size: 0.45rem;
+        font-size: 0.52rem;
     }
 
     .homepage-weather-strip-wrap {
@@ -104,12 +117,12 @@
         width: max-content;
         max-width: 100%;
         grid-template-columns: repeat(6, minmax(0, 1fr));
-        grid-template-rows: 1.05rem 1fr 1fr;
-        padding: 7px !important;
+        grid-template-rows: 1.2rem 1fr 1fr;
+        padding: 8px !important;
         border-color: rgba(70, 167, 232, 0.42);
         background:
-            linear-gradient(180deg, rgba(45, 128, 190, 0.34), rgba(11, 54, 82, 0.23)),
-            linear-gradient(135deg, rgba(9, 52, 88, 0.78), rgba(4, 31, 49, 0.72));
+            linear-gradient(180deg, rgba(56, 144, 206, 0.45), rgba(11, 54, 82, 0.3)),
+            linear-gradient(135deg, rgba(11, 61, 102, 0.86), rgba(4, 30, 50, 0.82));
         box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.22),
             inset 0 0 0 1px rgba(245, 249, 255, 0.14),

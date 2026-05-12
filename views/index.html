@@ -3,14 +3,14 @@
 
 <!-- Page Content -->
 <main>
-    <div class="mx-auto w-full lg:w-11/12 xl:w-5/6 2xl:w-3/4 p-3 sm:p-4 md:p-6 lg:p-8">
+    <div class="mx-auto w-full lg:w-11/12 xl:w-5/6 2xl:w-3/4 p-3 sm:p-4 md:p-6 lg:p-8 space-y-5 sm:space-y-6 md:space-y-8">
 
 
 
 
         <!-- Celý kamere Box -->
         <div
-            class="relative bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm overflow-hidden border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+            class="surface-panel relative overflow-hidden p-3 sm:p-4 md:p-5 lg:p-6 ring-1 ring-slate-200/70">
 
             <div class="grid">
 
@@ -217,39 +217,39 @@
         <!-- Celý kamere Box KOnec -->
 
 
-        <div class="py-3 sm:py-4 md:py-5 lg:py-6">
-            <h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 text-gray-800">
+        <div class="surface-panel p-4 sm:p-5 md:p-6 lg:p-7">
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3 text-gray-900">
                 {{ index .I18n "webcam_title" }}</h1>
-            <div class="space-y-2 sm:space-y-2.5 md:space-y-3">
+            <div class="space-y-3 sm:space-y-3.5 md:space-y-4">
                 <div>
-                    <h2 class="text-xs sm:text-sm md:text-base font-semibold text-gray-700 mb-1">{{ index .I18n
+                    <h2 class="text-sm sm:text-base font-semibold text-gray-800 mb-1">{{ index .I18n
                         "location_heading" }}</h2>
-                    <p class="text-gray-600 text-[0.65rem] sm:text-xs md:text-sm lg:text-base leading-relaxed">
+                    <p class="text-gray-700 text-xs sm:text-sm md:text-base leading-relaxed">
                         {{ index .I18n "location_description" }}
                     </p>
                 </div>
                 <div>
-                    <h2 class="text-xs sm:text-sm md:text-base font-semibold text-gray-700 mb-1">{{ index .I18n
+                    <h2 class="text-sm sm:text-base font-semibold text-gray-800 mb-1">{{ index .I18n
                         "weather_source_heading" }}</h2>
-                    <p class="text-gray-600 text-[0.65rem] sm:text-xs md:text-sm lg:text-base leading-relaxed">
+                    <p class="text-gray-700 text-xs sm:text-sm md:text-base leading-relaxed">
                         {{ index .I18n "weather_source_description" }}
                     </p>
                     <p
-                        class="text-gray-600 text-[0.65rem] sm:text-xs md:text-sm lg:text-base leading-relaxed font-black mt-2">
+                        class="text-gray-700 text-xs sm:text-sm md:text-base leading-relaxed font-semibold mt-2">
                         {{ index .I18n "hobby_disclaimer" }}
                     </p>
                 </div>
             </div>
         </div>
-    <div class="mt-4 sm:mt-6 md:mt-8">
-        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-4 sm:p-5 md:p-6 lg:p-7">
-            <h2 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
+    <div>
+        <div class="surface-panel p-4 sm:p-5 md:p-6 lg:p-7">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                 {{ index .I18n "tenerife_temperatures" }}
             </h2>
-            <p class="text-gray-600 text-xs sm:text-sm md:text-base mb-3 sm:mb-4">
+            <p class="text-gray-700 text-sm md:text-base mb-3 sm:mb-4">
                 {{ index .I18n "pws_map_subtitle" }}
             </p>
-            <p id="pwsLastUpdate" class="text-gray-700 text-xs sm:text-sm mb-3 sm:mb-4">
+            <p id="pwsLastUpdate" class="text-gray-700 text-sm mb-3 sm:mb-4">
                 {{ index .I18n "pws_last_update" }}: -
             </p>
 
@@ -258,11 +258,11 @@
         </div>
     </div>
 
-    <div class="mt-4 sm:mt-6 md:mt-8 mb-8">
-        <p class="px-1 sm:px-2 text-gray-800 text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-3">{{ index .I18n
+    <div class="mb-8">
+        <p class="px-1 sm:px-2 text-gray-900 text-lg sm:text-xl md:text-2xl font-bold mb-3">{{ index .I18n
             "hourly_values_for" }} {{ todayDate }}</p>
-        <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">{{ index .I18n "table_overview" }}</h2>
-        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3 px-1">{{ index .I18n "table_overview" }}</h2>
+        <div class="surface-panel overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-center text-xs sm:text-sm">
                     <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase">
@@ -285,10 +285,10 @@
     </div>
 
     <!-- Weather Charts Section -->
-    <div class="space-y-3 sm:space-y-4">
-        <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">{{ index .I18n "charts_heading" }}</h2>
+    <div class="space-y-3 sm:space-y-4 border-t border-slate-300/60 pt-4 sm:pt-5">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3 px-1">{{ index .I18n "charts_heading" }}</h2>
         <!-- Temperature Chart -->
-        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+        <div class="surface-panel p-3 sm:p-4 md:p-5 lg:p-6">
             <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n
                 "temperature_chart" }}</h2>
             <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
@@ -297,7 +297,7 @@
         </div>
 
         <!-- Pressure Chart -->
-        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+        <div class="surface-panel p-3 sm:p-4 md:p-5 lg:p-6">
             <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n
                 "pressure_chart" }}</h2>
             <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
@@ -306,7 +306,7 @@
         </div>
 
         <!-- Humidity Chart -->
-        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+        <div class="surface-panel p-3 sm:p-4 md:p-5 lg:p-6">
             <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n
                 "humidity_chart" }}</h2>
             <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
