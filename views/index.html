@@ -60,7 +60,7 @@
                             <!-- Teplota -->
                             <div class="glass-tile row-span-2 col-start-1 row-start-2 text-center">
                                 <div class="weather-box-heading font-bold text-amber-200 uppercase mb-1.5">{{ index .I18n "weatherbox_air" }}</div>
-                                <div class="mt-auto mb-[13px] flex flex-col items-center">
+                                <div class="mt-auto mb-[4px] min-[481px]:mb-[13px] flex flex-col items-center">
                                     <div class="weather-main-value text-cyan-200 font-semibold mb-0.5">{{ if .Weather }}{{ printf "%.1f" .Weather.Temperature }}{{ else }}--{{ end }}</div>
                                     <div class="weather-main-value text-white/90 font-light">°C</div>
                                 </div>
@@ -110,7 +110,7 @@
                             <!-- Sea  temperature-->
                             <div class="glass-tile row-span-2 col-start-4 row-start-2 text-center flex flex-col justify-start items-center">
                                 <div class="weather-box-heading font-bold text-amber-200 uppercase mb-1.5">{{ index .I18n "weatherbox_sea" }}</div>
-                                <div class="mt-auto mb-[13px] flex flex-col items-center">
+                                <div class="mt-auto mb-[4px] min-[481px]:mb-[13px] flex flex-col items-center">
                                     <div class="weather-main-value text-cyan-200 font-semibold mb-0.5">{{ if .SeaTemperature }}{{ printf "%.1f" .SeaTemperatureVal }}{{ else }}--{{ end }}</div>
                                     <div class="weather-main-value text-white/90 font-light">°C</div>
                                 </div>
@@ -147,9 +147,19 @@
                                     {{ index .I18n "tide_high" }}
                                 </div>
                                
-                                <div class="flex w-full flex-col items-center gap-0.5">
-                                    {{ if .TideHighEvents }}
-                                        {{ $lenHigh := len .TideHighEvents }}
+                                {{ if .TideHighEvents }}
+                                    {{ $lenHigh := len .TideHighEvents }}
+                                    {{ if eq $lenHigh 1 }}
+                                        <div class="flex w-full flex-1 flex-col justify-center items-center gap-0.5">
+                                            {{ range .TideHighEvents }}
+                                                <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
+                                                    <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
+                                                    <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
+                                                </div>
+                                            {{ end }}
+                                        </div>
+                                    {{ else }}
+                                        <div class="flex w-full flex-col items-center gap-0.5">
                                             {{ range $i, $event := .TideHighEvents }}
                                                 <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
                                                     <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
@@ -158,11 +168,12 @@
                                                 {{ if and (eq $lenHigh 2) (eq $i 0) }}
                                                     <hr class="w-3/4 mx-auto my-px border-t border-white/50">
                                                 {{ end }}
-                                        {{ end }}
-                                    {{ else }}
-                                        <div class="weather-tide-value text-white/30 italic">--</div>
+                                            {{ end }}
+                                        </div>
                                     {{ end }}
-                                </div>
+                                {{ else }}
+                                    <div class="weather-tide-value text-white/30 italic">--</div>
+                                {{ end }}
                             </div>
 
                        
@@ -174,9 +185,19 @@
                                     {{ index .I18n "tide_low" }}
                                 </div>
                                
-                                <div class="flex w-full flex-col items-center gap-0.5">
-                                    {{ if .TideLowEvents }}
-                                        {{ $lenLow := len .TideLowEvents }}
+                                {{ if .TideLowEvents }}
+                                    {{ $lenLow := len .TideLowEvents }}
+                                    {{ if eq $lenLow 1 }}
+                                        <div class="flex w-full flex-1 flex-col justify-center items-center gap-0.5">
+                                            {{ range .TideLowEvents }}
+                                                <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
+                                                    <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
+                                                    <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
+                                                </div>
+                                            {{ end }}
+                                        </div>
+                                    {{ else }}
+                                        <div class="flex w-full flex-col items-center gap-0.5">
                                             {{ range $i, $event := .TideLowEvents }}
                                                 <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
                                                     <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
@@ -185,11 +206,12 @@
                                                 {{ if and (eq $lenLow 2) (eq $i 0) }}
                                                     <hr class="w-3/4 mx-auto my-px border-t border-white/50">
                                                 {{ end }}
-                                        {{ end }}
-                                    {{ else }}
-                                        <div class="weather-tide-value text-white/30 italic">--</div>
+                                            {{ end }}
+                                        </div>
                                     {{ end }}
-                                </div>
+                                {{ else }}
+                                    <div class="weather-tide-value text-white/30 italic">--</div>
+                                {{ end }}
                             </div>
 
                     </div>
