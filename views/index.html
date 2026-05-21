@@ -46,7 +46,7 @@
                                 <div class="weather-first-row-text min-[375px]:hidden text-cyan-200 font-bold uppercase">
                                     <span class="text-cyan-200">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</span><span class="text-white/90">|{{ if .SeaTemperatureTime }}{{ .SeaTemperatureTime }}{{ else }}--{{ end }}</span>
                                 </div>
-                                <div class="weather-first-row-text hidden min-[375px]:block px-[1px] sm:px-[2px] text-cyan-200 font-bold uppercase">
+                                <div class="weather-first-row-text hidden min-[375px]:block px-[1px] sm:px-[2px] text-cyan-200 font-bold uppercase whitespace-nowrap max-[434px]:tracking-tight">
                                     <span class="text-cyan-200">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</span>
                                     <span class="text-white/90"> | {{ if .SeaTemperatureTime }}{{ .SeaTemperatureTime }}{{ else }}--{{ end }}</span>
                                 </div>
