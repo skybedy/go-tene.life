@@ -151,7 +151,7 @@
                                     {{ if .TideHighEvents }}
                                         {{ $lenHigh := len .TideHighEvents }}
                                             {{ range $i, $event := .TideHighEvents }}
-                                                <div class="flex flex-col items-center gap-1">
+                                                <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
                                                     <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
                                                     <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
                                                 </div>
@@ -178,7 +178,7 @@
                                     {{ if .TideLowEvents }}
                                         {{ $lenLow := len .TideLowEvents }}
                                             {{ range $i, $event := .TideLowEvents }}
-                                                <div class="flex flex-col items-center gap-1">
+                                                <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
                                                     <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
                                                     <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
                                                 </div>
