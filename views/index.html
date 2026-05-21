@@ -149,27 +149,28 @@
                                                        <!-- Příliv -->
                             <div class="glass-tile row-span-2 col-start-5 row-start-2 text-center flex flex-col justify-start items-center">
                                
-                                <div class="weather-box-heading font-bold text-amber-200 uppercase mb-0.5">
+                                <div class="weather-box-heading font-bold text-amber-200 uppercase mb-px">
                                     {{ index .I18n "tide_high" }}
                                 </div>
                                
                                 {{ if .TideHighEvents }}
                                     {{ $lenHigh := len .TideHighEvents }}
                                     {{ if eq $lenHigh 1 }}
-                                        <div class="flex w-full flex-1 flex-col justify-center items-center gap-0.5">
+                                        <div class="flex w-full flex-1 max-[420px]:flex-none flex-col justify-center max-[420px]:justify-start items-center gap-0.5">
                                             {{ range .TideHighEvents }}
                                                 <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
                                                     <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
-                                                    <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
+                                                    <div class="weather-tide-value text-white/90 font-semibold max-[420px]:hidden">{{ .Height }}</div>
                                                 </div>
                                             {{ end }}
+                                            <div class="weather-tide-value text-white/30 italic hidden max-[420px]:block">--</div>
                                         </div>
                                     {{ else }}
                                         <div class="flex w-full flex-col items-center gap-0.5">
                                             {{ range $i, $event := .TideHighEvents }}
                                                 <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
                                                     <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
-                                                    <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
+                                                    <div class="weather-tide-value text-white/90 font-semibold max-[420px]:hidden">{{ .Height }}</div>
                                                 </div>
                                                 {{ if and (eq $lenHigh 2) (eq $i 0) }}
                                                     <hr class="w-3/4 mx-auto my-px border-t border-white/50">
@@ -194,20 +195,21 @@
                                 {{ if .TideLowEvents }}
                                     {{ $lenLow := len .TideLowEvents }}
                                     {{ if eq $lenLow 1 }}
-                                        <div class="flex w-full flex-1 flex-col justify-center items-center gap-0.5">
+                                        <div class="flex w-full flex-1 max-[420px]:flex-none flex-col justify-center max-[420px]:justify-start items-center gap-0.5">
                                             {{ range .TideLowEvents }}
                                                 <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
                                                     <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
-                                                    <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
+                                                    <div class="weather-tide-value text-white/90 font-semibold max-[420px]:hidden">{{ .Height }}</div>
                                                 </div>
                                             {{ end }}
+                                            <div class="weather-tide-value text-white/30 italic hidden max-[420px]:block">--</div>
                                         </div>
                                     {{ else }}
                                         <div class="flex w-full flex-col items-center gap-0.5">
                                             {{ range $i, $event := .TideLowEvents }}
                                                 <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
                                                     <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
-                                                    <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
+                                                    <div class="weather-tide-value text-white/90 font-semibold max-[420px]:hidden">{{ .Height }}</div>
                                                 </div>
                                                 {{ if and (eq $lenLow 2) (eq $i 0) }}
                                                     <hr class="w-3/4 mx-auto my-px border-t border-white/50">
