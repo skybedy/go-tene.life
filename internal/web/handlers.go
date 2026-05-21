@@ -117,7 +117,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 			now := time.Now().In(loc)
 			return c.Render(http.StatusOK, "index.html", models.PageData{
 				FormattedDate:      now.Format("2. 1. 2006"),
-				FormattedDateSmall: now.Format("2.1."),
+					FormattedDateSmall: now.Format("2.1"),
 				FormattedTime:      strings.TrimPrefix(now.Format("15:04"), "0"),
 				WebcamImageURL:     webcamImageURL,
 				Locale:             locale,
@@ -190,7 +190,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 			}
 		}
 		if parsedOK {
-			seaTempDateFormatted = parsed.Format("2.1.")
+				seaTempDateFormatted = parsed.Format("2.1")
 			seaTempTimeFormatted = strings.TrimPrefix(parsed.Format("15:04"), "0")
 		}
 	}
@@ -254,7 +254,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		DayMaxTime:         dayMaxTime,
 		DayMinTime:         dayMinTime,
 		FormattedDate:      ts.Format("2. 1. 2006"),
-		FormattedDateSmall: ts.Format("2.1."),
+			FormattedDateSmall: ts.Format("2.1"),
 		FormattedTime:      strings.TrimPrefix(ts.Format("15:04"), "0"),
 		PageTitle:          "",
 		Locale:             locale,
@@ -382,7 +382,7 @@ func (h *Handler) getCachedTideData(reference time.Time) ([]models.TideEventView
 
 	var fetchedAtStr string
 	if len(selected) > 0 {
-		fetchedAtStr = selected[0].FetchedAt.Local().Format("2.1.")
+		fetchedAtStr = selected[0].FetchedAt.Local().Format("2.1")
 	}
 
 	high := make([]models.TideEventView, 0, 2)
@@ -1396,13 +1396,13 @@ func formatDayMonthLabel(raw string) string {
 	}
 	for _, layout := range layouts {
 		if t, err := time.Parse(layout, raw); err == nil {
-			return t.Format("2.1.")
+				return t.Format("2.1")
 		}
 	}
 
 	if len(raw) >= 10 {
 		if t, err := time.Parse("2006-01-02", raw[:10]); err == nil {
-			return t.Format("2.1.")
+				return t.Format("2.1")
 		}
 	}
 
