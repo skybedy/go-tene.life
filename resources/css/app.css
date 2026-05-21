@@ -33,7 +33,6 @@
     }
 
     .webcam-enlarge-shell {
-        padding: 7px !important;
         border-color: rgba(70, 167, 232, 0.42);
         background: linear-gradient(135deg, rgba(9, 52, 88, 0.78), rgba(4, 31, 49, 0.72));
         box-shadow:
@@ -118,7 +117,6 @@
         max-width: 100%;
         grid-template-columns: repeat(6, minmax(0, 1fr));
         grid-template-rows: 1.2rem 1fr 1fr;
-        padding: 8px !important;
         border-color: rgba(70, 167, 232, 0.42);
         background:
             linear-gradient(180deg, rgba(56, 144, 206, 0.45), rgba(11, 54, 82, 0.3)),
