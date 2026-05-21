@@ -22,7 +22,7 @@
 
                 <!-- Weather Info Box -->
                 <!-- Vnejsi poloha, odsazeni. atd -->
-                <div class="homepage-weather-strip-wrap col-start-1 row-start-1 self-start justify-self-start p-1 sm:p-2">
+                <div class="homepage-weather-strip-wrap col-start-1 row-start-1 self-start justify-self-start p-1 sm:p-2 max-[299px]:hidden">
                     <!-- Barvy, fonty, atd -->
                     <div class="homepage-weather-strip grid gap-x-px min-[480px]:gap-x-[2px] gap-y-px sm:gap-x-[2px] sm:gap-y-px p-0 min-[360px]:p-px min-[420px]:p-[2px] min-[480px]:p-3px md:p-2 rounded-md lg:rounded-xl border border-[#46a7e8]/40 bg-[linear-gradient(135deg,rgba(9,52,88,0.78),rgba(4,31,49,0.72))] text-white shadow-[0_10px_30px_rgba(0,24,45,0.34)] backdrop-blur-sm leading-none">
                         
@@ -199,14 +199,14 @@
 
             <div class="webcam-enlarge-shell absolute right-5 bottom-5 sm:right-6 sm:top-6 sm:bottom-auto md:right-7 md:top-7 lg:right-8 lg:top-8 z-20 rounded-lg lg:rounded-xl border border-[#46a7e8]/40 p-0 min-[360px]:p-px min-[420px]:p-[2px] min-[480px]:p-[3px] md:p-2 text-white shadow-[0_10px_30px_rgba(0,24,45,0.34)] backdrop-blur-sm transition-all duration-300">
                 <a href="{{ localeURL .Locale "/webcam/big" }}"
-                    class="glass-button webcam-enlarge-button"
+                    class="glass-button webcam-enlarge-button max-[480px]:px-2 max-[480px]:py-1 max-[480px]:gap-1"
                     title="{{ index .I18n "webcam_big_title" }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7" fill="none" viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 min-[481px]:h-4 min-[481px]:w-4 sm:h-5 sm:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2.25">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <span class="text-[0.5rem] sm:text-[0.65rem] md:text-xs xl:text-sm uppercase tracking-wider">{{ index .I18n "enlarge_image" }}</span>
+                    <span class="text-[0.38rem] min-[481px]:text-[0.5rem] sm:text-[0.65rem] md:text-xs xl:text-sm uppercase tracking-wider max-[480px]:tracking-[0.04em]">{{ index .I18n "enlarge_image" }}</span>
                 </a>
             </div>
 
