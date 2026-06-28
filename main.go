@@ -270,6 +270,7 @@ func main() {
 	e.GET("/statistics/recent", handler.RecentStatisticsHandler)
 	e.GET("/statistics/weekly", handler.WeeklyStatisticsHandler)
 	e.GET("/statistics/monthly", handler.MonthlyStatisticsHandler)
+	e.GET("/statistics/monthly-daily", handler.MonthlyDailyStatisticsHandler)
 	e.GET("/statistics/annual", handler.AnnualStatisticsHandler)
 
 	// Routes with locale prefix: /en, /de, /fr ...
@@ -306,6 +307,7 @@ func main() {
 	localized.GET("/statistics/recent", handler.RecentStatisticsHandler)
 	localized.GET("/statistics/weekly", handler.WeeklyStatisticsHandler)
 	localized.GET("/statistics/monthly", handler.MonthlyStatisticsHandler)
+	localized.GET("/statistics/monthly-daily", handler.MonthlyDailyStatisticsHandler)
 	localized.GET("/statistics/annual", handler.AnnualStatisticsHandler)
 
 	// API and service routes

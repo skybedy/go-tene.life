@@ -1,0 +1,126 @@
+{{ template "header.html" . }}
+{{ template "nav.html" . }}
+
+<main>
+    <div class="mx-auto w-full lg:w-11/12 xl:w-5/6 2xl:w-3/4 p-3 sm:p-4 md:p-6 lg:p-8">
+
+        <div
+            class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6 mb-4 sm:mb-6">
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-1">{{ .PageTitle }}</h1>
+            <p class="text-gray-600 text-xs sm:text-sm">{{ index .I18n "monthly_daily_stats_subtitle" }}</p>
+        </div>
+
+        {{ template "stats_nav.html" . }}
+
+        <form method="get" class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 mb-4 sm:mb-6 flex flex-wrap items-center gap-3">
+            <label for="month-select" class="text-sm font-semibold text-gray-700">{{ index .I18n "select_month" }}</label>
+            <select id="month-select" name="month_year" onchange="window.location.href=this.value"
+                class="px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white/90 text-slate-800">
+                {{ range .AvailableMonths }}
+                <option value="{{ localeURL $.Locale "/statistics/monthly-daily" }}?year={{ .Year }}&month={{ .Month }}"
+                    {{ if and (eq .Year $.SelectedYear) (eq .Month $.SelectedMonth) }}selected{{ end }}>
+                    {{ monthName $.Locale .Month }} {{ .Year }}
+                </option>
+                {{ else }}
+                <option value="" selected disabled>{{ index .I18n "no_data" }}</option>
+                {{ end }}
+            </select>
+        </form>
+
+        <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">{{ index .I18n "table_overview" }}</h2>
+        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden mb-8">
+            <div class="overflow-x-auto">
+                <table class="w-full text-center text-xs sm:text-sm">
+                    <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase">
+                        <tr>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "date" }}</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_temp" }} (°C)</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "min_max" }}</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_pressure" }} (hPa)</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "avg_humidity" }} (%)</th>
+                            <th class="px-3 py-3 font-semibold text-center">{{ index .I18n "sea" }} (°C)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {{ range .DailyStats }}
+                        <tr class="odd:bg-white/55 even:bg-blue-50/55 hover:bg-white/75 transition">
+                            <td class="px-3 py-3 text-center font-medium text-gray-900">{{ shortDate .Date }}</td>
+                            <td class="px-3 py-3 text-center text-gray-700">{{ f1 .AvgTemperature }}</td>
+                            <td class="px-3 py-3 text-center text-gray-500">
+                                <span class="text-blue-600">{{ f1 .MinTemperature }}</span> /
+                                <span class="text-red-600">{{ f1 .MaxTemperature }}</span>
+                            </td>
+                            <td class="px-3 py-3 text-center text-gray-700">{{ f1 .AvgPressure }}</td>
+                            <td class="px-3 py-3 text-center text-gray-700">{{ f0 .AvgHumidity }}</td>
+                            <td class="px-3 py-3 text-center text-gray-700">
+                                {{ if .SeaTemperature }}
+                                <div>{{ f1 .SeaTemperature }}</div>
+                                {{ if .SeaMeasuredAt }}<div class="text-[0.65rem] text-gray-500">{{ shortTimeNoZero .SeaMeasuredAt }}</div>{{ end }}
+                                {{ else }}-{{ end }}
+                            </td>
+                        </tr>
+                        {{ else }}
+                        <tr>
+                            <td colspan="6" class="px-3 py-8 text-center text-gray-500 italic">{{ index .I18n "no_data" }}</td>
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">Grafy</h2>
+        <div class="space-y-4 mb-6">
+            <div
+                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "temperature_chart" }}</h2>
+                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+
+            <div
+                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "pressure_chart" }}</h2>
+                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
+                    <canvas id="pressureChart"></canvas>
+                </div>
+            </div>
+
+            <div
+                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "humidity_chart" }}</h2>
+                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
+                    <canvas id="humidityChart"></canvas>
+                </div>
+            </div>
+
+            <div
+                class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+                <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n "sea_temperature" }} (°C)</h2>
+                <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
+                    <canvas id="seaTemperatureChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.statsMonthlyDaily = true;
+    window.statsSelectedYear = {{ .SelectedYear }};
+    window.statsSelectedMonth = {{ .SelectedMonth }};
+    window.statsI18n = {
+        temperature: {{ printf "%q" (index .I18n "temperature") }},
+        seaTemperature: {{ printf "%q" (index .I18n "sea_temperature") }},
+        pressure: {{ printf "%q" (index .I18n "pressure") }},
+        humidity: {{ printf "%q" (index .I18n "humidity") }},
+        min: {{ printf "%q" (index .I18n "min") }},
+        average: {{ printf "%q" (index .I18n "average") }},
+        max: {{ printf "%q" (index .I18n "max") }}
+    };
+</script>
+<script src="/js/statistics-charts.js"></script>
+
+{{ template "footer.html" . }}

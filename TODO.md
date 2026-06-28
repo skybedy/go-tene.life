@@ -15,6 +15,7 @@
 
 ## K ověření
 
+- Vizuálně ověřit nový `/statistics/monthly-daily` (select měsíce, tabulka po dnech, grafy) na mobilu i desktopu, ve všech jazykových verzích.
 - Ověřit, zda je `README.md` plně aktuální vůči současným routám a stránkám.
 - Ověřit aktuální CI/CD postup (zatím nezjištěno).
 - Ověřit kontrolní SQL dotazy z `docs/sql/water_temperatures_migration_checks.sql` po backfillu.

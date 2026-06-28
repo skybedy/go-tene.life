@@ -85,3 +85,9 @@
 
 24. V experimentální navigaci se používá transparentní varianta loga `tenelife-logo-transparent-v2.png`.
 - Důvod: původní PNG logo obsahuje neprůhledný šedý podklad (`rgb(243,244,246)`), který vytvářel viditelný obdélník na upravené navigační liště.
+
+25. Pro denní rozpis konkrétního měsíce byla zvolena samostatná stránka `/statistics/monthly-daily` s vlastní položkou v navigaci (nikoli rozbalování řádků v tabulce `/statistics/monthly`).
+- Důvod: uživatelský požadavek zachovat `/statistics/monthly` čistě jako přehled po měsících a neztrácet denní rozpis uvnitř jiné stránky; nová stránka má vlastní URL pro přímé sdílení.
+
+26. Select výběru měsíce na `/statistics/monthly-daily` se plní dynamicky podle reálně existujících dat (`SELECT DISTINCT YEAR(date), MONTH(date) FROM weather_daily`), ne pevným rozsahem od listopadu 2025.
+- Důvod: uživatelský požadavek na přesnost — měření začala v listopadu 2025, ale pevný rozsah by mohl nabízet i měsíce bez dat; dynamický dotaz se samočinně přizpůsobí, pokud se historie dat rozšíří nebo budou mezery.
