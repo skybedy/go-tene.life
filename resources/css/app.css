@@ -136,11 +136,11 @@
         }
 
         .homepage-weather-strip .glass-tile {
-            border-color: rgba(220, 242, 252, 0.1008);
-            background: rgba(4, 30, 50, 0.0432);
+            border-color: rgba(220, 242, 252, 0.12096);
+            background: rgba(4, 30, 50, 0.05184);
             box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.0576),
-                0 2px 8px rgba(0, 20, 35, 0.0576);
+                inset 0 1px 0 rgba(255, 255, 255, 0.06912),
+                0 2px 8px rgba(0, 20, 35, 0.06912);
         }
 
         .webcam-enlarge-shell {
@@ -151,11 +151,11 @@
 
         .webcam-enlarge-button,
         .webcam-enlarge-button:hover {
-            border-color: rgba(220, 242, 252, 0.1008);
-            background: rgba(4, 30, 50, 0.0432);
+            border-color: rgba(220, 242, 252, 0.12096);
+            background: rgba(4, 30, 50, 0.05184);
             box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.0576),
-                0 2px 8px rgba(0, 20, 35, 0.0576);
+                inset 0 1px 0 rgba(255, 255, 255, 0.06912),
+                0 2px 8px rgba(0, 20, 35, 0.06912);
         }
     }
 
