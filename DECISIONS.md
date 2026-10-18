@@ -91,3 +91,16 @@
 
 26. Select výběru měsíce na `/statistics/monthly-daily` se plní dynamicky podle reálně existujících dat (`SELECT DISTINCT YEAR(date), MONTH(date) FROM weather_daily`), ne pevným rozsahem od listopadu 2025.
 - Důvod: uživatelský požadavek na přesnost — měření začala v listopadu 2025, ale pevný rozsah by mohl nabízet i měsíce bez dat; dynamický dotaz se samočinně přizpůsobí, pokud se historie dat rozšíří nebo budou mezery.
+
+## Zprávy z Tenerife (2026-10-09)
+
+- Implementace zpráv je oddělena do větve `codex/tenelife-news-mvp` ze současného základu `experiment/jack-dorsey-redesign`.
+
+- Zprávy sdílejí Echo, databázový pool, Go html/template a Tailwind. Nové tabulky `news_categories` a `news_articles` přidává migrace 0012 bez zásahu do existujících tabulek.
+- MVP je česky bez jazykových kopií článků. Navigace všech jazyků odkazuje na `/zpravy`; na zprávách se jazykový přepínač nezobrazuje.
+- Pro jediného redaktora používáme Basic Auth s bcrypt hashem z konfigurace a HTTPS za Nginx. Nevzniká systém uživatelů ani session databáze. Administrace je bez konfigurace nepřístupná, chráněná CSRF, limitem autentizace, no-store a noindex.
+- Pomocný generátor redakčního hesla přijímá pro současné interní použití minimálně 6 bajtů, maximálně 72 bajtů podle limitu bcrypt; hash používá cost 12. Ochrana proti opakovaným pokusům zůstává aktivní.
+- Obsah článku se ukládá jako Markdown. Formátovací lišta vkládá pouze běžnou syntaxi a náhled používá tentýž Goldmark renderer jako detail. `html.WithUnsafe` není zapnuté, takže raw HTML a nebezpečná URL se nevykreslí. Obrázky se připojují URL; upload není součástí této verze.
+- AI je volitelný redakční asistent, nikoli publikační automat. Server volá OpenAI Responses API se Structured Outputs, `store: false`, pevným schématem a promptem verzovaným v kódu. Model je konfigurovatelný přes `OPENAI_NEWS_MODEL`; výchozí `gpt-6.1-sol` vyvažuje kvalitu a cenu. Vstup pochází výhradně z textu vloženého redaktorem, bez automatického stahování URL. Výstup se lokálně validuje, pouze vyplní formulář a nový článek zůstane konceptem.
+- Slug se navrhuje normalizací diakritiky. Od první publikace je neměnný a datum první publikace se uchovává při stažení. Unikátní index a kontrola revize zabraňují kolizím URL a přepsání souběžné úpravy.
+- Veřejné dotazy jednotně vyžadují published a datum publikace nejvýše aktuální UTC. Stejná podmínka platí pro homepage, detail, další zprávy a sitemap. Canonical/OG používají konfigurovaný SITE_URL, nikoli nedůvěryhodný Host požadavku. JSON-LD se vytváří encoding/json s escapováním HTML.

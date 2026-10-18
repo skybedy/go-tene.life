@@ -18,6 +18,7 @@ type LanguageOption struct {
 }
 
 type PageData struct {
+	LatestNews         []NewsArticle
 	Weather            *WeatherData
 	WebcamImageURL     string
 	SeaTemperature     *float64

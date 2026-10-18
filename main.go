@@ -20,6 +20,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/skybedy/laravel-tene.life/internal/alerts"
 	"github.com/skybedy/laravel-tene.life/internal/i18n"
+	"github.com/skybedy/laravel-tene.life/internal/newsai"
 	"github.com/skybedy/laravel-tene.life/internal/pws"
 	"github.com/skybedy/laravel-tene.life/internal/store"
 	"github.com/skybedy/laravel-tene.life/internal/utils"
@@ -118,6 +119,13 @@ func main() {
 
 	// Initialize Handlers
 	handler := web.NewHandler(weatherStore)
+	newsConfig, err := web.NewsConfigFromEnv()
+	if err != nil {
+		log.Fatal("News configuration: ", err)
+	}
+	newsStore := &store.NewsStore{DB: db}
+	handler.NewsStore = newsStore
+	newsHandler := &web.NewsHandler{Store: newsStore, AI: newsai.NewFromEnv(), Config: newsConfig}
 
 	// Initialize Echo
 	e := echo.New()
@@ -149,8 +157,8 @@ func main() {
 	e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
 		TokenLookup: "form:csrf",
 		Skipper: func(c echo.Context) bool {
-			// API endpoints are consumed by scripts/JS and do not post form tokens.
-			return len(c.Path()) >= 5 && c.Path()[:5] == "/api/"
+			// API endpoints use scripts/JS; news admin has its own scoped CSRF middleware.
+			return strings.HasPrefix(c.Path(), "/api/") || strings.HasPrefix(c.Path(), "/admin/zpravy")
 		},
 	}))
 
@@ -247,6 +255,8 @@ func main() {
 	}
 
 	e.Renderer = renderer
+
+	newsHandler.Register(e)
 
 	// Routes (default locale: cs)
 	e.GET("/", handler.IndexHandler)

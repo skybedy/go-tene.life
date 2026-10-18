@@ -38,6 +38,7 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 }
 
 type Handler struct {
+	NewsStore        NewsRepository
 	WeatherStore     *store.WeatherStore
 	TideCollector    *tides.Collector
 	weatherCache     *models.WeatherData
@@ -106,6 +107,16 @@ func filterDailyStatsWithValues(stats []models.WeatherDaily) []models.WeatherDai
 func (h *Handler) IndexHandler(c echo.Context) error {
 	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	webcamImageURL := h.webcamImageURL()
+	var latestNews []models.NewsArticle
+	if h.NewsStore != nil {
+		ctx, cancel := context.WithTimeout(c.Request().Context(), 2*time.Second)
+		var newsErr error
+		latestNews, _, newsErr = h.NewsStore.List(ctx, "", true, 3, 0)
+		cancel()
+		if newsErr != nil {
+			log.Printf("Error fetching homepage news: %v", newsErr)
+		}
+	}
 
 	// 1. Get Weather Data (with improved caching)
 	weather, seaTemp, seaTempDate, err := h.getCachedWeatherData()
@@ -116,6 +127,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 			loc, _ := time.LoadLocation("Atlantic/Canary")
 			now := time.Now().In(loc)
 			return c.Render(http.StatusOK, "index.html", models.PageData{
+				LatestNews:         latestNews,
 				FormattedDate:      now.Format("2. 1. 2006"),
 				FormattedDateSmall: now.Format("2.1"),
 				FormattedTime:      strings.TrimPrefix(now.Format("15:04"), "0"),
@@ -234,6 +246,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 	}
 
 	data := models.PageData{
+		LatestNews:         latestNews,
 		Weather:            weather,
 		WebcamImageURL:     webcamImageURL,
 		SeaTemperature:     seaTemp,

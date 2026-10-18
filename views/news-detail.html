@@ -1,0 +1,8 @@
+{{ template "header.html" . }}
+{{ template "nav.html" . }}
+<main class="news-container">
+    <a class="news-link inline-block mb-6" href="/zpravy">← Všechny zprávy</a>
+    {{ template "news-article" . }}
+    {{ if .Articles }}<section class="mt-10" aria-label="Nejnovější zprávy"><h2 class="text-2xl font-semibold text-slate-900 mb-5">Další zprávy z Tenerife</h2>{{ template "news-cards" .Articles }}</section>{{ end }}
+</main>
+{{ template "footer.html" . }}

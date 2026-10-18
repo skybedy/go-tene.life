@@ -5,7 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google" content="notranslate">
+    {{ if eq .CurrentSection "news" }}
+    <title>{{ .PageTitle }} | Tenelife</title>
+    {{ template "news-meta.html" . }}
+    {{ else }}
     <title>{{ if .PageTitle }}{{ .PageTitle }} | {{ end }}{{ index .I18n "site_title_suffix" }}</title>
+    {{ end }}
+    {{ if eq .CurrentSection "news-admin" }}<meta name="robots" content="noindex, nofollow">{{ end }}
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

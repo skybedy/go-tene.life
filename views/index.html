@@ -345,6 +345,10 @@
         </div>
     </div>
 
+        <section aria-label="Zprávy z Tenerife" lang="cs" class="space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-3"><h2 class="text-2xl font-semibold text-slate-900">Zprávy z Tenerife</h2><a class="news-link" href="/zpravy">Všechny zprávy →</a></div>
+            {{ if .LatestNews }}{{ template "news-cards" .LatestNews }}{{ else }}<p class="text-slate-600">První zprávy pro vás připravujeme.</p>{{ end }}
+        </section>
     </div>
 </main>
 
