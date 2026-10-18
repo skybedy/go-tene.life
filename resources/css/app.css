@@ -1,6 +1,19 @@
 @import "tailwindcss";
 
 @layer components {
+    .app-shell {
+        background:
+            radial-gradient(1200px 520px at 8% -5%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0)),
+            linear-gradient(180deg, #e8eff5 0%, #dfe8ef 45%, #e6edf3 100%);
+    }
+
+    .surface-panel {
+        @apply bg-white/74 rounded-2xl shadow-xl backdrop-blur-md border border-white/80;
+        box-shadow:
+            0 18px 40px rgba(15, 23, 42, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+
     .weather-overlay-shell {
         position: relative;
         overflow: hidden;
@@ -19,22 +32,55 @@
         @apply flex items-center gap-2 bg-[#245675]/58 px-3 py-1.5 rounded-md border border-transparent shadow-[0_6px_14px_rgba(8,20,34,0.18)] transition-all hover:bg-[#2a6286]/62 active:scale-95 text-white font-bold;
     }
 
+    .webcam-enlarge-shell {
+        border-color: rgba(70, 167, 232, 0.42);
+        background: linear-gradient(135deg, rgba(9, 52, 88, 0.78), rgba(4, 31, 49, 0.72));
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.22),
+            inset 0 0 0 1px rgba(245, 249, 255, 0.14),
+            inset 0 0 0 2px rgba(31, 118, 180, 0.22),
+            0 10px 30px rgba(0, 24, 45, 0.34);
+    }
+
+    .webcam-enlarge-button {
+        border-radius: 0.5rem;
+        border-color: rgba(69, 148, 196, 0.16);
+        background:
+            linear-gradient(180deg, rgba(8, 43, 65, 0.96), rgba(8, 29, 38, 0.9));
+        color: rgba(245, 249, 255, 0.94);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+        box-shadow:
+            inset 0 1px 0 rgba(135, 217, 255, 0.08),
+            0 5px 14px rgba(0, 20, 35, 0.2);
+    }
+
+    .webcam-enlarge-button:hover {
+        background:
+            linear-gradient(180deg, rgba(10, 52, 78, 0.98), rgba(9, 35, 47, 0.94));
+    }
+
+    @media (min-width: 1024px) {
+        .webcam-enlarge-button {
+            border-radius: 0.55rem;
+        }
+    }
+
     .weather-first-row-text {
-        font-size: 0.5rem;
+        font-size: 0.56rem;
         line-height: 1;
         letter-spacing: 0.04em;
     }
 
     .weather-box-heading {
-        font-size: 0.495rem;
+        font-size: 0.54rem;
     }
 
     .weather-card-copy {
-        font-size: 0.45rem;
+        font-size: 0.5rem;
     }
 
     .weather-main-value {
-        font-size: 0.908rem;
+        font-size: 0.96rem;
     }
 
     .weather-wave-title {
@@ -58,7 +104,7 @@
     }
 
     .weather-tide-value {
-        font-size: 0.45rem;
+        font-size: 0.52rem;
     }
 
     .homepage-weather-strip-wrap {
@@ -70,7 +116,25 @@
         width: max-content;
         max-width: 100%;
         grid-template-columns: repeat(6, minmax(0, 1fr));
-        grid-template-rows: 1.05rem 1fr 1fr;
+        grid-template-rows: 1.2rem 1fr 1fr;
+        border-color: rgba(70, 167, 232, 0.42);
+        background:
+            linear-gradient(180deg, rgba(56, 144, 206, 0.45), rgba(11, 54, 82, 0.3)),
+            linear-gradient(135deg, rgba(11, 61, 102, 0.86), rgba(4, 30, 50, 0.82));
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.22),
+            inset 0 0 0 1px rgba(245, 249, 255, 0.14),
+            inset 0 0 0 2px rgba(31, 118, 180, 0.22),
+            0 10px 30px rgba(0, 24, 45, 0.34);
+    }
+
+    .homepage-weather-strip .glass-tile {
+        border-color: rgba(69, 148, 196, 0.16);
+        background:
+            linear-gradient(180deg, rgba(8, 43, 65, 0.96), rgba(8, 29, 38, 0.9));
+        box-shadow:
+            inset 0 1px 0 rgba(135, 217, 255, 0.08),
+            0 5px 14px rgba(0, 20, 35, 0.2);
     }
 
     .weather-tile-label,
@@ -118,6 +182,35 @@
     .homepage-weather-strip .weather-wave-detail-value,
     .homepage-weather-strip .weather-tide-value {
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+    }
+
+    .homepage-weather-strip .weather-box-heading,
+    .homepage-weather-strip .weather-wave-title {
+        color: #f2d451;
+    }
+
+    .homepage-weather-strip .weather-main-value,
+    .homepage-weather-strip .weather-box-secondary,
+    .homepage-weather-strip .weather-wave-value,
+    .homepage-weather-strip .weather-wave-detail-value,
+    .homepage-weather-strip .weather-tide-value.font-bold,
+    .homepage-weather-strip .text-cyan-200,
+    .homepage-weather-strip .text-cyan-300 {
+        color: #6fe7f2;
+    }
+
+    .homepage-weather-strip .weather-first-row-text,
+    .homepage-weather-strip .weather-first-row-text.text-cyan-200,
+    .homepage-weather-strip .weather-first-row-text .text-cyan-200,
+    .homepage-weather-strip .text-white\/90,
+    .homepage-weather-strip .text-white\/80,
+    .homepage-weather-strip .text-white\/70,
+    .homepage-weather-strip .text-white {
+        color: rgba(245, 249, 255, 0.94);
+    }
+
+    .homepage-weather-strip hr {
+        border-color: rgba(214, 230, 238, 0.34);
     }
 
     .weather-overlay-shell::before {
@@ -488,6 +581,20 @@
     }
 
     @media (max-width: 420px) {
+        .homepage-weather-strip {
+            grid-template-columns: 1fr 1fr 1fr 1.3fr 0.85fr 0.85fr;
+        }
+
+        .homepage-weather-strip .glass-tile {
+            padding-left: 0.18rem;
+            padding-right: 0.18rem;
+        }
+
+        .homepage-weather-strip .sea-updated-line {
+            font-size: 0.56rem;
+            letter-spacing: 0.01em;
+        }
+
         .weather-overlay-shell {
             padding: 0.55rem;
             border-radius: 1.15rem;
@@ -583,4 +690,28 @@
     .pws-info-tooltip:before {
         border-top-color: rgba(17, 24, 39, 0.9);
     }
+}
+
+@layer components {
+    .news-container { @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12; }
+    .news-link { @apply text-blue-800 underline underline-offset-4 hover:text-blue-600; }
+    .news-button { @apply inline-flex items-center justify-center rounded-lg bg-blue-800 px-4 py-3 text-white font-semibold hover:bg-blue-900 cursor-pointer; }
+    .news-button:disabled { @apply cursor-not-allowed opacity-50; }
+    .news-button-secondary { @apply inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-800 hover:bg-blue-50 cursor-pointer; }
+    .news-button-secondary[aria-current="page"] { @apply bg-blue-800 text-white border-blue-800; }
+    .news-form label { @apply block font-medium text-slate-800; }
+    .news-form input:not([type="hidden"]), .news-form textarea, .news-form select { @apply block w-full min-w-0 mt-2 rounded-lg border border-slate-400 bg-white px-3 py-3 font-normal text-slate-900; }
+    .news-form input[readonly] { @apply bg-slate-100 text-slate-600; }
+    .news-body { @apply text-lg leading-relaxed text-slate-800; overflow-wrap: anywhere; }
+    .news-body p { @apply mb-5; }
+    .news-body h2 { @apply mt-9 mb-4 text-2xl font-semibold text-slate-900; }
+    .news-body h3 { @apply mt-7 mb-3 text-xl font-semibold text-slate-900; }
+    .news-body ul { @apply mb-5 list-disc pl-7; }
+    .news-body ol { @apply mb-5 list-decimal pl-7; }
+    .news-body li { @apply mb-2; }
+    .news-body blockquote { @apply my-6 border-l-4 border-blue-600 bg-blue-50 px-5 py-3 italic; }
+    .news-body a { @apply text-blue-800 underline underline-offset-4 hover:text-blue-600; }
+    .news-body strong { @apply font-semibold text-slate-950; }
+    .news-markdown-toolbar button { @apply rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 hover:bg-blue-50; }
+    .news-container :focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
 }

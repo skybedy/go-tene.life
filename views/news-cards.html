@@ -1,0 +1,22 @@
+{{ define "news-cards" }}
+<div class="grid gap-5 md:grid-cols-3">
+    {{ range . }}
+    <article class="surface-panel overflow-hidden flex flex-col">
+        {{ if .ImageURL }}<a href="/zpravy/{{ .Slug }}" tabindex="-1" aria-hidden="true"><img src="{{ .ImageURL }}" alt="" loading="lazy" class="w-full aspect-video object-cover"></a>{{ end }}
+        <div class="p-5 space-y-3">
+            <p class="text-sm text-slate-600"><a class="news-link" href="/zpravy?kategorie={{ .Category.Slug }}">{{ .Category.Name }}</a> · <time datetime="{{ .PublishedISO }}">{{ .PublishedDate }}</time></p>
+            <h2 class="text-xl font-semibold text-slate-900 break-words"><a href="/zpravy/{{ .Slug }}" class="hover:text-blue-700">{{ .Title }}</a></h2>
+            <p class="text-slate-700 break-words">{{ .Summary }}</p>
+            <a class="news-link inline-block" href="/zpravy/{{ .Slug }}" aria-label="Číst článek: {{ .Title }}">Číst článek →</a>
+        </div>
+    </article>
+    {{ end }}
+</div>
+{{ end }}
+{{ define "news-pagination" }}
+<nav aria-label="Stránkování zpráv" class="flex flex-wrap items-center justify-between gap-4 mt-8">
+    {{ if .PreviousURL }}<a class="news-button-secondary" href="{{ .PreviousURL }}" rel="prev">← Novější</a>{{ end }}
+    <span class="text-sm text-slate-600">Strana {{ .Page }} · celkem {{ .Total }} článků</span>
+    {{ if .NextURL }}<a class="news-button-secondary" href="{{ .NextURL }}" rel="next">Starší →</a>{{ end }}
+</nav>
+{{ end }}

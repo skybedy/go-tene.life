@@ -38,6 +38,7 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 }
 
 type Handler struct {
+	NewsStore        NewsRepository
 	WeatherStore     *store.WeatherStore
 	TideCollector    *tides.Collector
 	weatherCache     *models.WeatherData
@@ -106,6 +107,16 @@ func filterDailyStatsWithValues(stats []models.WeatherDaily) []models.WeatherDai
 func (h *Handler) IndexHandler(c echo.Context) error {
 	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	webcamImageURL := h.webcamImageURL()
+	var latestNews []models.NewsArticle
+	if h.NewsStore != nil {
+		ctx, cancel := context.WithTimeout(c.Request().Context(), 2*time.Second)
+		var newsErr error
+		latestNews, _, newsErr = h.NewsStore.List(ctx, "", true, 3, 0)
+		cancel()
+		if newsErr != nil {
+			log.Printf("Error fetching homepage news: %v", newsErr)
+		}
+	}
 
 	// 1. Get Weather Data (with improved caching)
 	weather, seaTemp, seaTempDate, err := h.getCachedWeatherData()
@@ -116,8 +127,9 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 			loc, _ := time.LoadLocation("Atlantic/Canary")
 			now := time.Now().In(loc)
 			return c.Render(http.StatusOK, "index.html", models.PageData{
+				LatestNews:         latestNews,
 				FormattedDate:      now.Format("2. 1. 2006"),
-				FormattedDateSmall: now.Format("2.1."),
+				FormattedDateSmall: now.Format("2.1"),
 				FormattedTime:      strings.TrimPrefix(now.Format("15:04"), "0"),
 				WebcamImageURL:     webcamImageURL,
 				Locale:             locale,
@@ -190,7 +202,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 			}
 		}
 		if parsedOK {
-			seaTempDateFormatted = parsed.Format("2.1.")
+			seaTempDateFormatted = parsed.Format("2.1")
 			seaTempTimeFormatted = strings.TrimPrefix(parsed.Format("15:04"), "0")
 		}
 	}
@@ -234,6 +246,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 	}
 
 	data := models.PageData{
+		LatestNews:         latestNews,
 		Weather:            weather,
 		WebcamImageURL:     webcamImageURL,
 		SeaTemperature:     seaTemp,
@@ -254,7 +267,7 @@ func (h *Handler) IndexHandler(c echo.Context) error {
 		DayMaxTime:         dayMaxTime,
 		DayMinTime:         dayMinTime,
 		FormattedDate:      ts.Format("2. 1. 2006"),
-		FormattedDateSmall: ts.Format("2.1."),
+		FormattedDateSmall: ts.Format("2.1"),
 		FormattedTime:      strings.TrimPrefix(ts.Format("15:04"), "0"),
 		PageTitle:          "",
 		Locale:             locale,
@@ -382,7 +395,7 @@ func (h *Handler) getCachedTideData(reference time.Time) ([]models.TideEventView
 
 	var fetchedAtStr string
 	if len(selected) > 0 {
-		fetchedAtStr = selected[0].FetchedAt.Local().Format("2.1.")
+		fetchedAtStr = selected[0].FetchedAt.Local().Format("2.1")
 	}
 
 	high := make([]models.TideEventView, 0, 2)
@@ -638,11 +651,25 @@ func (h *Handler) WebcamBigHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "webcam-big.html", data)
 }
 
-
 func (h *Handler) SeaTemperatureHandler(c echo.Context) error {
 	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	return c.Render(http.StatusOK, "sea-temperature.html", models.PageData{
-		PageTitle:       "Teplota moře – satelitní vizualizace",
+		PageTitle:       i18n.T(locale, "sea_temp_page_title_tenerife"),
+		Locale:          locale,
+		LocalePrefix:    i18n.LocalePrefix(locale),
+		CurrentPath:     currentPath,
+		CurrentSection:  "sea-temperature",
+		Languages:       languages,
+		I18n:            messages,
+		GAEnabled:       gaEnabled,
+		GAMeasurementID: gaMeasurementID,
+	})
+}
+
+func (h *Handler) SeaTemperatureCanaryHandler(c echo.Context) error {
+	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
+	return c.Render(http.StatusOK, "sea-temperature-canary.html", models.PageData{
+		PageTitle:       i18n.T(locale, "sea_temp_page_title_canary"),
 		Locale:          locale,
 		LocalePrefix:    i18n.LocalePrefix(locale),
 		CurrentPath:     currentPath,
@@ -1043,6 +1070,74 @@ func (h *Handler) MonthlyStatisticsHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "monthly.html", data)
 }
 
+func (h *Handler) MonthlyDailyStatisticsHandler(c echo.Context) error {
+	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
+
+	availableMonths, err := h.WeatherStore.GetAvailableMonths()
+	if err != nil {
+		log.Println("Error fetching available months:", err)
+	}
+
+	loc, locErr := time.LoadLocation("Atlantic/Canary")
+	if locErr != nil {
+		loc = time.UTC
+	}
+	now := time.Now().In(loc)
+	year := now.Year()
+	month := int(now.Month())
+
+	if yearStr := c.QueryParam("year"); yearStr != "" {
+		if y, parseErr := strconv.Atoi(yearStr); parseErr == nil {
+			year = y
+		}
+	}
+	if monthStr := c.QueryParam("month"); monthStr != "" {
+		if m, parseErr := strconv.Atoi(monthStr); parseErr == nil {
+			month = m
+		}
+	}
+
+	if len(availableMonths) > 0 {
+		found := false
+		for _, mo := range availableMonths {
+			if mo.Year == year && mo.Month == month {
+				found = true
+				break
+			}
+		}
+		if !found {
+			year = availableMonths[0].Year
+			month = availableMonths[0].Month
+		}
+	}
+
+	startDate := fmt.Sprintf("%04d-%02d-01", year, month)
+	endDate := time.Date(year, time.Month(month)+1, 0, 0, 0, 0, 0, time.UTC).Format("2006-01-02")
+
+	stats, statsErr := h.WeatherStore.GetDailyStatsByRange(startDate, endDate)
+	if statsErr != nil {
+		log.Println("Error fetching monthly daily stats:", statsErr)
+	}
+
+	data := models.StatsPageData{
+		DailyStats:      stats,
+		AvailableMonths: availableMonths,
+		SelectedYear:    year,
+		SelectedMonth:   month,
+		PageTitle:       i18n.T(locale, "monthly_daily_statistics"),
+		StatsSection:    "monthly-daily",
+		Locale:          locale,
+		LocalePrefix:    i18n.LocalePrefix(locale),
+		CurrentPath:     currentPath,
+		CurrentSection:  "statistics",
+		Languages:       languages,
+		I18n:            messages,
+		GAEnabled:       gaEnabled,
+		GAMeasurementID: gaMeasurementID,
+	}
+	return c.Render(http.StatusOK, "monthly-daily.html", data)
+}
+
 func (h *Handler) AnnualStatisticsHandler(c echo.Context) error {
 	locale, currentPath, languages, messages, gaEnabled, gaMeasurementID := h.getCommonViewData(c)
 	stats, err := h.WeatherStore.GetAnnualStats()
@@ -1382,13 +1477,13 @@ func formatDayMonthLabel(raw string) string {
 	}
 	for _, layout := range layouts {
 		if t, err := time.Parse(layout, raw); err == nil {
-			return t.Format("2.1.")
+			return t.Format("2.1")
 		}
 	}
 
 	if len(raw) >= 10 {
 		if t, err := time.Parse("2006-01-02", raw[:10]); err == nil {
-			return t.Format("2.1.")
+			return t.Format("2.1")
 		}
 	}
 

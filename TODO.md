@@ -15,6 +15,7 @@
 
 ## K ověření
 
+- Vizuálně ověřit nový `/statistics/monthly-daily` (select měsíce, tabulka po dnech, grafy) na mobilu i desktopu, ve všech jazykových verzích.
 - Ověřit, zda je `README.md` plně aktuální vůči současným routám a stránkám.
 - Ověřit aktuální CI/CD postup (zatím nezjištěno).
 - Ověřit kontrolní SQL dotazy z `docs/sql/water_temperatures_migration_checks.sql` po backfillu.
@@ -24,6 +25,14 @@
 - Vizuálně ověřit na `/statistics/monthly`, že horní karty „aktuální měsíc průběžně k poslednímu datu“ odpovídají dynamickému výpočtu z raw `weather` a `water_temperatures` oříznutému podle posledního dne ve `weather_daily`.
 - Vizuálně ověřit na `/statistics/recent` čitelnost nově zobrazeného času měření moře (formát `H:MM` bez počáteční nuly) na mobilu i desktopu.
 - Vizuálně ověřit na `/spanelsko-ceska-slovicka`, že volba `Přehrát všechno za sebou` používá nový track `1-500` a synchronizuje panel slovíček bez posunu.
+- Vizuálně ověřit nové routy a podmenu vizualizací teplot Atlantiku:
+  - `/atlantic-sea-temperature-tenerife`
+  - `/atlantic-sea-temperature-canary-islands`
+  včetně locale prefix variant (`/en/...`, `/es/...`, ...).
+- Vizuálně ověřit desktop/mobil navigaci po přidání nové položky a podmenu (zalomení kolem `lg` breakpointu).
+- Vizuálně ověřit lokalizované texty na obou stránkách teploty moře a ve viewer chybových hláškách.
+- Vizuálně ověřit nový tmavě modrý styl homepage weather boxu a tlačítka „Zvětšit fotku“ na mobilu i desktopu (mezery, rámečky, kontrast, zaoblení).
+- V experimentální branchi `experiment/jack-dorsey-redesign` vizuálně porovnat `before/after` screenshot homepage a rozhodnout, které změny ponechat pro merge do hlavní větve.
 
 ## Možné budoucí úpravy
 
@@ -32,4 +41,19 @@
 - Ověřit nasazení migrace `0011_drop_weather_daily_sea_temperature` na všech prostředích.
 
 - Copernicus viewer: doplnit archiv měsíců (výběr období) a produkční data exportovaná z Meteodata.
-- Copernicus viewer: nahradit dočasné demo snímky reálnými SST framy + volitelným `video.mp4`.
+- Copernicus viewer: nahradit dočasné demo snímky reálnými SST framy.
+
+## Zprávy z Tenerife (2026-10-09)
+
+- Další práci na zprávách vést ve větvi `codex/tenelife-news-mvp`.
+
+- Dokončeno: databázová vrstva a migrace 0012, veřejné stránky, kategorie, stránkování, administrace, náhled, publikace/stažení, navigace, homepage, OG/SEO/NewsArticle, sitemap a testy.
+- Dokončeno: Markdown editor s formátovací lištou a bezpečným serverovým náhledem; volitelný AI asistent generující všechna redakční pole jako neuložený koncept přes strukturovanou odpověď OpenAI.
+- Před použitím AI nastavit serverový `OPENAI_API_KEY`, zkontrolovat rozpočet/limity OpenAI projektu a provést redakční zkoušku na reálných veřejných podkladech.
+- Před nasazením ověřit DB verzi, aplikovat 0012, nastavit SITE_URL a redakční přihlašovací údaje, sestavit CSS/binárku a restartovat. Podrobný postup v README.
+- Po nasazení ověřit Nginx HTTPS/cache a průchod sitemap/robots do aplikace, poté skutečný Facebook náhled první publikované URL.
+- Po nasazení vizuálně ověřit lištu Markdown editoru a AI generování v desktopovém i mobilním formuláři.
+- Samostatně opravit existující migraci 0006 pro instalace od nuly (kolize FK po 0005 a očekávání legacy station_id).
+- Samostatně opravit instalaci od nuly také u migrace 0007 (duplicitní sloupce avg_sea_temperature z 0001).
+- Vizuální kontrolu mobilu/desktopu a formuláře dokončit v dostupném prohlížeči; v této relaci nástroj nehlásil žádný dostupný prohlížeč. HTTP smoke test stávajících i nových stránek prošel.
+- Dokončeno: test publikačního cyklu přes autentizované HTTP proti izolované MariaDB, kontrola sitemap/homepage po stažení, `go test -race ./...`, `go vet`, Go/CSS build.

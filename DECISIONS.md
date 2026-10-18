@@ -70,3 +70,37 @@
 
 - 2026-05-09: Pro první fázi Copernicus integrace v tene.life zvolena statická architektura (`public/data/.../manifest.json` + snímky), bez volání externích API z webu.
 - 2026-05-09: Přidána route `/teplota-more` a samostatný vanilla JS přehrávač s Play/Pause + sliderem, aby šlo později jednoduše přidat archiv měsíců.
+- 2026-05-10: Pro veřejné odkazy na viewer zvoleny anglické a jednoznačné cesty:
+  - `/atlantic-sea-temperature-tenerife`
+  - `/atlantic-sea-temperature-canary-islands`
+  Staré české routy (`/teplota-more`, `/teplota-more-kanary`) zůstávají jako redirecty kvůli kompatibilitě.
+- 2026-05-10: Položka „Vizualizace teplot Atlantiku“ je v hlavní navigaci jako samostatné podmenu (`Tenerife`, `Kanárské ostrovy`), nikoli pod „Rozšířené statistiky počasí`.
+- 2026-05-10: Status text v vieweru se běžně nezobrazuje; je vyhrazen jen pro chybové stavy (např. chybějící manifest / chyba načtení snímku), aby UI nebylo zbytečně zahlcené.
+- 2026-05-10: Nové texty pro stránky teploty moře a viewer JS hlášky jsou řešené přes i18n klíče pro všechny podporované jazyky (`cs`, `en`, `es`, `pl`, `de`, `fr`, `it`, `hu`).
+- 2026-05-10: Homepage weather info box a tlačítko „Zvětšit fotku“ používají sjednocený tmavě modrý vizuální styl s modrým rámem, jemnou světlou linkou a stejným vnějším paddingem.
+- Důvod: uživatelský požadavek sjednotit vzhled podle dodané reference a zachovat stávající layout, velikosti a obsah.
+
+23. Pro experimentální redesign homepage byl zaveden opakovaně použitelný panelový styl `surface-panel` a současně byla navýšena čitelnost weather overlaye drobným zvětšením typografie a vertikálního rytmu.
+- Důvod: zlepšení vizuální hierarchie a skenovatelnosti dat bez změny struktury stránky nebo přidání nových závislostí.
+
+24. V experimentální navigaci se používá transparentní varianta loga `tenelife-logo-transparent-v2.png`.
+- Důvod: původní PNG logo obsahuje neprůhledný šedý podklad (`rgb(243,244,246)`), který vytvářel viditelný obdélník na upravené navigační liště.
+
+25. Pro denní rozpis konkrétního měsíce byla zvolena samostatná stránka `/statistics/monthly-daily` s vlastní položkou v navigaci (nikoli rozbalování řádků v tabulce `/statistics/monthly`).
+- Důvod: uživatelský požadavek zachovat `/statistics/monthly` čistě jako přehled po měsících a neztrácet denní rozpis uvnitř jiné stránky; nová stránka má vlastní URL pro přímé sdílení.
+
+26. Select výběru měsíce na `/statistics/monthly-daily` se plní dynamicky podle reálně existujících dat (`SELECT DISTINCT YEAR(date), MONTH(date) FROM weather_daily`), ne pevným rozsahem od listopadu 2025.
+- Důvod: uživatelský požadavek na přesnost — měření začala v listopadu 2025, ale pevný rozsah by mohl nabízet i měsíce bez dat; dynamický dotaz se samočinně přizpůsobí, pokud se historie dat rozšíří nebo budou mezery.
+
+## Zprávy z Tenerife (2026-10-09)
+
+- Implementace zpráv je oddělena do větve `codex/tenelife-news-mvp` ze současného základu `experiment/jack-dorsey-redesign`.
+
+- Zprávy sdílejí Echo, databázový pool, Go html/template a Tailwind. Nové tabulky `news_categories` a `news_articles` přidává migrace 0012 bez zásahu do existujících tabulek.
+- MVP je česky bez jazykových kopií článků. Navigace všech jazyků odkazuje na `/zpravy`; na zprávách se jazykový přepínač nezobrazuje.
+- Pro jediného redaktora používáme Basic Auth s bcrypt hashem z konfigurace a HTTPS za Nginx. Nevzniká systém uživatelů ani session databáze. Administrace je bez konfigurace nepřístupná, chráněná CSRF, limitem autentizace, no-store a noindex.
+- Pomocný generátor redakčního hesla přijímá pro současné interní použití minimálně 6 bajtů, maximálně 72 bajtů podle limitu bcrypt; hash používá cost 12. Ochrana proti opakovaným pokusům zůstává aktivní.
+- Obsah článku se ukládá jako Markdown. Formátovací lišta vkládá pouze běžnou syntaxi a náhled používá tentýž Goldmark renderer jako detail. `html.WithUnsafe` není zapnuté, takže raw HTML a nebezpečná URL se nevykreslí. Obrázky se připojují URL; upload není součástí této verze.
+- AI je volitelný redakční asistent, nikoli publikační automat. Server volá OpenAI Responses API se Structured Outputs, `store: false`, pevným schématem a promptem verzovaným v kódu. Model je konfigurovatelný přes `OPENAI_NEWS_MODEL`; výchozí `gpt-6.1-sol` vyvažuje kvalitu a cenu. Vstup pochází výhradně z textu vloženého redaktorem, bez automatického stahování URL. Výstup se lokálně validuje, pouze vyplní formulář a nový článek zůstane konceptem.
+- Slug se navrhuje normalizací diakritiky. Od první publikace je neměnný a datum první publikace se uchovává při stažení. Unikátní index a kontrola revize zabraňují kolizím URL a přepsání souběžné úpravy.
+- Veřejné dotazy jednotně vyžadují published a datum publikace nejvýše aktuální UTC. Stejná podmínka platí pro homepage, detail, další zprávy a sitemap. Canonical/OG používají konfigurovaný SITE_URL, nikoli nedůvěryhodný Host požadavku. JSON-LD se vytváří encoding/json s escapováním HTML.

@@ -18,6 +18,7 @@ type LanguageOption struct {
 }
 
 type PageData struct {
+	LatestNews         []NewsArticle
 	Weather            *WeatherData
 	WebcamImageURL     string
 	SeaTemperature     *float64
@@ -171,12 +172,20 @@ type CurrentMonthSummary struct {
 	LocalRangeEndCanary   string   `json:"local_range_end_canary"`
 }
 
+type MonthOption struct {
+	Year  int
+	Month int
+}
+
 type StatsPageData struct {
 	DailyStats      []WeatherDaily
 	WeeklyStats     []WeatherWeekly
 	MonthlyStats    []WeatherMonthly
 	AnnualStats     []WeatherMonthly
 	SelectedDate    string
+	AvailableMonths []MonthOption
+	SelectedYear    int
+	SelectedMonth   int
 	PageTitle       string
 	StatsSection    string
 	Locale          string

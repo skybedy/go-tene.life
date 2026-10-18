@@ -1,24 +1,26 @@
-<nav class="bg-white/30 backdrop-blur-sm border-b border-gray-300 shadow-sm relative z-50">
+<nav class="bg-slate-50/88 backdrop-blur-sm border-b border-slate-200/80 shadow-sm relative z-50">
     <div class="mx-auto w-full lg:w-11/12 xl:w-5/6 2xl:w-3/4 px-3 sm:px-4 md:px-6 lg:px-8">
         <div class="flex items-center py-4 sm:py-5 md:py-4 min-w-0">
-            <div class="flex-shrink-0 -mt-3 sm:-mt-5.5">
+            <div class="flex-shrink-0 -mt-3">
                 <a href="{{ localeURL .Locale "/" }}" class="inline-flex flex-col items-start">
-                    <img src="/images/tenelife-logo.png" alt="TeneLife Logo" class="h-8 sm:h-10 md:h-12 w-auto">
+                    <img src="/images/tenelife-logo-transparent-v2.png" alt="TeneLife Logo" class="h-8 sm:h-10 md:h-12 w-auto">
                     <span class="mt-[1px] text-[0.52rem] sm:text-[0.64rem] md:text-[0.76rem] font-medium tracking-[0.14em] text-slate-600 whitespace-nowrap">
                         LIFE ON TENERIFE
                     </span>
                 </a>
             </div>
 
-            <div class="hidden lg:flex items-center gap-2 lg:gap-4 ml-6 lg:ml-8">
+            <div class="hidden lg:flex items-center gap-1 xl:gap-2 ml-4">
                 <a href="{{ localeURL .Locale "/" }}"
-                    class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "home" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                    class="px-2 py-2 text-sm font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "home" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                     {{ index .I18n "home" }}
                 </a>
 
+                <a href="/zpravy" class="px-2 py-2 text-sm font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "news" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">Zprávy</a>
+
                 <div class="relative group">
                     <button
-                        class="flex items-center gap-1 px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "statistics" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                        class="flex items-center gap-1 px-2 py-2 text-sm font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "statistics" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                         {{ index .I18n "statistics" }}
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -27,25 +29,45 @@
                     </button>
 
                     <div
-                        class="absolute left-0 mt-1 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
+                        class="absolute left-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
                         <a href="{{ localeURL .Locale "/statistics/daily" }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "daily_statistics" }}</a>
                         <a href="{{ localeURL .Locale "/statistics/weekly" }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "weekly_statistics" }}</a>
                         <a href="{{ localeURL .Locale "/statistics/monthly" }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "monthly_statistics" }}</a>
+                        <a href="{{ localeURL .Locale "/statistics/monthly-daily" }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "monthly_daily_statistics" }}</a>
                         <a href="{{ localeURL .Locale "/statistics/recent" }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "recent_statistics" }}</a>
          </div>
                 </div>
+                <div class="relative group">
+                    <button
+                        class="flex items-center gap-1 px-2 py-2 text-sm font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sea-temperature" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                        {{ index .I18n "atlantic_viz" }}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <div
+                        class="absolute left-0 mt-1 w-48 bg-white rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
+                        <a href="{{ localeURL .Locale "/atlantic-sea-temperature-tenerife" }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "atlantic_tenerife" }}</a>
+                        <a href="{{ localeURL .Locale "/atlantic-sea-temperature-canary-islands" }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">{{ index .I18n "atlantic_canary" }}</a>
+                    </div>
+                </div>
                 <a href="/spanelsko-ceska-slovicka"
-                    class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sounds" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                    class="px-2 py-2 text-sm font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sounds" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                     {{ index .I18n "sounds_nav" }}
                 </a>
             </div>
 
             <div class="ml-auto flex items-center gap-1.5 lg:hidden">
-                {{ if ne .CurrentSection "sounds" }}
+                {{ if and (ne .CurrentSection "sounds") (ne .CurrentSection "news") (ne .CurrentSection "news-admin") }}
                 <div class="relative">
                     <button id="mobileLangToggle" type="button"
                         class="flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-gray-700 hover:bg-white/50 rounded-lg transition whitespace-nowrap"
@@ -57,7 +79,7 @@
                         </svg>
                     </button>
                     <div id="mobileLangMenu"
-                        class="hidden absolute right-0 mt-1 w-36 max-w-[calc(100vw-1rem)] bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 z-50 py-1">
+                        class="hidden absolute right-0 mt-1 w-36 max-w-[calc(100vw-1rem)] bg-white rounded-xl shadow-xl border border-gray-200 z-50 py-1">
                         {{ range .Languages }}
                         <a href="{{ localeURL .Code $.CurrentPath }}"
                             class="flex items-center gap-2 px-3 py-2 text-xs {{ if eq .Code $.Locale }}font-semibold text-blue-700 bg-blue-50/70{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }} transition"><span>{{ languageFlag .Code }}</span><span class="truncate">{{ .Name }}</span></a>
@@ -80,7 +102,7 @@
                 </button>
             </div>
 
-            {{ if ne .CurrentSection "sounds" }}
+            {{ if and (ne .CurrentSection "sounds") (ne .CurrentSection "news") (ne .CurrentSection "news-admin") }}
             <div class="relative group ml-auto hidden lg:block">
                 <button
                     class="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-sm font-medium text-gray-700 hover:bg-white/50 rounded-lg transition whitespace-nowrap">
@@ -93,7 +115,7 @@
                 </button>
 
                 <div
-                    class="absolute right-0 mt-1 w-44 bg-white/90 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
+                    class="absolute right-0 mt-1 w-44 bg-white rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1">
                     {{ range .Languages }}
                     <a href="{{ localeURL .Code $.CurrentPath }}"
                         class="flex items-center gap-2 px-4 py-2 text-sm {{ if eq .Code $.Locale }}font-semibold text-blue-700 bg-blue-50/70{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }} transition"><span>{{ languageFlag .Code }}</span><span>{{ .Name }}</span></a>
@@ -104,7 +126,8 @@
         </div>
 
         <div id="mobileMainMenu" class="lg:hidden hidden pb-3">
-            <div class="bg-white/85 backdrop-blur-md rounded-xl shadow-lg border border-gray-200 p-2 space-y-1">
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-2 space-y-1">
+                <a href="/zpravy" class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "news" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">Zprávy</a>
                 <a href="{{ localeURL .Locale "/" }}"
                     class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "home" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
                     {{ index .I18n "home" }}
@@ -125,6 +148,22 @@
                     class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                     {{ index .I18n "monthly_statistics" }}
                 </a>
+                <a href="{{ localeURL .Locale "/statistics/monthly-daily" }}"
+                    class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                    {{ index .I18n "monthly_daily_statistics" }}
+                </a>
+                <div
+                    class="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide {{ if eq .CurrentSection "sea-temperature" }}text-blue-700{{ else }}text-gray-500{{ end }}">
+                    {{ index .I18n "atlantic_viz" }}
+                </div>
+                <a href="{{ localeURL .Locale "/atlantic-sea-temperature-tenerife" }}"
+                    class="block px-3 py-2 text-sm rounded-lg {{ if eq .CurrentPath "/atlantic-sea-temperature-tenerife" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
+                    {{ index .I18n "atlantic_tenerife" }}
+                </a>
+                <a href="{{ localeURL .Locale "/atlantic-sea-temperature-canary-islands" }}"
+                    class="block px-3 py-2 text-sm rounded-lg {{ if eq .CurrentPath "/atlantic-sea-temperature-canary-islands" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
+                    {{ index .I18n "atlantic_canary" }}
+                </a>
                 <a href="/spanelsko-ceska-slovicka"
                     class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "sounds" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
                     {{ index .I18n "sounds_nav" }}
@@ -143,7 +182,7 @@
         const langToggle = document.getElementById('mobileLangToggle');
         const langMenu = document.getElementById('mobileLangMenu');
 
-        if (!menuToggle || !mainMenu || !iconOpen || !iconClose || !langToggle || !langMenu) {
+        if (!menuToggle || !mainMenu || !iconOpen || !iconClose) {
             return;
         }
 
@@ -155,7 +194,7 @@
             menuToggle.setAttribute('aria-expanded', String(!isOpen));
         });
 
-        langToggle.addEventListener('click', () => {
+        if (langToggle && langMenu) langToggle.addEventListener('click', () => {
             const isOpen = !langMenu.classList.contains('hidden');
             langMenu.classList.toggle('hidden');
             langToggle.setAttribute('aria-expanded', String(!isOpen));

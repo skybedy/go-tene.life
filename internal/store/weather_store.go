@@ -229,6 +229,27 @@ func (s *WeatherStore) GetDailyStatsByRange(startDate, endDate string) ([]models
 	return results, nil
 }
 
+func (s *WeatherStore) GetAvailableMonths() ([]models.MonthOption, error) {
+	var results []models.MonthOption
+	query := `SELECT DISTINCT YEAR(date) AS y, MONTH(date) AS m
+	          FROM weather_daily
+	          ORDER BY y DESC, m DESC`
+	rows, err := s.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var mo models.MonthOption
+		if err := rows.Scan(&mo.Year, &mo.Month); err != nil {
+			return nil, err
+		}
+		results = append(results, mo)
+	}
+	return results, nil
+}
+
 func (s *WeatherStore) GetWeeklyStats() ([]models.WeatherWeekly, error) {
 	var results []models.WeatherWeekly
 	query := `SELECT year, week, week_start, week_end, avg_sea_temperature, avg_temperature, min_temperature, max_temperature, 

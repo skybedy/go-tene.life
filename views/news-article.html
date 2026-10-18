@@ -1,0 +1,12 @@
+{{ define "news-article" }}
+<article class="surface-panel overflow-hidden">
+    {{ if .Article.ImageURL }}<img src="{{ .Article.ImageURL }}" alt="{{ .Article.ImageAlt }}" class="w-full max-h-[32rem] object-cover">{{ end }}
+    <div class="p-5 sm:p-8 md:p-12 max-w-4xl mx-auto">
+        <p class="text-sm text-slate-600 mb-4"><a class="news-link" href="/zpravy?kategorie={{ .Article.Category.Slug }}">{{ .Article.Category.Name }}</a>{{ if .Article.PublishedAt }} · <time datetime="{{ .Article.PublishedISO }}">{{ .Article.PublishedDate }}</time>{{ else }} · Dosud nepublikováno{{ end }}</p>
+        <h1 class="text-3xl sm:text-4xl font-semibold text-slate-900 leading-tight break-words">{{ .Article.Title }}</h1>
+        <p class="text-lg sm:text-xl text-slate-700 mt-6 mb-8 leading-relaxed break-words">{{ .Article.Summary }}</p>
+        <div class="news-body">{{ .BodyHTML }}</div>
+        {{ if .Article.SourceURL }}<p class="mt-8 pt-5 border-t border-slate-200 text-sm text-slate-600">Původní zdroj: <a class="news-link break-words" href="{{ .Article.SourceURL }}" rel="external noopener noreferrer">{{ .Article.SourceName }}</a></p>{{ end }}
+    </div>
+</article>
+{{ end }}

@@ -20,6 +20,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/skybedy/laravel-tene.life/internal/alerts"
 	"github.com/skybedy/laravel-tene.life/internal/i18n"
+	"github.com/skybedy/laravel-tene.life/internal/newsai"
 	"github.com/skybedy/laravel-tene.life/internal/pws"
 	"github.com/skybedy/laravel-tene.life/internal/store"
 	"github.com/skybedy/laravel-tene.life/internal/utils"
@@ -118,6 +119,13 @@ func main() {
 
 	// Initialize Handlers
 	handler := web.NewHandler(weatherStore)
+	newsConfig, err := web.NewsConfigFromEnv()
+	if err != nil {
+		log.Fatal("News configuration: ", err)
+	}
+	newsStore := &store.NewsStore{DB: db}
+	handler.NewsStore = newsStore
+	newsHandler := &web.NewsHandler{Store: newsStore, AI: newsai.NewFromEnv(), Config: newsConfig}
 
 	// Initialize Echo
 	e := echo.New()
@@ -149,8 +157,8 @@ func main() {
 	e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
 		TokenLookup: "form:csrf",
 		Skipper: func(c echo.Context) bool {
-			// API endpoints are consumed by scripts/JS and do not post form tokens.
-			return len(c.Path()) >= 5 && c.Path()[:5] == "/api/"
+			// API endpoints use scripts/JS; news admin has its own scoped CSRF middleware.
+			return strings.HasPrefix(c.Path(), "/api/") || strings.HasPrefix(c.Path(), "/admin/zpravy")
 		},
 	}))
 
@@ -167,6 +175,13 @@ func main() {
 	// We still need to serve local images for other files
 	e.Static("/images", "public/images")
 	e.Static("/files", "public/files")
+	dataStaticDir := "public/data"
+	if _, err := os.Stat(dataStaticDir); err != nil {
+		if _, err2 := os.Stat("../public/data"); err2 == nil {
+			dataStaticDir = "../public/data"
+		}
+	}
+	e.Static("/data", dataStaticDir)
 	e.Static("/spanelsko-ceska-slovicka/files", "public/sounds")
 
 	// Template Renderer using Embed
@@ -241,6 +256,8 @@ func main() {
 
 	e.Renderer = renderer
 
+	newsHandler.Register(e)
+
 	// Routes (default locale: cs)
 	e.GET("/", handler.IndexHandler)
 	e.GET("/webcam/big", handler.WebcamBigHandler)
@@ -248,7 +265,14 @@ func main() {
 		return c.Redirect(http.StatusMovedPermanently, "/spanelsko-ceska-slovicka")
 	})
 	e.GET("/spanelsko-ceska-slovicka", handler.SoundsHandler)
-	e.GET("/teplota-more", handler.SeaTemperatureHandler)
+	e.GET("/atlantic-sea-temperature-tenerife", handler.SeaTemperatureHandler)
+	e.GET("/atlantic-sea-temperature-canary-islands", handler.SeaTemperatureCanaryHandler)
+	e.GET("/teplota-more", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/atlantic-sea-temperature-tenerife")
+	})
+	e.GET("/teplota-more-kanary", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/atlantic-sea-temperature-canary-islands")
+	})
 	e.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/statistics/daily")
 	})
@@ -256,6 +280,7 @@ func main() {
 	e.GET("/statistics/recent", handler.RecentStatisticsHandler)
 	e.GET("/statistics/weekly", handler.WeeklyStatisticsHandler)
 	e.GET("/statistics/monthly", handler.MonthlyStatisticsHandler)
+	e.GET("/statistics/monthly-daily", handler.MonthlyDailyStatisticsHandler)
 	e.GET("/statistics/annual", handler.AnnualStatisticsHandler)
 
 	// Routes with locale prefix: /en, /de, /fr ...
@@ -277,7 +302,14 @@ func main() {
 	localized.GET("/spanelsko-ceska-slovicka", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/spanelsko-ceska-slovicka")
 	})
-	localized.GET("/teplota-more", handler.SeaTemperatureHandler)
+	localized.GET("/atlantic-sea-temperature-tenerife", handler.SeaTemperatureHandler)
+	localized.GET("/atlantic-sea-temperature-canary-islands", handler.SeaTemperatureCanaryHandler)
+	localized.GET("/teplota-more", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/atlantic-sea-temperature-tenerife"))
+	})
+	localized.GET("/teplota-more-kanary", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/atlantic-sea-temperature-canary-islands"))
+	})
 	localized.GET("/statistics", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, i18n.LocaleURL(c.Param("locale"), "/statistics/daily"))
 	})
@@ -285,6 +317,7 @@ func main() {
 	localized.GET("/statistics/recent", handler.RecentStatisticsHandler)
 	localized.GET("/statistics/weekly", handler.WeeklyStatisticsHandler)
 	localized.GET("/statistics/monthly", handler.MonthlyStatisticsHandler)
+	localized.GET("/statistics/monthly-daily", handler.MonthlyDailyStatisticsHandler)
 	localized.GET("/statistics/annual", handler.AnnualStatisticsHandler)
 
 	// API and service routes

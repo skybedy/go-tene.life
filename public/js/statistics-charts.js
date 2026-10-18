@@ -220,11 +220,46 @@ document.addEventListener('DOMContentLoaded', function () {
     } else if (path.includes('/statistics/weekly')) {
         // Implement weekly...
         loadGenericStats('weekly');
+    } else if (path.includes('/statistics/monthly-daily')) {
+        loadMonthlyDailyStats();
     } else if (path.includes('/statistics/monthly')) {
         loadGenericStats('monthly', false);
         loadMonthlySummary();
     } else if (path.includes('/statistics/annual')) {
         loadGenericStats('annual');
+    }
+
+    async function loadMonthlyDailyStats() {
+        if (!charts.temperature) return;
+
+        try {
+            const year = window.statsSelectedYear;
+            const month = window.statsSelectedMonth;
+            const response = await fetch(`/api/weather/monthly-daily?year=${encodeURIComponent(year)}&month=${encodeURIComponent(month)}`);
+            const data = await response.json();
+
+            if (data.labels && data.datasets) {
+                charts.temperature.data.labels = data.labels;
+                charts.temperature.data.datasets[0].data = data.datasets.avg_temperature;
+                charts.temperature.update();
+
+                if (charts.seaTemperature) {
+                    charts.seaTemperature.data.labels = data.labels;
+                    charts.seaTemperature.data.datasets[0].data = data.datasets.sea_temperature;
+                    charts.seaTemperature.update();
+                }
+
+                charts.pressure.data.labels = data.labels;
+                charts.pressure.data.datasets[0].data = data.datasets.avg_pressure;
+                charts.pressure.update();
+
+                charts.humidity.data.labels = data.labels;
+                charts.humidity.data.datasets[0].data = data.datasets.avg_humidity;
+                charts.humidity.update();
+            }
+        } catch (error) {
+            console.error('Error loading monthly daily stats:', error);
+        }
     }
 
     async function loadGenericStats(type, updateCards = true) {

@@ -3,14 +3,14 @@
 
 <!-- Page Content -->
 <main>
-    <div class="mx-auto w-full lg:w-11/12 xl:w-5/6 2xl:w-3/4 p-3 sm:p-4 md:p-6 lg:p-8">
+    <div class="mx-auto w-full lg:w-11/12 xl:w-5/6 2xl:w-3/4 p-3 sm:p-4 md:p-6 lg:p-8 space-y-5 sm:space-y-6 md:space-y-8">
 
 
 
 
         <!-- Celý kamere Box -->
         <div
-            class="relative bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm overflow-hidden border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+            class="surface-panel relative overflow-hidden p-3 sm:p-4 md:p-5 lg:p-6 ring-1 ring-slate-200/70">
 
             <div class="grid">
 
@@ -22,17 +22,19 @@
 
                 <!-- Weather Info Box -->
                 <!-- Vnejsi poloha, odsazeni. atd -->
-                <div class="homepage-weather-strip-wrap col-start-1 row-start-1 self-start justify-self-start p-1 sm:p-2">
+                <div class="homepage-weather-strip-wrap col-start-1 row-start-1 self-start justify-self-start p-1 sm:p-2 max-[299px]:hidden">
                     <!-- Barvy, fonty, atd -->
-                    <div class="homepage-weather-strip grid gap-[2px] sm:gap-[2px] px-[2px] pb-[2px] pt-[2px] sm:px-[2px] sm:pb-[2px] sm:pt-[2px] rounded-md lg:rounded-xl border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm leading-none">
+                    <div class="homepage-weather-strip grid gap-x-px max-[420px]:gap-x-0 min-[480px]:gap-x-[2px] gap-y-px sm:gap-x-[2px] sm:gap-y-px p-0 min-[360px]:p-px max-[420px]:p-0 min-[420px]:p-[2px] min-[480px]:p-3px md:p-2 rounded-md lg:rounded-xl border border-[#46a7e8]/40 bg-[linear-gradient(135deg,rgba(9,52,88,0.78),rgba(4,31,49,0.72))] text-white shadow-[0_10px_30px_rgba(0,24,45,0.34)] backdrop-blur-sm leading-none">
                         
                             <!-- NOVÉ SLOUPCE (První řádek) -->
 
                             <!-- Spojené aktualizace pro Vzduch, Tlak a Vlhkost (Zabírá sloupce 1 a 2) -->
                             <div class="glass-tile col-start-1 col-span-2 row-start-1 h-full grid place-items-center p-0.5 rounded-sm text-center">
                                 <div class="weather-first-row-text font-bold uppercase">
-                                    <span class="text-cyan-200">{{ .FormattedDateSmall }}</span>
-                                    <span class="text-white/90"> | {{ .FormattedTime }}</span>
+                                    <span class="inline-flex items-center gap-[3px]">
+                                        <span class="text-cyan-200">{{ .FormattedDateSmall }}</span>
+                                        <span class="text-white/90">{{ .FormattedTime }}</span>
+                                    </span>
                                 </div>
                             </div>
 
@@ -44,11 +46,15 @@
                             <!-- 2. sloupec: pod Moře (1 sloupec na všech velikostech) -->
                             <div class="glass-tile col-start-4 col-span-1 row-start-1 h-full grid place-items-center p-0.5 rounded-sm text-center">
                                 <div class="weather-first-row-text min-[375px]:hidden text-cyan-200 font-bold uppercase">
-                                    <span class="text-cyan-200">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</span><span class="text-white/90">|{{ if .SeaTemperatureTime }}{{ .SeaTemperatureTime }}{{ else }}--{{ end }}</span>
+                                    <span class="inline-flex items-center gap-[3px]">
+                                        <span class="text-cyan-200">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</span><span class="text-white/90">{{ if .SeaTemperatureTime }}{{ .SeaTemperatureTime }}{{ else }}--{{ end }}</span>
+                                    </span>
                                 </div>
-                                <div class="weather-first-row-text hidden min-[375px]:block px-[1px] sm:px-[2px] text-cyan-200 font-bold uppercase">
-                                    <span class="text-cyan-200">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</span>
-                                    <span class="text-white/90"> | {{ if .SeaTemperatureTime }}{{ .SeaTemperatureTime }}{{ else }}--{{ end }}</span>
+                                <div class="weather-first-row-text sea-updated-line hidden min-[375px]:block px-[1px] sm:px-[2px] text-cyan-200 font-bold uppercase whitespace-nowrap max-[434px]:tracking-tight">
+                                    <span class="inline-flex items-center gap-[3px] whitespace-nowrap">
+                                        <span class="shrink-0 text-cyan-200">{{ if .SeaTemperatureDate }}{{ .SeaTemperatureDate }}{{ else }}--{{ end }}</span>
+                                        <span class="shrink-0 text-white/90">{{ if .SeaTemperatureTime }}{{ .SeaTemperatureTime }}{{ else }}--{{ end }}</span>
+                                    </span>
                                 </div>
                             </div>
 
@@ -60,7 +66,7 @@
                             <!-- Teplota -->
                             <div class="glass-tile row-span-2 col-start-1 row-start-2 text-center">
                                 <div class="weather-box-heading font-bold text-amber-200 uppercase mb-1.5">{{ index .I18n "weatherbox_air" }}</div>
-                                <div class="mt-auto mb-[13px] flex flex-col items-center">
+                                <div class="mt-auto mb-[4px] min-[481px]:mb-[13px] flex flex-col items-center">
                                     <div class="weather-main-value text-cyan-200 font-semibold mb-0.5">{{ if .Weather }}{{ printf "%.1f" .Weather.Temperature }}{{ else }}--{{ end }}</div>
                                     <div class="weather-main-value text-white/90 font-light">°C</div>
                                 </div>
@@ -110,7 +116,7 @@
                             <!-- Sea  temperature-->
                             <div class="glass-tile row-span-2 col-start-4 row-start-2 text-center flex flex-col justify-start items-center">
                                 <div class="weather-box-heading font-bold text-amber-200 uppercase mb-1.5">{{ index .I18n "weatherbox_sea" }}</div>
-                                <div class="mt-auto mb-[13px] flex flex-col items-center">
+                                <div class="mt-auto mb-[4px] min-[481px]:mb-[13px] flex flex-col items-center">
                                     <div class="weather-main-value text-cyan-200 font-semibold mb-0.5">{{ if .SeaTemperature }}{{ printf "%.1f" .SeaTemperatureVal }}{{ else }}--{{ end }}</div>
                                     <div class="weather-main-value text-white/90 font-light">°C</div>
                                 </div>
@@ -143,26 +149,38 @@
                                                        <!-- Příliv -->
                             <div class="glass-tile row-span-2 col-start-5 row-start-2 text-center flex flex-col justify-start items-center">
                                
-                                <div class="weather-box-heading font-bold text-amber-200 uppercase mb-0.5">
+                                <div class="weather-box-heading font-bold text-amber-200 uppercase mb-px">
                                     {{ index .I18n "tide_high" }}
                                 </div>
                                
-                                <div class="flex w-full flex-col items-center gap-0.5">
-                                    {{ if .TideHighEvents }}
-                                        {{ $lenHigh := len .TideHighEvents }}
-                                            {{ range $i, $event := .TideHighEvents }}
-                                                <div class="flex flex-col items-center gap-1">
+                                {{ if .TideHighEvents }}
+                                    {{ $lenHigh := len .TideHighEvents }}
+                                    {{ if eq $lenHigh 1 }}
+                                        <div class="flex w-full flex-1 max-[420px]:flex-none flex-col justify-center max-[420px]:justify-start items-center gap-0.5">
+                                            {{ range .TideHighEvents }}
+                                                <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
                                                     <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
-                                                    <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
+                                                    <div class="weather-tide-value text-white/90 font-semibold max-[420px]:hidden">{{ .Height }}</div>
+                                                </div>
+                                            {{ end }}
+                                            <div class="weather-tide-value text-white/30 italic hidden max-[420px]:block">--</div>
+                                        </div>
+                                    {{ else }}
+                                        <div class="flex w-full flex-col items-center gap-0.5">
+                                            {{ range $i, $event := .TideHighEvents }}
+                                                <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
+                                                    <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
+                                                    <div class="weather-tide-value text-white/90 font-semibold max-[420px]:hidden">{{ .Height }}</div>
                                                 </div>
                                                 {{ if and (eq $lenHigh 2) (eq $i 0) }}
                                                     <hr class="w-3/4 mx-auto my-px border-t border-white/50">
                                                 {{ end }}
-                                        {{ end }}
-                                    {{ else }}
-                                        <div class="weather-tide-value text-white/30 italic">--</div>
+                                            {{ end }}
+                                        </div>
                                     {{ end }}
-                                </div>
+                                {{ else }}
+                                    <div class="weather-tide-value text-white/30 italic">--</div>
+                                {{ end }}
                             </div>
 
                        
@@ -174,22 +192,34 @@
                                     {{ index .I18n "tide_low" }}
                                 </div>
                                
-                                <div class="flex w-full flex-col items-center gap-0.5">
-                                    {{ if .TideLowEvents }}
-                                        {{ $lenLow := len .TideLowEvents }}
-                                            {{ range $i, $event := .TideLowEvents }}
-                                                <div class="flex flex-col items-center gap-1">
+                                {{ if .TideLowEvents }}
+                                    {{ $lenLow := len .TideLowEvents }}
+                                    {{ if eq $lenLow 1 }}
+                                        <div class="flex w-full flex-1 max-[420px]:flex-none flex-col justify-center max-[420px]:justify-start items-center gap-0.5">
+                                            {{ range .TideLowEvents }}
+                                                <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
                                                     <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
-                                                    <div class="weather-tide-value text-white/90 font-semibold">{{ .Height }}</div>
+                                                    <div class="weather-tide-value text-white/90 font-semibold max-[420px]:hidden">{{ .Height }}</div>
+                                                </div>
+                                            {{ end }}
+                                            <div class="weather-tide-value text-white/30 italic hidden max-[420px]:block">--</div>
+                                        </div>
+                                    {{ else }}
+                                        <div class="flex w-full flex-col items-center gap-0.5">
+                                            {{ range $i, $event := .TideLowEvents }}
+                                                <div class="flex flex-col items-center gap-0.5 min-[481px]:gap-1">
+                                                    <div class="weather-tide-value text-cyan-200 font-bold">{{ .Time }}</div>
+                                                    <div class="weather-tide-value text-white/90 font-semibold max-[420px]:hidden">{{ .Height }}</div>
                                                 </div>
                                                 {{ if and (eq $lenLow 2) (eq $i 0) }}
                                                     <hr class="w-3/4 mx-auto my-px border-t border-white/50">
                                                 {{ end }}
-                                        {{ end }}
-                                    {{ else }}
-                                        <div class="weather-tide-value text-white/30 italic">--</div>
+                                            {{ end }}
+                                        </div>
                                     {{ end }}
-                                </div>
+                                {{ else }}
+                                    <div class="weather-tide-value text-white/30 italic">--</div>
+                                {{ end }}
                             </div>
 
                     </div>
@@ -197,16 +227,16 @@
 
             </div>
 
-            <div class="absolute right-5 bottom-5 sm:right-6 sm:top-6 sm:bottom-auto md:right-7 md:top-7 lg:right-8 lg:top-8 z-20 rounded-md border border-cyan-200/8 bg-[linear-gradient(135deg,rgba(12,24,45,0.66),rgba(8,54,77,0.58))]/60 p-0.5 text-white shadow-[0_10px_30px_rgba(0,0,0,0.2)] backdrop-blur-sm transition-all duration-300">
+            <div class="webcam-enlarge-shell absolute right-5 bottom-5 sm:right-6 sm:top-6 sm:bottom-auto md:right-7 md:top-7 lg:right-8 lg:top-8 z-20 rounded-lg lg:rounded-xl border border-[#46a7e8]/40 p-0 min-[360px]:p-px min-[420px]:p-[2px] min-[480px]:p-[3px] md:p-2 text-white shadow-[0_10px_30px_rgba(0,24,45,0.34)] backdrop-blur-sm transition-all duration-300">
                 <a href="{{ localeURL .Locale "/webcam/big" }}"
-                    class="glass-button"
+                    class="glass-button webcam-enlarge-button max-[480px]:px-2 max-[480px]:py-1 max-[480px]:gap-1"
                     title="{{ index .I18n "webcam_big_title" }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7" fill="none" viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 min-[481px]:h-4 min-[481px]:w-4 sm:h-5 sm:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2.25">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <span class="text-[0.5rem] sm:text-[0.65rem] md:text-xs xl:text-sm uppercase tracking-wider">{{ index .I18n "enlarge_image" }}</span>
+                    <span class="text-[0.38rem] min-[481px]:text-[0.5rem] sm:text-[0.65rem] md:text-xs xl:text-sm uppercase tracking-wider max-[480px]:tracking-[0.04em]">{{ index .I18n "enlarge_image" }}</span>
                 </a>
             </div>
 
@@ -217,39 +247,39 @@
         <!-- Celý kamere Box KOnec -->
 
 
-        <div class="py-3 sm:py-4 md:py-5 lg:py-6">
-            <h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 text-gray-800">
+        <div class="surface-panel p-4 sm:p-5 md:p-6 lg:p-7">
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3 text-gray-900">
                 {{ index .I18n "webcam_title" }}</h1>
-            <div class="space-y-2 sm:space-y-2.5 md:space-y-3">
+            <div class="space-y-3 sm:space-y-3.5 md:space-y-4">
                 <div>
-                    <h2 class="text-xs sm:text-sm md:text-base font-semibold text-gray-700 mb-1">{{ index .I18n
+                    <h2 class="text-sm sm:text-base font-semibold text-gray-800 mb-1">{{ index .I18n
                         "location_heading" }}</h2>
-                    <p class="text-gray-600 text-[0.65rem] sm:text-xs md:text-sm lg:text-base leading-relaxed">
+                    <p class="text-gray-700 text-xs sm:text-sm md:text-base leading-relaxed">
                         {{ index .I18n "location_description" }}
                     </p>
                 </div>
                 <div>
-                    <h2 class="text-xs sm:text-sm md:text-base font-semibold text-gray-700 mb-1">{{ index .I18n
+                    <h2 class="text-sm sm:text-base font-semibold text-gray-800 mb-1">{{ index .I18n
                         "weather_source_heading" }}</h2>
-                    <p class="text-gray-600 text-[0.65rem] sm:text-xs md:text-sm lg:text-base leading-relaxed">
+                    <p class="text-gray-700 text-xs sm:text-sm md:text-base leading-relaxed">
                         {{ index .I18n "weather_source_description" }}
                     </p>
                     <p
-                        class="text-gray-600 text-[0.65rem] sm:text-xs md:text-sm lg:text-base leading-relaxed font-black mt-2">
+                        class="text-gray-700 text-xs sm:text-sm md:text-base leading-relaxed font-semibold mt-2">
                         {{ index .I18n "hobby_disclaimer" }}
                     </p>
                 </div>
             </div>
         </div>
-    <div class="mt-4 sm:mt-6 md:mt-8">
-        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-4 sm:p-5 md:p-6 lg:p-7">
-            <h2 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
+    <div>
+        <div class="surface-panel p-4 sm:p-5 md:p-6 lg:p-7">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                 {{ index .I18n "tenerife_temperatures" }}
             </h2>
-            <p class="text-gray-600 text-xs sm:text-sm md:text-base mb-3 sm:mb-4">
+            <p class="text-gray-700 text-sm md:text-base mb-3 sm:mb-4">
                 {{ index .I18n "pws_map_subtitle" }}
             </p>
-            <p id="pwsLastUpdate" class="text-gray-700 text-xs sm:text-sm mb-3 sm:mb-4">
+            <p id="pwsLastUpdate" class="text-gray-700 text-sm mb-3 sm:mb-4">
                 {{ index .I18n "pws_last_update" }}: -
             </p>
 
@@ -258,11 +288,11 @@
         </div>
     </div>
 
-    <div class="mt-4 sm:mt-6 md:mt-8 mb-8">
-        <p class="px-1 sm:px-2 text-gray-800 text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-3">{{ index .I18n
+    <div class="mb-8">
+        <p class="px-1 sm:px-2 text-gray-900 text-lg sm:text-xl md:text-2xl font-bold mb-3">{{ index .I18n
             "hourly_values_for" }} {{ todayDate }}</p>
-        <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">{{ index .I18n "table_overview" }}</h2>
-        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 overflow-hidden">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3 px-1">{{ index .I18n "table_overview" }}</h2>
+        <div class="surface-panel overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-center text-xs sm:text-sm">
                     <thead class="bg-gray-50/50 border-b border-gray-300 text-gray-700 uppercase">
@@ -285,10 +315,10 @@
     </div>
 
     <!-- Weather Charts Section -->
-    <div class="space-y-3 sm:space-y-4">
-        <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">{{ index .I18n "charts_heading" }}</h2>
+    <div class="space-y-3 sm:space-y-4 border-t border-slate-300/60 pt-4 sm:pt-5">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3 px-1">{{ index .I18n "charts_heading" }}</h2>
         <!-- Temperature Chart -->
-        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+        <div class="surface-panel p-3 sm:p-4 md:p-5 lg:p-6">
             <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n
                 "temperature_chart" }}</h2>
             <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
@@ -297,7 +327,7 @@
         </div>
 
         <!-- Pressure Chart -->
-        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+        <div class="surface-panel p-3 sm:p-4 md:p-5 lg:p-6">
             <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n
                 "pressure_chart" }}</h2>
             <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
@@ -306,7 +336,7 @@
         </div>
 
         <!-- Humidity Chart -->
-        <div class="bg-white/30 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-300 p-3 sm:p-4 md:p-5 lg:p-6">
+        <div class="surface-panel p-3 sm:p-4 md:p-5 lg:p-6">
             <h2 class="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">{{ index .I18n
                 "humidity_chart" }}</h2>
             <div class="relative h-40 sm:h-48 md:h-56 lg:h-64">
@@ -315,6 +345,10 @@
         </div>
     </div>
 
+        <section aria-label="Zprávy z Tenerife" lang="cs" class="space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-3"><h2 class="text-2xl font-semibold text-slate-900">Zprávy z Tenerife</h2><a class="news-link" href="/zpravy">Všechny zprávy →</a></div>
+            {{ if .LatestNews }}{{ template "news-cards" .LatestNews }}{{ else }}<p class="text-slate-600">První zprávy pro vás připravujeme.</p>{{ end }}
+        </section>
     </div>
 </main>
 
