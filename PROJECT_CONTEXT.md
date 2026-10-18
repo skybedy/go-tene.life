@@ -65,6 +65,7 @@
 - Produkční deployment běží ručně na VPS skriptem `deploy.sh`: aktualizuje aktuální větev z GitHubu, sestaví Tailwind a Go binárku `tenelife-app`, odstraní zdrojové soubory a následně vyžaduje `sudo systemctl restart tenelife`. Databázové migrace skript nespouští.
 - V homepage weather boxu proběhl swap barev (to, co bylo `text-white/90`, je nyní `text-orange-300`; původní `text-orange-300` je nyní `text-white/90`).
 - Homepage hodinová tabulka má jednotky v hlavičkách sloupců (`°C`, `hPa`, `%`) a hodnoty v buňkách bez jednotek, se zarovnáním na střed.
+- Homepage weather info box má do šířky 640 px výrazně průhlednější panel i dlaždice, aby na malých displejích zůstala viditelná fotografie webkamery; větší breakpointy zachovávají tmavý vzhled.
 - Tabulky na homepage, `/statistics/daily`, `/statistics/weekly`, `/statistics/monthly` a `/statistics/recent` používají sjednocený monthly styl: centrované buňky, jednotky v hlavičkách, `text-xs sm:text-sm`, `px-3 py-3` a střídavé podbarvení řádků.
 - Horní tři souhrnné karty na `/statistics/recent` používají stejný formát a typografii jako souhrnné karty na `/statistics/daily`.
 - `/statistics/recent` má doplněnou čtvrtou souhrnnou kartu pro průměrnou teplotu moře z dostupných hodnot `datasets.sea_temperature`.

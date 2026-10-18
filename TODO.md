@@ -31,6 +31,7 @@
 - Vizuálně ověřit desktop/mobil navigaci po přidání nové položky a podmenu (zalomení kolem `lg` breakpointu).
 - Vizuálně ověřit lokalizované texty na obou stránkách teploty moře a ve viewer chybových hláškách.
 - Vizuálně ověřit nový tmavě modrý styl homepage weather boxu a tlačítka „Zvětšit fotku“ na mobilu i desktopu (mezery, rámečky, kontrast, zaoblení).
+- Vizuálně ověřit čitelnost textu a viditelnost fotografie pod průhlednějším weather info boxem při šířkách do 640 px.
 - Po nasazení vizuálně ověřit redesign homepage z původní experimentální větve na mobilu i desktopu.
 
 ## Možné budoucí úpravy

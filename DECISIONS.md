@@ -104,3 +104,6 @@
 - AI je volitelný redakční asistent, nikoli publikační automat. Server volá OpenAI Responses API se Structured Outputs, `store: false`, pevným schématem a promptem verzovaným v kódu. Model je konfigurovatelný přes `OPENAI_NEWS_MODEL`; výchozí `gpt-6.1-sol` vyvažuje kvalitu a cenu. Vstup pochází výhradně z textu vloženého redaktorem, bez automatického stahování URL. Výstup se lokálně validuje, pouze vyplní formulář a nový článek zůstane konceptem.
 - Slug se navrhuje normalizací diakritiky. Od první publikace je neměnný a datum první publikace se uchovává při stažení. Unikátní index a kontrola revize zabraňují kolizím URL a přepsání souběžné úpravy.
 - Veřejné dotazy jednotně vyžadují published a datum publikace nejvýše aktuální UTC. Stejná podmínka platí pro homepage, detail, další zprávy a sitemap. Canonical/OG používají konfigurovaný SITE_URL, nikoli nedůvěryhodný Host požadavku. JSON-LD se vytváří encoding/json s escapováním HTML.
+
+27. Homepage weather info box používá do šířky 640 px výrazně průhlednější pozadí panelu i jednotlivých dlaždic; od větších šířek zůstává původní tmavý vzhled.
+- Důvod: na malém displeji panel zabírá velkou část webkamery a téměř neprůhledné dlaždice zakrývaly fotografii.
