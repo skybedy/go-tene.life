@@ -111,5 +111,5 @@
 28. Hlavní stylesheet se v HTML odkazuje s query verzí odvozenou z krátkého SHA-256 otisku vestavěného `app.css`.
 - Důvod: každá změna CSS automaticky vytvoří novou URL a zabrání mobilním prohlížečům používat starý styl bez nutnosti ručně čistit cache.
 
-29. Sloupce přílivu a odlivu mají nadpis ukotvený nahoře a společnou pružnou oblast, která vertikálně centruje jednu i dvě události; čas a výška se zobrazují na všech šířkách.
-- Důvod: počet denních extrémů se mění a jejich údaje nesmí být nalepené k horní hraně ani na mobilu přicházet o výšku moře.
+29. Sloupce přílivu a odlivu mají nadpis ukotvený nahoře a společnou pružnou oblast, která vertikálně centruje jednu i dvě události; čas a výška se zobrazují na všech šířkách a nezalamují se. Do 420 px se sloupec moře mírně zužuje ve prospěch obou přílivových sloupců.
+- Důvod: počet denních extrémů se mění a jejich údaje nesmí být nalepené k horní hraně, na mobilu přicházet o výšku moře ani zalamovat jednotku `m` na samostatný řádek.

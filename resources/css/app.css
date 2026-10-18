@@ -105,6 +105,7 @@
 
     .weather-tide-value {
         font-size: 0.52rem;
+        white-space: nowrap;
     }
 
     .homepage-weather-strip-wrap {
@@ -594,7 +595,7 @@
 
     @media (max-width: 420px) {
         .homepage-weather-strip {
-            grid-template-columns: 1fr 1fr 1fr 1.3fr 0.85fr 0.85fr;
+            grid-template-columns: 1fr 1fr 1fr 1.1fr 0.95fr 0.95fr;
         }
 
         .homepage-weather-strip .glass-tile {
