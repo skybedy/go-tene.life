@@ -9,7 +9,6 @@
 
 ## K doplnění
 
-- Doplnit stručný popis produkčního deploy postupu (pokud se používá).
 - Upřesnit provozní režim schedulerů kolektorů v produkci (jen in-app vs. kombinace s cron).
 - Doplnit mapu API endpointů do samostatné dokumentace (pokud chybí).
 
@@ -17,7 +16,7 @@
 
 - Vizuálně ověřit nový `/statistics/monthly-daily` (select měsíce, tabulka po dnech, grafy) na mobilu i desktopu, ve všech jazykových verzích.
 - Ověřit, zda je `README.md` plně aktuální vůči současným routám a stránkám.
-- Ověřit aktuální CI/CD postup (zatím nezjištěno).
+- Ověřit, zda ruční produkční deploy přes `deploy.sh` nemá být nahrazen bezpečnějším release/CI postupem.
 - Ověřit kontrolní SQL dotazy z `docs/sql/water_temperatures_migration_checks.sql` po backfillu.
 - Ověřit vizuálně weather box na mobilu i desktopu po swapu barev (kontrast, čitelnost).
 - Vizuálně ověřit na `/statistics/daily` chování teploty moře po restartu aplikace: `Dnes HH:MM` pro dnešní měření a fallback na poslední dostupné datum+čas, pokud dnešní záznam chybí.
@@ -32,7 +31,7 @@
 - Vizuálně ověřit desktop/mobil navigaci po přidání nové položky a podmenu (zalomení kolem `lg` breakpointu).
 - Vizuálně ověřit lokalizované texty na obou stránkách teploty moře a ve viewer chybových hláškách.
 - Vizuálně ověřit nový tmavě modrý styl homepage weather boxu a tlačítka „Zvětšit fotku“ na mobilu i desktopu (mezery, rámečky, kontrast, zaoblení).
-- V experimentální branchi `experiment/jack-dorsey-redesign` vizuálně porovnat `before/after` screenshot homepage a rozhodnout, které změny ponechat pro merge do hlavní větve.
+- Po nasazení vizuálně ověřit redesign homepage z původní experimentální větve na mobilu i desktopu.
 
 ## Možné budoucí úpravy
 
@@ -44,8 +43,6 @@
 - Copernicus viewer: nahradit dočasné demo snímky reálnými SST framy.
 
 ## Zprávy z Tenerife (2026-10-09)
-
-- Další práci na zprávách vést ve větvi `codex/tenelife-news-mvp`.
 
 - Dokončeno: databázová vrstva a migrace 0012, veřejné stránky, kategorie, stránkování, administrace, náhled, publikace/stažení, navigace, homepage, OG/SEO/NewsArticle, sitemap a testy.
 - Dokončeno: Markdown editor s formátovací lištou a bezpečným serverovým náhledem; volitelný AI asistent generující všechna redakční pole jako neuložený koncept přes strukturovanou odpověď OpenAI.

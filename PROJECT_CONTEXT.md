@@ -8,7 +8,7 @@
 ## Aktuální stav
 
 - Typ: rozpracovaný existující projekt.
-- Git: implementace zpráv je rozpracovaná ve větvi `codex/tenelife-news-mvp`, vytvořené z `experiment/jack-dorsey-redesign`; změny zatím nejsou commitované.
+- Git: redesign homepage, stránka denních statistik po měsících a MVP zpráv jsou sloučené do `main`.
 - Všechna slovíčka (lekce 1–26 i velké soubory 1–250, 251–500) mají vygenerované časované segmenty v `public/sounds/index.json`.
 
 ## Technologie
@@ -62,7 +62,7 @@
 
 - `node_modules/` je přítomné v projektu.
 - V `data/` jsou cache JSON soubory používané kolektory.
-- Konkrétní deployment workflow je zatím nezjištěno (k doplnění).
+- Produkční deployment běží ručně na VPS skriptem `deploy.sh`: aktualizuje aktuální větev z GitHubu, sestaví Tailwind a Go binárku `tenelife-app`, odstraní zdrojové soubory a následně vyžaduje `sudo systemctl restart tenelife`. Databázové migrace skript nespouští.
 - V homepage weather boxu proběhl swap barev (to, co bylo `text-white/90`, je nyní `text-orange-300`; původní `text-orange-300` je nyní `text-white/90`).
 - Homepage hodinová tabulka má jednotky v hlavičkách sloupců (`°C`, `hPa`, `%`) a hodnoty v buňkách bez jednotek, se zarovnáním na střed.
 - Tabulky na homepage, `/statistics/daily`, `/statistics/weekly`, `/statistics/monthly` a `/statistics/recent` používají sjednocený monthly styl: centrované buňky, jednotky v hlavičkách, `text-xs sm:text-sm`, `px-3 py-3` a střídavé podbarvení řádků.
@@ -79,8 +79,8 @@
 - 2026-05-10: V navigaci je nová položka s podmenu „Vizualizace teplot Atlantiku“ (`Tenerife`, `Kanárské ostrovy`) v desktop i mobilní variantě.
 - 2026-05-10: Texty a UI pro obě stránky teploty moře (včetně hlášek vieweru v JS) jsou lokalizované pro všechny podporované jazyky (`cs`, `en`, `es`, `pl`, `de`, `fr`, `it`, `hu`).
 - 2026-05-10: Homepage weather info box má upravený tmavě modrý vizuální styl podle dodané reference. Stejný rám, pozadí a vnější padding používá i tlačítko „Zvětšit fotku“; tlačítko má bílé písmo/ikonu.
-- 2026-05-12: Na experimentální branchi `experiment/jack-dorsey-redesign` proběhl UX/UI experiment homepage: sjednocení panelových kontejnerů (`surface-panel`) a jemné navýšení čitelnosti weather overlaye (větší typografie a vyšší první řádek gridu).
-- 2026-05-12: V experimentální branchi byla navigace přepojena na `public/images/tenelife-logo-transparent-v2.png`, protože původní `tenelife-logo.png` obsahuje neprůhledné pozadí `rgb(243,244,246)`.
+- 2026-05-12: UX/UI redesign homepage sjednotil panelové kontejnery (`surface-panel`) a jemně navýšil čitelnost weather overlaye (větší typografie a vyšší první řádek gridu).
+- 2026-05-12: Navigace byla přepojena na `public/images/tenelife-logo-transparent-v2.png`, protože původní `tenelife-logo.png` obsahuje neprůhledné pozadí `rgb(243,244,246)`.
 - 2026-06-28: Přidána nová stránka `/statistics/monthly-daily` („Dny v měsíci“) v navigaci statistik vedle Denní/Týdenní/Měsíční/Posledních 10 dní. Zobrazuje denní rozpis vybraného měsíce ve stylu tabulky `/statistics/recent`. Výběr měsíce je `<select>` naplněný dynamicky podle reálně existujících dat (`SELECT DISTINCT YEAR(date), MONTH(date) FROM weather_daily`), takže obsahuje jen měsíce od listopadu 2025 dál. Pokud aktuální měsíc ještě nemá data, automaticky se vybere nejnovější dostupný měsíc. Nový handler `MonthlyDailyStatisticsHandler` a store metoda `GetAvailableMonths()`; grafy znovu používají existující API `/api/weather/monthly-daily?year=&month=`.
 
 - 2026-10-09: Implementováno MVP českých zpráv: `/zpravy`, `/zpravy/:slug`, `/admin/zpravy`, `/sitemap.xml`, `/robots.txt`. Sdílí Echo, MySQL pool, Go šablony a Tailwind; homepage zobrazuje poslední 3 publikované zprávy. Kategorie a články přidává nedestruktivní up migrace `0012_news`.
@@ -92,3 +92,4 @@
 - Při sestavení čerstvé testovací DB zjištěn existující problém migrace 0006: po 0005 koliduje název FK `pws_latest_station_ref_id_fk`; migrace navíc očekává starší sloupec `station_id`. Netýká se přechodu 0011 → 0012; řešení starší migrace je samostatný úkol.
 - Na čerstvém schématu má také migrace 0007 duplicitní `avg_sea_temperature` (již existuje v 0001). Lokální smoke test aplikace proto použil ekvivalentní schéma bez opakování 0006/0007; nová 0012 byla provedena a otestována samostatně.
 - Závěrečné ověření: `go test -race ./...` včetně DB testu, `go vet ./...`, Go build a Tailwind build prošly. Přes HTTP proti izolované DB prošel celý cyklus náhled → koncept → publikace → stažení → potvrzené smazání i načtení stávajících stránek. Vizuální kontrola zůstává neověřená (žádný dostupný prohlížeč v nástroji).
+- 2026-10-18: Větev `experiment/jack-dorsey-redesign` byla včetně MVP zpráv sloučena do `main`.

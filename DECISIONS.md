@@ -94,7 +94,7 @@
 
 ## Zprávy z Tenerife (2026-10-09)
 
-- Implementace zpráv je oddělena do větve `codex/tenelife-news-mvp` ze současného základu `experiment/jack-dorsey-redesign`.
+- Implementace zpráv vznikla nad redesignem homepage a 2026-10-18 byla spolu s větví `experiment/jack-dorsey-redesign` sloučena do `main`.
 
 - Zprávy sdílejí Echo, databázový pool, Go html/template a Tailwind. Nové tabulky `news_categories` a `news_articles` přidává migrace 0012 bez zásahu do existujících tabulek.
 - MVP je česky bez jazykových kopií článků. Navigace všech jazyků odkazuje na `/zpravy`; na zprávách se jazykový přepínač nezobrazuje.
