@@ -105,8 +105,8 @@
 - Slug se navrhuje normalizací diakritiky. Od první publikace je neměnný a datum první publikace se uchovává při stažení. Unikátní index a kontrola revize zabraňují kolizím URL a přepsání souběžné úpravy.
 - Veřejné dotazy jednotně vyžadují published a datum publikace nejvýše aktuální UTC. Stejná podmínka platí pro homepage, detail, další zprávy a sitemap. Canonical/OG používají konfigurovaný SITE_URL, nikoli nedůvěryhodný Host požadavku. JSON-LD se vytváří encoding/json s escapováním HTML.
 
-27. Homepage weather info box i tlačítko „Zvětšit fotku“ používají do šířky 640 px shodnou hierarchii průhledného skla: tmavší zadní obal a světlejší vnitřní dlaždice/tlačítko. Od větších šířek zůstává původní tmavý vzhled a budoucí vizuální změny obou prvků se provádějí společně.
-- Důvod: na malém displeji oba prvky překrývají webkameru, proto musí jednotně zachovat viditelnost fotografie a působit jako jedna vizuální soustava.
+27. Homepage weather info box i tlačítko „Zvětšit fotku“ používají do šířky 640 px zcela průhledný zadní layoutový obal bez rámečku, stínu a backdrop blur; jemně tónované zůstávají pouze vnitřní dlaždice/tlačítko. Od větších šířek zůstává původní tmavý vzhled a budoucí vizuální změny obou prvků se provádějí společně.
+- Důvod: na malém displeji oba prvky překrývají webkameru, proto jejich obaly nesmějí fotografii vizuálně zakrývat, ale layoutové kontejnery musí zůstat zachované.
 
 28. Hlavní stylesheet se v HTML odkazuje s query verzí odvozenou z krátkého SHA-256 otisku vestavěného `app.css`.
 - Důvod: každá změna CSS automaticky vytvoří novou URL a zabrání mobilním prohlížečům používat starý styl bez nutnosti ručně čistit cache.
