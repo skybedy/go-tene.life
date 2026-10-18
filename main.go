@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/sha256"
 	"database/sql"
 	"embed"
 	"fmt"
@@ -168,6 +169,13 @@ func main() {
 
 	// Static Files from Embed
 	publicFS, _ := fs.Sub(staticFS, "public")
+	cssVersion := "dev"
+	if cssBytes, err := fs.ReadFile(publicFS, "css/app.css"); err != nil {
+		log.Printf("could not fingerprint embedded CSS: %v", err)
+	} else {
+		cssDigest := sha256.Sum256(cssBytes)
+		cssVersion = fmt.Sprintf("%x", cssDigest[:6])
+	}
 	e.StaticFS("/js", echo.MustSubFS(publicFS, "js"))
 	e.StaticFS("/css", echo.MustSubFS(publicFS, "css"))
 	e.FileFS("/images/tenelife-logo.png", "images/tenelife-logo.png", publicFS)
@@ -187,6 +195,7 @@ func main() {
 	// Template Renderer using Embed
 	renderer := &web.TemplateRenderer{
 		Templates: template.Must(template.New("").Funcs(template.FuncMap{
+			"cssVersion":          func() string { return cssVersion },
 			"localeURL":           i18n.LocaleURL,
 			"monthName":           i18n.MonthName,
 			"languageFlag":        i18n.LanguageFlag,

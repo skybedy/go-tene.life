@@ -77,7 +77,11 @@ func newsTestServer(t *testing.T) (*echo.Echo, *fakeNews) {
 func newsTestServerWithAI(t *testing.T, ai ArticleAI) (*echo.Echo, *fakeNews) {
 	t.Helper()
 	e := echo.New()
-	templates := template.New("").Funcs(template.FuncMap{"localeURL": i18n.LocaleURL, "languageFlag": i18n.LanguageFlag})
+	templates := template.New("").Funcs(template.FuncMap{
+		"cssVersion":   func() string { return "test-css" },
+		"localeURL":    i18n.LocaleURL,
+		"languageFlag": i18n.LanguageFlag,
+	})
 	templates, err := templates.ParseGlob("../../views/news-*.html")
 	if err != nil {
 		t.Fatal(err)
@@ -109,6 +113,9 @@ func TestNewsPublicRenderingAndSEO(t *testing.T) {
 		body := rec.Body.String()
 		if strings.Contains(body, "<script>alert(1)</script>") {
 			t.Fatalf("XSS in %s", path)
+		}
+		if strings.HasPrefix(path, "/zpravy") && !strings.Contains(body, `/css/app.css?v=test-css`) {
+			t.Fatalf("versioned CSS URL missing in %s", path)
 		}
 		if path == "/zpravy?kategorie=doprava&page=2" && (f.offset != 12 || !f.public || !strings.Contains(body, "kategorie=doprava")) {
 			t.Fatal("pagination/filter lost")

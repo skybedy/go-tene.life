@@ -107,3 +107,6 @@
 
 27. Homepage weather info box používá do šířky 640 px výrazně průhlednější pozadí panelu i jednotlivých dlaždic; od větších šířek zůstává původní tmavý vzhled.
 - Důvod: na malém displeji panel zabírá velkou část webkamery a téměř neprůhledné dlaždice zakrývaly fotografii.
+
+28. Hlavní stylesheet se v HTML odkazuje s query verzí odvozenou z krátkého SHA-256 otisku vestavěného `app.css`.
+- Důvod: každá změna CSS automaticky vytvoří novou URL a zabrání mobilním prohlížečům používat starý styl bez nutnosti ručně čistit cache.

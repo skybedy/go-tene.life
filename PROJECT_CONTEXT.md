@@ -18,6 +18,7 @@
 - Konfigurace: `.env` přes `github.com/joho/godotenv`.
 - Frontend: server-side HTML šablony (`views/`) + Vanilla JS (`public/js`).
 - Styling: Tailwind CSS 4 (`@tailwindcss/cli`), zdroj `resources/css/app.css`, výstup `public/css/app.css`.
+- URL hlavního CSS obsahuje automatický krátký SHA-256 otisk vestavěného `app.css`; po změně CSS se tedy změní URL a prohlížeče nepoužijí zastaralou cache.
 - Migrace: SQL migrace v `migrations/` přes `golang-migrate` (Makefile).
 - Sea temperature redesign (active): nové měření jde do `water_temperatures` (timestamp + hodnota), legacy sloupec `weather_daily.sea_temperature` je určen k odstranění migrací `0011`.
 - Backfill pravidlo: historické hodnoty z `weather_daily.sea_temperature` se mapují na čas `10:00:00` (UTC) jako default pro legacy denní záznamy.
