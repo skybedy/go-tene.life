@@ -88,4 +88,5 @@
 
 - Při sestavení čerstvé testovací DB byl zjištěn existující problém migrace 0006: po 0005 koliduje název FK `pws_latest_station_ref_id_fk`; migrace navíc očekává starší sloupec `station_id`.
 - Na čerstvém schématu má migrace 0007 duplicitní `avg_sea_temperature`, který už existuje v 0001.
-- 2026-10-23: Nedokončené MVP zpráv bylo z této produkční větve kompletně odstraněno; jeho další vývoj patří do samostatné vývojové větve.
+- 2026-10-23: Nedokončené MVP zpráv bylo z `main` odstraněno commitem `66ac05f`. Kompletní rozpracovaná implementace je zachovaná lokálně i na GitHubu ve větvi `codex/tenelife-news-mvp` na commitu `b630512` (`Add Tenerife news publishing MVP`).
+- Při návratu ke zprávám nevycházet ze současného stromu `main` naslepo: založit novou pracovní větev z aktuálního `main` a řízeně znovu aplikovat změny z `b630512`, protože `main` obsahuje pozdější commit, který tuto funkcionalitu odstranil.

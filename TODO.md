@@ -47,4 +47,4 @@
 - Copernicus viewer: doplnit archiv měsíců (výběr období) a produkční data exportovaná z Meteodata.
 - Copernicus viewer: nahradit dočasné demo snímky reálnými SST framy.
 
-- Zprávy z Tenerife dál rozpracovávat pouze v samostatné vývojové větvi; do produkční větve je vrátit až po výslovném schválení připravenosti.
+- Zprávy z Tenerife jsou zachované ve větvi `codex/tenelife-news-mvp` na commitu `b630512`. Dál je rozpracovávat pouze v samostatné vývojové větvi a do produkčního `main` je vrátit až po výslovném schválení připravenosti.

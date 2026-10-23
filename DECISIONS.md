@@ -101,5 +101,5 @@
 29. Sloupce přílivu a odlivu mají nadpis ukotvený nahoře a společnou pružnou oblast, která vertikálně centruje jednu i dvě události; čas a výška se zobrazují na všech šířkách a nezalamují se. Do 420 px se sloupec moře mírně zužuje ve prospěch obou přílivových sloupců.
 - Důvod: počet denních extrémů se mění a jejich údaje nesmí být nalepené k horní hraně, na mobilu přicházet o výšku moře ani zalamovat jednotku `m` na samostatný řádek.
 
-30. Nedokončené MVP zpráv zůstává mimo produkční větev a bude se dál vyvíjet pouze v samostatné vývojové větvi.
-- Důvod: veřejné stránky, navigace, administrační část ani databázová migrace zatím nejsou schválené pro produkční provoz.
+30. Nedokončené MVP zpráv zůstává mimo produkční `main` a je uchované ve větvi `codex/tenelife-news-mvp` na commitu `b630512`; z `main` bylo odstraněno commitem `66ac05f`.
+- Důvod: veřejné stránky, navigace, administrační část ani databázová migrace zatím nejsou schválené pro produkční provoz. Při obnovení práce je potřeba vyjít z aktuálního `main` a změny ze zachovaného commitu aplikovat v nové pracovní větvi.
