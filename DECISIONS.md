@@ -92,19 +92,6 @@
 26. Select výběru měsíce na `/statistics/monthly-daily` se plní dynamicky podle reálně existujících dat (`SELECT DISTINCT YEAR(date), MONTH(date) FROM weather_daily`), ne pevným rozsahem od listopadu 2025.
 - Důvod: uživatelský požadavek na přesnost — měření začala v listopadu 2025, ale pevný rozsah by mohl nabízet i měsíce bez dat; dynamický dotaz se samočinně přizpůsobí, pokud se historie dat rozšíří nebo budou mezery.
 
-## Zprávy z Tenerife (2026-10-09)
-
-- Implementace zpráv vznikla nad redesignem homepage a 2026-10-18 byla spolu s větví `experiment/jack-dorsey-redesign` sloučena do `main`.
-
-- Zprávy sdílejí Echo, databázový pool, Go html/template a Tailwind. Nové tabulky `news_categories` a `news_articles` přidává migrace 0012 bez zásahu do existujících tabulek.
-- MVP je česky bez jazykových kopií článků. Navigace všech jazyků odkazuje na `/zpravy`; na zprávách se jazykový přepínač nezobrazuje.
-- Pro jediného redaktora používáme Basic Auth s bcrypt hashem z konfigurace a HTTPS za Nginx. Nevzniká systém uživatelů ani session databáze. Administrace je bez konfigurace nepřístupná, chráněná CSRF, limitem autentizace, no-store a noindex.
-- Pomocný generátor redakčního hesla přijímá pro současné interní použití minimálně 6 bajtů, maximálně 72 bajtů podle limitu bcrypt; hash používá cost 12. Ochrana proti opakovaným pokusům zůstává aktivní.
-- Obsah článku se ukládá jako Markdown. Formátovací lišta vkládá pouze běžnou syntaxi a náhled používá tentýž Goldmark renderer jako detail. `html.WithUnsafe` není zapnuté, takže raw HTML a nebezpečná URL se nevykreslí. Obrázky se připojují URL; upload není součástí této verze.
-- AI je volitelný redakční asistent, nikoli publikační automat. Server volá OpenAI Responses API se Structured Outputs, `store: false`, pevným schématem a promptem verzovaným v kódu. Model je konfigurovatelný přes `OPENAI_NEWS_MODEL`; výchozí `gpt-6.1-sol` vyvažuje kvalitu a cenu. Vstup pochází výhradně z textu vloženého redaktorem, bez automatického stahování URL. Výstup se lokálně validuje, pouze vyplní formulář a nový článek zůstane konceptem.
-- Slug se navrhuje normalizací diakritiky. Od první publikace je neměnný a datum první publikace se uchovává při stažení. Unikátní index a kontrola revize zabraňují kolizím URL a přepsání souběžné úpravy.
-- Veřejné dotazy jednotně vyžadují published a datum publikace nejvýše aktuální UTC. Stejná podmínka platí pro homepage, detail, další zprávy a sitemap. Canonical/OG používají konfigurovaný SITE_URL, nikoli nedůvěryhodný Host požadavku. JSON-LD se vytváří encoding/json s escapováním HTML.
-
 27. Homepage weather info box i tlačítko „Zvětšit fotku“ používají do šířky 640 px zcela průhledný zadní layoutový obal bez rámečku, stínu a backdrop blur; jemně tónované zůstávají pouze vnitřní dlaždice/tlačítko. Od větších šířek zůstává původní tmavý vzhled a budoucí vizuální změny obou prvků se provádějí společně.
 - Důvod: na malém displeji oba prvky překrývají webkameru, proto jejich obaly nesmějí fotografii vizuálně zakrývat, ale layoutové kontejnery musí zůstat zachované.
 
@@ -113,3 +100,6 @@
 
 29. Sloupce přílivu a odlivu mají nadpis ukotvený nahoře a společnou pružnou oblast, která vertikálně centruje jednu i dvě události; čas a výška se zobrazují na všech šířkách a nezalamují se. Do 420 px se sloupec moře mírně zužuje ve prospěch obou přílivových sloupců.
 - Důvod: počet denních extrémů se mění a jejich údaje nesmí být nalepené k horní hraně, na mobilu přicházet o výšku moře ani zalamovat jednotku `m` na samostatný řádek.
+
+30. Nedokončené MVP zpráv zůstává mimo produkční větev a bude se dál vyvíjet pouze v samostatné vývojové větvi.
+- Důvod: veřejné stránky, navigace, administrační část ani databázová migrace zatím nejsou schválené pro produkční provoz.

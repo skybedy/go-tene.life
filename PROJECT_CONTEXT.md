@@ -8,7 +8,7 @@
 ## Aktuální stav
 
 - Typ: rozpracovaný existující projekt.
-- Git: redesign homepage, stránka denních statistik po měsících a MVP zpráv jsou sloučené do `main`.
+- Git: redesign homepage a stránka denních statistik po měsících jsou sloučené do `main`; nedokončené MVP zpráv bylo z produkční větve odstraněno.
 - Všechna slovíčka (lekce 1–26 i velké soubory 1–250, 251–500) mají vygenerované časované segmenty v `public/sounds/index.json`.
 
 ## Technologie
@@ -86,13 +86,6 @@
 - 2026-05-12: Navigace byla přepojena na `public/images/tenelife-logo-transparent-v2.png`, protože původní `tenelife-logo.png` obsahuje neprůhledné pozadí `rgb(243,244,246)`.
 - 2026-06-28: Přidána nová stránka `/statistics/monthly-daily` („Dny v měsíci“) v navigaci statistik vedle Denní/Týdenní/Měsíční/Posledních 10 dní. Zobrazuje denní rozpis vybraného měsíce ve stylu tabulky `/statistics/recent`. Výběr měsíce je `<select>` naplněný dynamicky podle reálně existujících dat (`SELECT DISTINCT YEAR(date), MONTH(date) FROM weather_daily`), takže obsahuje jen měsíce od listopadu 2025 dál. Pokud aktuální měsíc ještě nemá data, automaticky se vybere nejnovější dostupný měsíc. Nový handler `MonthlyDailyStatisticsHandler` a store metoda `GetAvailableMonths()`; grafy znovu používají existující API `/api/weather/monthly-daily?year=&month=`.
 
-- 2026-10-09: Implementováno MVP českých zpráv: `/zpravy`, `/zpravy/:slug`, `/admin/zpravy`, `/sitemap.xml`, `/robots.txt`. Sdílí Echo, MySQL pool, Go šablony a Tailwind; homepage zobrazuje poslední 3 publikované zprávy. Kategorie a články přidává nedestruktivní up migrace `0012_news`.
-- Redakce používá jeden účet (`NEWS_ADMIN_USERNAME`, bcrypt `NEWS_ADMIN_PASSWORD_HASH`), helper `go run ./cmd/news-password`, Basic Auth za HTTPS, omezení přihlášení a CSRF. Obě prázdné hodnoty administraci vypnou. `SITE_URL` řídí canonical a absolutní OG URL.
-- Helper pro redakční heslo přijímá 6–72 bajtů a vytváří bcrypt hash s costem 12; administrace dále omezuje frekvenci pokusů o přihlášení.
-- Editor používá bezpečně renderovaný Markdown s lištou pro běžné formátování, náhled bez zápisu, koncept/publikaci/stažení a potvrzené mazání. Raw HTML a nebezpečné odkazy Goldmark nevykreslí. První publikace uzamkne slug a datum; revize chrání před přepsáním souběžné změny. Obrázky se zadávají URL (HTTPS nebo `/images/…`), soubory se nahrávají mimo editor.
-- Volitelný AI asistent v administraci používá serverově OpenAI Responses API se Structured Outputs. Z vložených podkladů připraví titulek, perex, Markdown obsah, kategorii, slug a SEO pole; nic automaticky neukládá ani nepublikuje. Konfigurace: `OPENAI_API_KEY`, volitelně `OPENAI_NEWS_MODEL` (výchozí `gpt-6.1-sol`). Podklady se neposílají nikam, pokud redaktor nestiskne tlačítko generování.
-- Integrační testy na izolované MariaDB 10.11 ověřily migraci 0012, publikaci/stažení, trvalý slug, konflikty, filtrování, stránkování a rollback. `NEWS_TEST_DSN` umožňuje opakování; bez proměnné se DB test přeskočí. Žádné migrace nebyly aplikovány na existující databázi.
-- Při sestavení čerstvé testovací DB zjištěn existující problém migrace 0006: po 0005 koliduje název FK `pws_latest_station_ref_id_fk`; migrace navíc očekává starší sloupec `station_id`. Netýká se přechodu 0011 → 0012; řešení starší migrace je samostatný úkol.
-- Na čerstvém schématu má také migrace 0007 duplicitní `avg_sea_temperature` (již existuje v 0001). Lokální smoke test aplikace proto použil ekvivalentní schéma bez opakování 0006/0007; nová 0012 byla provedena a otestována samostatně.
-- Závěrečné ověření: `go test -race ./...` včetně DB testu, `go vet ./...`, Go build a Tailwind build prošly. Přes HTTP proti izolované DB prošel celý cyklus náhled → koncept → publikace → stažení → potvrzené smazání i načtení stávajících stránek. Vizuální kontrola zůstává neověřená (žádný dostupný prohlížeč v nástroji).
-- 2026-10-18: Větev `experiment/jack-dorsey-redesign` byla včetně MVP zpráv sloučena do `main`.
+- Při sestavení čerstvé testovací DB byl zjištěn existující problém migrace 0006: po 0005 koliduje název FK `pws_latest_station_ref_id_fk`; migrace navíc očekává starší sloupec `station_id`.
+- Na čerstvém schématu má migrace 0007 duplicitní `avg_sea_temperature`, který už existuje v 0001.
+- 2026-10-23: Nedokončené MVP zpráv bylo z této produkční větve kompletně odstraněno; jeho další vývoj patří do samostatné vývojové větve.

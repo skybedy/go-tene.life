@@ -10,17 +10,15 @@
                 </a>
             </div>
 
-            <div class="hidden lg:flex items-center gap-1 xl:gap-2 ml-4">
+            <div class="hidden lg:flex items-center gap-1 xl:gap-4 ml-4 xl:ml-8">
                 <a href="{{ localeURL .Locale "/" }}"
-                    class="px-2 py-2 text-sm font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "home" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                    class="px-2 xl:px-4 py-2 text-sm xl:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "home" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                     {{ index .I18n "home" }}
                 </a>
 
-                <a href="/zpravy" class="px-2 py-2 text-sm font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "news" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">Zprávy</a>
-
                 <div class="relative group">
                     <button
-                        class="flex items-center gap-1 px-2 py-2 text-sm font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "statistics" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                        class="flex items-center gap-1 px-2 xl:px-4 py-2 text-sm xl:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "statistics" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                         {{ index .I18n "statistics" }}
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -44,7 +42,7 @@
                 </div>
                 <div class="relative group">
                     <button
-                        class="flex items-center gap-1 px-2 py-2 text-sm font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sea-temperature" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                        class="flex items-center gap-1 px-2 xl:px-4 py-2 text-sm xl:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sea-temperature" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                         {{ index .I18n "atlantic_viz" }}
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -61,13 +59,13 @@
                     </div>
                 </div>
                 <a href="/spanelsko-ceska-slovicka"
-                    class="px-2 py-2 text-sm font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sounds" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
+                    class="px-2 xl:px-4 py-2 text-sm xl:text-base font-medium rounded-lg hover:bg-white/50 transition whitespace-nowrap {{ if eq .CurrentSection "sounds" }}bg-white/50 text-gray-900{{ else }}text-gray-600{{ end }}">
                     {{ index .I18n "sounds_nav" }}
                 </a>
             </div>
 
             <div class="ml-auto flex items-center gap-1.5 lg:hidden">
-                {{ if and (ne .CurrentSection "sounds") (ne .CurrentSection "news") (ne .CurrentSection "news-admin") }}
+                {{ if ne .CurrentSection "sounds" }}
                 <div class="relative">
                     <button id="mobileLangToggle" type="button"
                         class="flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-gray-700 hover:bg-white/50 rounded-lg transition whitespace-nowrap"
@@ -102,7 +100,7 @@
                 </button>
             </div>
 
-            {{ if and (ne .CurrentSection "sounds") (ne .CurrentSection "news") (ne .CurrentSection "news-admin") }}
+            {{ if ne .CurrentSection "sounds" }}
             <div class="relative group ml-auto hidden lg:block">
                 <button
                     class="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-sm font-medium text-gray-700 hover:bg-white/50 rounded-lg transition whitespace-nowrap">
@@ -127,7 +125,6 @@
 
         <div id="mobileMainMenu" class="lg:hidden hidden pb-3">
             <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-2 space-y-1">
-                <a href="/zpravy" class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "news" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">Zprávy</a>
                 <a href="{{ localeURL .Locale "/" }}"
                     class="block px-3 py-2 text-sm font-medium rounded-lg {{ if eq .CurrentSection "home" }}bg-blue-50 text-blue-700{{ else }}text-gray-700 hover:bg-blue-50 hover:text-blue-600{{ end }}">
                     {{ index .I18n "home" }}
@@ -182,7 +179,7 @@
         const langToggle = document.getElementById('mobileLangToggle');
         const langMenu = document.getElementById('mobileLangMenu');
 
-        if (!menuToggle || !mainMenu || !iconOpen || !iconClose) {
+        if (!menuToggle || !mainMenu || !iconOpen || !iconClose || !langToggle || !langMenu) {
             return;
         }
 
@@ -194,7 +191,7 @@
             menuToggle.setAttribute('aria-expanded', String(!isOpen));
         });
 
-        if (langToggle && langMenu) langToggle.addEventListener('click', () => {
+        langToggle.addEventListener('click', () => {
             const isOpen = !langMenu.classList.contains('hidden');
             langMenu.classList.toggle('hidden');
             langToggle.setAttribute('aria-expanded', String(!isOpen));
