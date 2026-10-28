@@ -92,8 +92,8 @@
 26. Select výběru měsíce na `/statistics/monthly-daily` se plní dynamicky podle reálně existujících dat (`SELECT DISTINCT YEAR(date), MONTH(date) FROM weather_daily`), ne pevným rozsahem od listopadu 2025.
 - Důvod: uživatelský požadavek na přesnost — měření začala v listopadu 2025, ale pevný rozsah by mohl nabízet i měsíce bez dat; dynamický dotaz se samočinně přizpůsobí, pokud se historie dat rozšíří nebo budou mezery.
 
-27. Homepage weather info box i tlačítko „Zvětšit fotku“ používají do šířky 640 px zcela průhledný zadní layoutový obal bez rámečku, stínu a backdrop blur; jemně tónované zůstávají pouze vnitřní dlaždice/tlačítko. Od větších šířek zůstává původní tmavý vzhled a budoucí vizuální změny obou prvků se provádějí společně.
-- Důvod: na malém displeji oba prvky překrývají webkameru, proto jejich obaly nesmějí fotografii vizuálně zakrývat, ale layoutové kontejnery musí zůstat zachované.
+27. Homepage weather info box používá na všech šířkách lehce tónovaný hlavní podklad bez rámečku, stínu a backdrop blur; vnitřní dlaždice jsou tónované desetiprocentně. Tlačítko „Zvětšit fotku“ má průhledný vnější obal a tónované samotné tlačítko. Budoucí vizuální změny obou prvků se posuzují společně.
+- Důvod: lehký jednotný vzhled na mobilu i desktopu nechává fotografii webkamery viditelnou, zatímco mírný podklad drží informační box pohromadě a zvyšuje čitelnost bez změny responzivního rozložení.
 
 28. Hlavní stylesheet se v HTML odkazuje s query verzí odvozenou z krátkého SHA-256 otisku vestavěného `app.css`.
 - Důvod: každá změna CSS automaticky vytvoří novou URL a zabrání mobilním prohlížečům používat starý styl bez nutnosti ručně čistit cache.

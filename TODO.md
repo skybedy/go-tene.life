@@ -7,6 +7,7 @@
 - Po ověření přepnout klienty ingestu na posílání `measured_at` (datum+čas) pro ruční teplotu moře.
 - Dokončeno: Statistiky s agregacemi moře (`weekly/monthly`) používají hodnoty dopočítané z `water_temperatures` přes weather processor a agregační tabulky.
 - Dokončeno: Časy přílivu z Open-Meteo se převádějí z UTC do `Atlantic/Canary` včetně regresního testu přechodu na zimní čas.
+- Dokončeno v experimentální větvi: desktopový weather info box používá stejný lehký vzhled jako mobil s mírně tónovaným hlavním podkladem; tlačítko „Zvětšit fotku“ má průhledný vnější obal. Lokálně ověřeno při 1440×1000 a 390×844.
 
 ## K doplnění
 
@@ -31,8 +32,8 @@
   včetně locale prefix variant (`/en/...`, `/es/...`, ...).
 - Vizuálně ověřit desktop/mobil navigaci po přidání nové položky a podmenu (zalomení kolem `lg` breakpointu).
 - Vizuálně ověřit lokalizované texty na obou stránkách teploty moře a ve viewer chybových hláškách.
-- Vizuálně ověřit nový tmavě modrý styl homepage weather boxu a tlačítka „Zvětšit fotku“ na mobilu i desktopu (mezery, rámečky, kontrast, zaoblení).
-- Vizuálně ověřit čitelnost textu a viditelnost fotografie pod sladěným průhledným weather info boxem a tlačítkem „Zvětšit fotku“ při šířkách do 640 px.
+- Po případném nasazení experimentální větve vizuálně ověřit průhledný homepage weather box a tlačítko „Zvětšit fotku“ na mobilu i desktopu (mezery, rámečky, kontrast, zaoblení).
+- Po případném nasazení experimentální větve ověřit čitelnost textu a viditelnost fotografie pod sladěným průhledným weather info boxem a tlačítkem „Zvětšit fotku“ na všech šířkách.
 - Po nasazení ověřit na mobilu, že URL `/css/app.css?v=…` dostala nový otisk a nový vzhled se načte bez ručního vymazání cache.
 - Vizuálně ověřit vertikální centrování přílivu a odlivu pro dny s jednou i dvěma událostmi, včetně času a výšky na úzkém mobilu.
 - Po nasazení vizuálně ověřit redesign homepage z původní experimentální větve na mobilu i desktopu.
