@@ -6,6 +6,7 @@
 - Dokončeno: Zpracování všech lekcí i velkých audio souborů (1–250, 251–500) do časovaných segmentů.
 - Po ověření přepnout klienty ingestu na posílání `measured_at` (datum+čas) pro ruční teplotu moře.
 - Dokončeno: Statistiky s agregacemi moře (`weekly/monthly`) používají hodnoty dopočítané z `water_temperatures` přes weather processor a agregační tabulky.
+- Dokončeno: Časy přílivu z Open-Meteo se převádějí z UTC do `Atlantic/Canary` včetně regresního testu přechodu na zimní čas.
 
 ## K doplnění
 

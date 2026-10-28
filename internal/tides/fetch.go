@@ -22,6 +22,13 @@ type ExtremeEvent struct {
 
 type ExtremeFetcher func(ctx context.Context, date time.Time, loc LocationConfig) ([]ExtremeEvent, string, error)
 
+type openMeteoPayload struct {
+	Minutely15 struct {
+		Time   []string  `json:"time"`
+		Height []float64 `json:"sea_level_height_msl"`
+	} `json:"minutely_15"`
+}
+
 func FetchPuertosExtremes(ctx context.Context, date time.Time, loc LocationConfig) ([]ExtremeEvent, string, error) {
 	stationID := loc.PuertosStationID
 	if raw := strings.TrimSpace(os.Getenv("PUERTOS_TIDE_STATION_ID")); raw != "" {
@@ -47,7 +54,7 @@ func FetchPuertosExtremes(ctx context.Context, date time.Time, loc LocationConfi
 		return nil, "", err
 	}
 	startLocal := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, locTZ)
-	endLocal := startLocal.Add(24*time.Hour - time.Minute)
+	endLocal := startLocal.AddDate(0, 0, 1).Add(-time.Minute)
 
 	u := url.URL{
 		Scheme: "https",
@@ -96,6 +103,15 @@ func FetchPuertosExtremes(ctx context.Context, date time.Time, loc LocationConfi
 }
 
 func FetchOpenMeteoExtremes(ctx context.Context, date time.Time, loc LocationConfig) ([]ExtremeEvent, string, error) {
+	locTZ, err := time.LoadLocation(loc.Timezone)
+	if err != nil {
+		return nil, "", err
+	}
+	startLocal := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, locTZ)
+	endLocal := startLocal.AddDate(0, 0, 1)
+	startUTCDate := startLocal.UTC().Format("2006-01-02")
+	endUTCDate := endLocal.Add(-time.Nanosecond).UTC().Format("2006-01-02")
+
 	u := url.URL{
 		Scheme: "https",
 		Host:   "marine-api.open-meteo.com",
@@ -105,10 +121,11 @@ func FetchOpenMeteoExtremes(ctx context.Context, date time.Time, loc LocationCon
 	q.Set("latitude", strconv.FormatFloat(loc.Lat, 'f', 6, 64))
 	q.Set("longitude", strconv.FormatFloat(loc.Lon, 'f', 6, 64))
 	q.Set("minutely_15", "sea_level_height_msl")
-	q.Set("timezone", loc.Timezone)
-	day := date.Format("2006-01-02")
-	q.Set("start_date", day)
-	q.Set("end_date", day)
+	// Open-Meteo applies one fixed UTC offset to the whole response. Request UTC
+	// and convert every timestamp ourselves so DST transition days stay correct.
+	q.Set("timezone", "UTC")
+	q.Set("start_date", startUTCDate)
+	q.Set("end_date", endUTCDate)
 	u.RawQuery = q.Encode()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
@@ -127,12 +144,7 @@ func FetchOpenMeteoExtremes(ctx context.Context, date time.Time, loc LocationCon
 		return nil, "", fmt.Errorf("open-meteo status %d", resp.StatusCode)
 	}
 
-	var payload struct {
-		Minutely15 struct {
-			Time   []string  `json:"time"`
-			Height []float64 `json:"sea_level_height_msl"`
-		} `json:"minutely_15"`
-	}
+	var payload openMeteoPayload
 	if err := json.NewDecoder(resp.Body).Decode(&payload); err != nil {
 		return nil, "", err
 	}
@@ -142,25 +154,38 @@ func FetchOpenMeteoExtremes(ctx context.Context, date time.Time, loc LocationCon
 		return nil, string(raw), fmt.Errorf("open-meteo payload missing minutely_15 sea level data")
 	}
 
-	locTZ, err := time.LoadLocation(loc.Timezone)
+	events, err := parseOpenMeteoUTCEvents(payload, startLocal, endLocal)
 	if err != nil {
 		return nil, string(raw), err
 	}
-
-	series := make([]seriesPoint, 0, len(payload.Minutely15.Time))
-	for i := range payload.Minutely15.Time {
-		ts, err := time.ParseInLocation("2006-01-02T15:04", payload.Minutely15.Time[i], locTZ)
-		if err != nil {
-			return nil, string(raw), fmt.Errorf("open-meteo time parse: %w", err)
-		}
-		series = append(series, seriesPoint{Time: ts, Height: payload.Minutely15.Height[i]})
-	}
-
-	events := detectExtremes(series)
 	if len(events) == 0 {
 		return nil, string(raw), fmt.Errorf("no open-meteo extremes found")
 	}
 	return events, string(raw), nil
+}
+
+func parseOpenMeteoUTCEvents(payload openMeteoPayload, startLocal, endLocal time.Time) ([]ExtremeEvent, error) {
+	series := make([]seriesPoint, 0, len(payload.Minutely15.Time))
+	for i := range payload.Minutely15.Time {
+		tsUTC, err := time.Parse("2006-01-02T15:04", payload.Minutely15.Time[i])
+		if err != nil {
+			return nil, fmt.Errorf("open-meteo UTC time parse: %w", err)
+		}
+		series = append(series, seriesPoint{
+			Time:   tsUTC.In(startLocal.Location()),
+			Height: payload.Minutely15.Height[i],
+		})
+	}
+
+	allEvents := detectExtremes(series)
+	events := make([]ExtremeEvent, 0, len(allEvents))
+	for _, event := range allEvents {
+		if event.TimeLocal.Before(startLocal) || !event.TimeLocal.Before(endLocal) {
+			continue
+		}
+		events = append(events, event)
+	}
+	return events, nil
 }
 
 type seriesPoint struct {

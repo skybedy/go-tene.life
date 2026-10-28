@@ -103,3 +103,6 @@
 
 30. Nedokončené MVP zpráv zůstává mimo produkční `main` a je uchované ve větvi `codex/tenelife-news-mvp` na commitu `b630512`; z `main` bylo odstraněno commitem `66ac05f`.
 - Důvod: veřejné stránky, navigace, administrační část ani databázová migrace zatím nejsou schválené pro produkční provoz. Při obnovení práce je potřeba vyjít z aktuálního `main` a změny ze zachovaného commitu aplikovat v nové pracovní větvi.
+
+31. Open-Meteo přílivová časová řada se požaduje v UTC a jednotlivé časové body se v aplikaci převádějí do `Atlantic/Canary`; rozsah dotazu pokrývá celý místní kalendářní den.
+- Důvod: Open-Meteo používá pro odpověď jeden pevný UTC posun, což na dni změny letního času posunulo část událostí o hodinu. Převod každého UTC okamžiku přes databázi časových pásem správně zpracuje 23hodinové i 25hodinové dny.

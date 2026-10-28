@@ -68,6 +68,7 @@
 - Homepage hodinová tabulka má jednotky v hlavičkách sloupců (`°C`, `hPa`, `%`) a hodnoty v buňkách bez jednotek, se zarovnáním na střed.
 - Homepage weather info box a tlačítko „Zvětšit fotku“ mají do šířky 640 px zcela průhledný zadní layoutový obal bez rámečku, stínu a rozmazání; viditelné zůstávají jen jemně tónované vnitřní dlaždice/tlačítko, aby fotografie webkamery nebyla zakrytá. Větší breakpointy zachovávají tmavý vzhled. Další vizuální změny informačního boxu se mají vždy současně promítnout i do tlačítka.
 - Sloupce přílivu a odlivu drží nadpis nahoře a ve zbývající výšce vertikálně centrují jednu nebo dvě události; každá událost vždy zobrazuje čas i výšku moře. Do 420 px dostávají více prostoru na úkor sloupce moře a hodnoty se nezalamují.
+- Přílivová data z Open-Meteo se načítají v UTC a každý čas se převádí do `Atlantic/Canary`; přechodové dny letního/zimního času se vymezují místním kalendářním dnem přes `AddDate`, takže mohou mít 23 nebo 25 hodin.
 - Tabulky na homepage, `/statistics/daily`, `/statistics/weekly`, `/statistics/monthly` a `/statistics/recent` používají sjednocený monthly styl: centrované buňky, jednotky v hlavičkách, `text-xs sm:text-sm`, `px-3 py-3` a střídavé podbarvení řádků.
 - Horní tři souhrnné karty na `/statistics/recent` používají stejný formát a typografii jako souhrnné karty na `/statistics/daily`.
 - `/statistics/recent` má doplněnou čtvrtou souhrnnou kartu pro průměrnou teplotu moře z dostupných hodnot `datasets.sea_temperature`.
