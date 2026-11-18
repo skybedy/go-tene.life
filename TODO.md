@@ -7,6 +7,7 @@
 - Po ověření přepnout klienty ingestu na posílání `measured_at` (datum+čas) pro ruční teplotu moře.
 - Dokončeno: Statistiky s agregacemi moře (`weekly/monthly`) používají hodnoty dopočítané z `water_temperatures` přes weather processor a agregační tabulky.
 - Dokončeno: Časy přílivu z Open-Meteo se převádějí z UTC do `Atlantic/Canary` včetně regresního testu přechodu na zimní čas.
+- Dokončeno: Homepage omezuje příliv i odliv samostatně na nejvýše dvě zobrazené události, včetně regresního testu pro tři události stejného typu.
 - Dokončeno v experimentální větvi: desktopový weather info box používá stejný lehký vzhled jako mobil s mírně tónovaným hlavním podkladem; tlačítko „Zvětšit fotku“ má průhledný vnější obal. Lokálně ověřeno při 1440×1000 a 390×844.
 
 ## K doplnění

@@ -106,3 +106,6 @@
 
 31. Open-Meteo přílivová časová řada se požaduje v UTC a jednotlivé časové body se v aplikaci převádějí do `Atlantic/Canary`; rozsah dotazu pokrývá celý místní kalendářní den.
 - Důvod: Open-Meteo používá pro odpověď jeden pevný UTC posun, což na dni změny letního času posunulo část událostí o hodinu. Převod každého UTC okamžiku přes databázi časových pásem správně zpracuje 23hodinové i 25hodinové dny.
+
+32. Titulní weather box zobrazuje maximálně první dva přílivy a první dva odlivy; úplná sada událostí zůstává zachovaná v databázi a tide API.
+- Důvod: třetí událost stejného typu se do pevné výšky dlaždice nevejde a rozbíjí rozložení titulní stránky, zatímco ostatní konzumenti mohou potřebovat kompletní data.
