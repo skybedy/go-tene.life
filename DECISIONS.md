@@ -109,3 +109,6 @@
 
 32. Titulní weather box zobrazuje maximálně první dva přílivy a první dva odlivy; úplná sada událostí zůstává zachovaná v databázi a tide API.
 - Důvod: třetí událost stejného typu se do pevné výšky dlaždice nevejde a rozbíjí rozložení titulní stránky, zatímco ostatní konzumenti mohou potřebovat kompletní data.
+
+33. Sousední body přílivové řady se shodnou výškou (v toleranci 1 mm) se při hledání extrémů posuzují jako jeden plochý úsek; čas skutečného plochého extrému se bere z prostředního bodu úseku.
+- Důvod: Open-Meteo vrací výšku zaokrouhlenou na centimetry. Původní porovnávání každého bodu zvlášť označilo rovný schod uvnitř pokračujícího poklesu jako falešný příliv pouhých 15 minut před odlivem.

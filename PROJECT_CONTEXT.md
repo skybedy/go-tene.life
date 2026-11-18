@@ -70,6 +70,7 @@
 - Sloupce přílivu a odlivu drží nadpis nahoře a ve zbývající výšce vertikálně centrují jednu nebo dvě události; každá událost vždy zobrazuje čas i výšku moře. Do 420 px dostávají více prostoru na úkor sloupce moře a hodnoty se nezalamují.
 - Homepage zobrazuje nejvýše první dva přílivy a první dva odlivy daného dne; případné třetí události zůstávají v uložených datech a API, ale do omezeného weather boxu se neposílají.
 - Přílivová data z Open-Meteo se načítají v UTC a každý čas se převádí do `Atlantic/Canary`; přechodové dny letního/zimního času se vymezují místním kalendářním dnem přes `AddDate`, takže mohou mít 23 nebo 25 hodin.
+- Detekce přílivových extrémů vyhodnocuje sousední body se stejnou zaokrouhlenou výškou jako jeden plochý úsek. Plochý mezikrok v pokračujícím růstu nebo poklesu se proto nevydává za falešný příliv či odliv; skutečný plochý vrchol/dno používá prostřední čas úseku.
 - Tabulky na homepage, `/statistics/daily`, `/statistics/weekly`, `/statistics/monthly` a `/statistics/recent` používají sjednocený monthly styl: centrované buňky, jednotky v hlavičkách, `text-xs sm:text-sm`, `px-3 py-3` a střídavé podbarvení řádků.
 - Horní tři souhrnné karty na `/statistics/recent` používají stejný formát a typografii jako souhrnné karty na `/statistics/daily`.
 - `/statistics/recent` má doplněnou čtvrtou souhrnnou kartu pro průměrnou teplotu moře z dostupných hodnot `datasets.sea_temperature`.
