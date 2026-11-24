@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zápis teploty moře · TeneLife</title>
+    <style>
+        :root { color-scheme: dark; }
+        body { margin: 0; background: #101827; color: #f1f5f9; font: 1rem system-ui, sans-serif; }
+        main { max-width: 26rem; margin: 3rem auto; padding: 0 1rem; }
+        h1 { font-size: 1.65rem; }
+        form { display: grid; gap: 1rem; padding: 1.25rem; border: 1px solid #475569; border-radius: .75rem; background: #1e293b; }
+        label { display: grid; gap: .4rem; min-width: 0; }
+        input, button { box-sizing: border-box; width: 100%; min-width: 0; min-height: 3rem; padding: .6rem .75rem; border-radius: .4rem; font: inherit; }
+        input { border: 1px solid #64748b; background: #101827; color: inherit; }
+        button { border: 0; background: #7dd3fc; color: #082f49; font-weight: 700; cursor: pointer; }
+        :focus-visible { outline: 2px solid #bae6fd; outline-offset: 2px; }
+        .error { color: #fecaca; }
+        .saved { color: #bbf7d0; }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Zápis teploty moře</h1>
+    {{if .Saved}}<p class="saved" role="status">Měření uloženo.</p>{{end}}
+    {{if .Error}}<p class="error" role="alert">{{.Error}}</p>{{end}}
+    <form method="post" action="/mereni-more">
+        <input type="hidden" name="csrf" value="{{.CSRF}}">
+        <label>
+            Teplota moře (°C)
+            <input type="text" name="temperature" inputmode="decimal" maxlength="8" placeholder="Např. 21,4" value="{{.Temperature}}" required>
+        </label>
+        <label>
+            Datum a čas měření (Tenerife)
+            <input type="datetime-local" name="measured_at" value="{{.MeasuredAt}}" required>
+        </label>
+        <button type="submit">Uložit měření</button>
+    </form>
+</main>
+</body>
+</html>

@@ -112,3 +112,6 @@
 
 33. Sousední body přílivové řady se shodnou výškou (v toleranci 1 mm) se při hledání extrémů posuzují jako jeden plochý úsek; čas skutečného plochého extrému se bere z prostředního bodu úseku.
 - Důvod: Open-Meteo vrací výšku zaokrouhlenou na centimetry. Původní porovnávání každého bodu zvlášť označilo rovný schod uvnitř pokračujícího poklesu jako falešný příliv pouhých 15 minut před odlivem.
+
+34. Mobilní formulář /mereni-more se zapíná proměnnou `SEA_TEMPERATURE_FORM_PASSWORD` a používá HTTP Basic Auth přes HTTPS a stávající CSRF ochranu.
+- Důvod: formulář pro jednoho obsluhujícího uživatele využívá stávající zápis do databáze a časové pásmo Tenerife.

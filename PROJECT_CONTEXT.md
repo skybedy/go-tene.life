@@ -6,6 +6,7 @@
 - Účel: webová aplikace pro informace související s Tenerife (počasí, vlny, kvalita vody, příliv/odliv, PWS teploty).
 
 ## Aktuální stav
+- Experimentální větev přidává chráněný mobilní formulář /mereni-more pro zápis do water_temperatures.
 
 - Typ: rozpracovaný existující projekt.
 - Git: redesign homepage a stránka denních statistik po měsících jsou sloučené do `main`; nedokončené MVP zpráv bylo z produkční větve odstraněno.
