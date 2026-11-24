@@ -49,6 +49,8 @@ type Handler struct {
 	cacheTimeout     time.Duration
 }
 
+const maxHomepageTideEventsPerType = 2
+
 func NewHandler(ws *store.WeatherStore) *Handler {
 	return &Handler{
 		WeatherStore:  ws,
@@ -385,9 +387,15 @@ func (h *Handler) getCachedTideData(reference time.Time) ([]models.TideEventView
 		fetchedAtStr = selected[0].FetchedAt.Local().Format("2.1")
 	}
 
-	high := make([]models.TideEventView, 0, 2)
-	low := make([]models.TideEventView, 0, 2)
-	for _, ev := range selected {
+	high, low := buildHomepageTideEventViews(selected)
+
+	return high, low, fetchedAtStr
+}
+
+func buildHomepageTideEventViews(events []models.TideEvent) ([]models.TideEventView, []models.TideEventView) {
+	high := make([]models.TideEventView, 0, maxHomepageTideEventsPerType)
+	low := make([]models.TideEventView, 0, maxHomepageTideEventsPerType)
+	for _, ev := range events {
 		timeLabel := strings.TrimSpace(strings.TrimPrefix(ev.EventTimeLocal.Format("15:04"), "0"))
 		heightLabel := formatTideHeightSigned(ev.HeightM) + " m"
 		item := models.TideEventView{
@@ -396,13 +404,17 @@ func (h *Handler) getCachedTideData(reference time.Time) ([]models.TideEventView
 		}
 		switch ev.EventType {
 		case "HIGH":
-			high = append(high, item)
+			if len(high) < maxHomepageTideEventsPerType {
+				high = append(high, item)
+			}
 		case "LOW":
-			low = append(low, item)
+			if len(low) < maxHomepageTideEventsPerType {
+				low = append(low, item)
+			}
 		}
 	}
 
-	return high, low, fetchedAtStr
+	return high, low
 }
 
 func formatTideHeightSigned(v float64) string {

@@ -250,21 +250,30 @@ func detectExtremes(series []seriesPoint) []ExtremeEvent {
 	}
 
 	events := make([]ExtremeEvent, 0, 4)
-	for i := 1; i < len(series)-1; i++ {
-		prev := series[i-1]
-		curr := series[i]
-		next := series[i+1]
-		if math.Abs(curr.Height-prev.Height) < 0.001 && math.Abs(curr.Height-next.Height) < 0.001 {
-			continue
+	for start := 0; start < len(series); {
+		end := start
+		for end+1 < len(series) && math.Abs(series[end+1].Height-series[start].Height) < 0.001 {
+			end++
 		}
 
-		if curr.Height >= prev.Height && curr.Height > next.Height {
-			events = append(events, ExtremeEvent{Type: "HIGH", TimeLocal: curr.Time, HeightM: curr.Height})
-			continue
+		// A plateau touching either edge cannot be classified without data from
+		// both sides. Treat the whole plateau as one point so a flat step in an
+		// otherwise rising/falling curve is not mistaken for a tide extreme.
+		if start > 0 && end < len(series)-1 {
+			prev := series[start-1]
+			curr := series[start]
+			next := series[end+1]
+			midpoint := series[start+(end-start)/2]
+
+			if curr.Height > prev.Height && curr.Height > next.Height {
+				events = append(events, ExtremeEvent{Type: "HIGH", TimeLocal: midpoint.Time, HeightM: curr.Height})
+			}
+			if curr.Height < prev.Height && curr.Height < next.Height {
+				events = append(events, ExtremeEvent{Type: "LOW", TimeLocal: midpoint.Time, HeightM: curr.Height})
+			}
 		}
-		if curr.Height <= prev.Height && curr.Height < next.Height {
-			events = append(events, ExtremeEvent{Type: "LOW", TimeLocal: curr.Time, HeightM: curr.Height})
-		}
+
+		start = end + 1
 	}
 
 	if len(events) == 0 {

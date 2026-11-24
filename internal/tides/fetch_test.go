@@ -78,3 +78,45 @@ func TestCanaryDSTEndDayHas25Hours(t *testing.T) {
 		t.Fatalf("unexpected UTC end: %s", got)
 	}
 }
+
+func TestDetectExtremesIgnoresFlatStepWithinFallingCurve(t *testing.T) {
+	start := time.Date(2026, time.November, 18, 0, 0, 0, 0, time.UTC)
+	heights := []float64{-0.46, -0.47, -0.47, -0.48, -0.47}
+	series := make([]seriesPoint, 0, len(heights))
+	for i, height := range heights {
+		series = append(series, seriesPoint{
+			Time:   start.Add(time.Duration(i) * 15 * time.Minute),
+			Height: height,
+		})
+	}
+
+	events := detectExtremes(series)
+
+	if len(events) != 1 {
+		t.Fatalf("expected only the real low tide, got %#v", events)
+	}
+	if events[0].Type != "LOW" || events[0].TimeLocal.Format("15:04") != "00:45" {
+		t.Fatalf("expected low tide at 00:45, got %#v", events[0])
+	}
+}
+
+func TestDetectExtremesUsesMiddleOfPlateau(t *testing.T) {
+	start := time.Date(2026, time.November, 18, 6, 30, 0, 0, time.UTC)
+	heights := []float64{0.20, 0.22, 0.22, 0.22, 0.21}
+	series := make([]seriesPoint, 0, len(heights))
+	for i, height := range heights {
+		series = append(series, seriesPoint{
+			Time:   start.Add(time.Duration(i) * 15 * time.Minute),
+			Height: height,
+		})
+	}
+
+	events := detectExtremes(series)
+
+	if len(events) != 1 {
+		t.Fatalf("expected one high tide, got %#v", events)
+	}
+	if events[0].Type != "HIGH" || events[0].TimeLocal.Format("15:04") != "07:00" {
+		t.Fatalf("expected high tide at plateau midpoint 07:00, got %#v", events[0])
+	}
+}

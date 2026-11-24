@@ -92,8 +92,8 @@
 26. Select výběru měsíce na `/statistics/monthly-daily` se plní dynamicky podle reálně existujících dat (`SELECT DISTINCT YEAR(date), MONTH(date) FROM weather_daily`), ne pevným rozsahem od listopadu 2025.
 - Důvod: uživatelský požadavek na přesnost — měření začala v listopadu 2025, ale pevný rozsah by mohl nabízet i měsíce bez dat; dynamický dotaz se samočinně přizpůsobí, pokud se historie dat rozšíří nebo budou mezery.
 
-27. Homepage weather info box i tlačítko „Zvětšit fotku“ používají do šířky 640 px zcela průhledný zadní layoutový obal bez rámečku, stínu a backdrop blur; jemně tónované zůstávají pouze vnitřní dlaždice/tlačítko. Od větších šířek zůstává původní tmavý vzhled a budoucí vizuální změny obou prvků se provádějí společně.
-- Důvod: na malém displeji oba prvky překrývají webkameru, proto jejich obaly nesmějí fotografii vizuálně zakrývat, ale layoutové kontejnery musí zůstat zachované.
+27. Homepage weather info box používá na všech šířkách lehce tónovaný hlavní podklad bez rámečku, stínu a backdrop blur; vnitřní dlaždice jsou tónované desetiprocentně. Tlačítko „Zvětšit fotku“ má průhledný vnější obal a tónované samotné tlačítko. Budoucí vizuální změny obou prvků se posuzují společně.
+- Důvod: lehký jednotný vzhled na mobilu i desktopu nechává fotografii webkamery viditelnou, zatímco mírný podklad drží informační box pohromadě a zvyšuje čitelnost bez změny responzivního rozložení.
 
 28. Hlavní stylesheet se v HTML odkazuje s query verzí odvozenou z krátkého SHA-256 otisku vestavěného `app.css`.
 - Důvod: každá změna CSS automaticky vytvoří novou URL a zabrání mobilním prohlížečům používat starý styl bez nutnosti ručně čistit cache.
@@ -107,5 +107,11 @@
 31. Open-Meteo přílivová časová řada se požaduje v UTC a jednotlivé časové body se v aplikaci převádějí do `Atlantic/Canary`; rozsah dotazu pokrývá celý místní kalendářní den.
 - Důvod: Open-Meteo používá pro odpověď jeden pevný UTC posun, což na dni změny letního času posunulo část událostí o hodinu. Převod každého UTC okamžiku přes databázi časových pásem správně zpracuje 23hodinové i 25hodinové dny.
 
-32. Mobilní formulář /mereni-more se zapíná proměnnou `SEA_TEMPERATURE_FORM_PASSWORD` a používá HTTP Basic Auth přes HTTPS a stávající CSRF ochranu.
+32. Titulní weather box zobrazuje maximálně první dva přílivy a první dva odlivy; úplná sada událostí zůstává zachovaná v databázi a tide API.
+- Důvod: třetí událost stejného typu se do pevné výšky dlaždice nevejde a rozbíjí rozložení titulní stránky, zatímco ostatní konzumenti mohou potřebovat kompletní data.
+
+33. Sousední body přílivové řady se shodnou výškou (v toleranci 1 mm) se při hledání extrémů posuzují jako jeden plochý úsek; čas skutečného plochého extrému se bere z prostředního bodu úseku.
+- Důvod: Open-Meteo vrací výšku zaokrouhlenou na centimetry. Původní porovnávání každého bodu zvlášť označilo rovný schod uvnitř pokračujícího poklesu jako falešný příliv pouhých 15 minut před odlivem.
+
+34. Mobilní formulář /mereni-more se zapíná proměnnou `SEA_TEMPERATURE_FORM_PASSWORD` a používá HTTP Basic Auth přes HTTPS a stávající CSRF ochranu.
 - Důvod: formulář pro jednoho obsluhujícího uživatele využívá stávající zápis do databáze a časové pásmo Tenerife.
