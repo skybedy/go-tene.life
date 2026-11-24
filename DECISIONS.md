@@ -106,3 +106,6 @@
 
 31. Open-Meteo přílivová časová řada se požaduje v UTC a jednotlivé časové body se v aplikaci převádějí do `Atlantic/Canary`; rozsah dotazu pokrývá celý místní kalendářní den.
 - Důvod: Open-Meteo používá pro odpověď jeden pevný UTC posun, což na dni změny letního času posunulo část událostí o hodinu. Převod každého UTC okamžiku přes databázi časových pásem správně zpracuje 23hodinové i 25hodinové dny.
+
+32. Mobilní formulář /mereni-more se zapíná proměnnou `SEA_TEMPERATURE_FORM_PASSWORD` a používá HTTP Basic Auth přes HTTPS a stávající CSRF ochranu.
+- Důvod: formulář pro jednoho obsluhujícího uživatele využívá stávající zápis do databáze a časové pásmo Tenerife.

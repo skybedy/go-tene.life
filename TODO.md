@@ -14,6 +14,7 @@
 - Doplnit mapu API endpointů do samostatné dokumentace (pokud chybí).
 
 ## K ověření
+- Před nasazením formuláře /mereni-more ověřit zápis na testovací MariaDB a dostupnost přes HTTPS.
 
 - Vizuálně ověřit nový `/statistics/monthly-daily` (select měsíce, tabulka po dnech, grafy) na mobilu i desktopu, ve všech jazykových verzích.
 - Ověřit, zda je `README.md` plně aktuální vůči současným routám a stránkám.

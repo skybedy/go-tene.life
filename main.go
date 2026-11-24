@@ -256,6 +256,7 @@ func main() {
 	}
 
 	e.Renderer = renderer
+	handler.RegisterSeaTemperatureForm(e, os.Getenv("SEA_TEMPERATURE_FORM_PASSWORD"))
 
 	// Routes (default locale: cs)
 	e.GET("/", handler.IndexHandler)
